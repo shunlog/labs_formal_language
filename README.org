@@ -1,4 +1,4 @@
-* The title of the work
+*
 - Course :: Formal Languages & Finite Automata
 - Author :: Balan Artiom
 
@@ -7,16 +7,23 @@ An instance of a formal language is a set of /words/ which are composed of /lett
 The set of /words/ can be defined in many ways:
 - by simply enumerating all the valid elements (words)
 - by defining an alphabet and a grammar
-  - alphabet :: a set of /letters/
-  - grammar :: a set of rules that define how to form valid /words/ from the alphabet
 
+- alphabet :: a set of letters
+- grammar :: a set of rules that define how to form valid words from the alphabet
+
+A regular grammar is one in which all production rules in P are of one of the following forms:
+- A → a
+- A → aB
+- A → ε
+where A, B, S ∈ N are non-terminal symbols, a ∈ Σ is a terminal symbol,
+and ε denotes the empty string, i.e. the string of length 0. S is called the start symbol.
 * Objectives
 Implement a  =Grammar= and a =FiniteAutomaton=, with the respective methods:
 - =Grammar=
   - =generateString()=
   - =convert_to_FSM()=
-- [ ] =FiniteAutomaton=
-  - [ ] =check_string()=
+- =FiniteAutomaton=
+  - =check_string()=
 
 Showcase the code:
 - generate 5 words with the grammar
@@ -67,12 +74,8 @@ def verify(self, w):
     return s in self.F
 #+end_src
 
-I made a few assumptions that would simplify the implementation:
-- all symbols are strings of length 1
-- there is only one terminal and at most one non-terminal symbol in a rule
-- the non-terminal symbol comes after the terminal one
-- the language defined by the grammar is deterministic
-
+** Deterministic or not?
 Variant #3 defines a non-deterministic language, but not #2 for example.
 I'm not sure if this was intended,
 but to bring justice I picked #2 even though I'm 3rd on the list.
+
