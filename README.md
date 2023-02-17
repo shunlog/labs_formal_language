@@ -1,39 +1,26 @@
 # The title of the work
 
-- Course: Formal Languages & Finite Automata
-- Author: Balan Artiom
+Course  
+Formal Languages & Finite Automata
 
-----
+Author  
+Balan Artiom
 
-## Theory
+# Theory
+
 If needed, but it should be written by the author in her/his words.
 
+# Objectives
 
-## Objectives:
+# Implementation
 
-* First objective.
-* ...
+- Code snippets from your files.
 
-
-## Implementation description
-
-* About 2-3 sentences to explain each piece of the implementation.
-
-
-* Code snippets from your files.
-
-```
+``` example
 public static void main() 
 {
 
 }
 ```
 
-* If needed, screenshots.
-
-
-## Conclusions / Screenshots / Results
-
-
-## References
-
+- If needed, screenshots.
