@@ -1,4 +1,4 @@
-\*
+# Implementation of formal languages
 
 Course  
 Formal Languages & Finite Automata
@@ -8,17 +8,16 @@ Balan Artiom
 
 # Theory
 
-An instance of a formal language is a set of *words* which are composed
-of *letters*. The set of *words* can be defined in many ways:
+An instance of a **formal language** is a set of *words* which are
+composed of *letters*. The set of words can be defined in many ways:
 
 - by simply enumerating all the valid elements (words)
-
 - by defining an alphabet and a grammar
 
-- alphabet :: a set of letters
+An **alphabet** is a set of letters.
 
-- grammar :: a set of rules that define how to form valid words from the
-  alphabet
+A **grammar** is a set of rules that define how to form valid words from
+the alphabet.
 
 A regular grammar is one in which all production rules in P are of one
 of the following forms:
@@ -72,12 +71,8 @@ pair `(state, letter)` to the next state `(new_state)`.
 def to_FSM(self):
     fin_state = "End"
     d = {}
-    for s0, arr in self.P.items():
-        for v in arr:
-            l = v[0]
-            s1 = v[1] if len(v) == 2 else fin_state
-            d[(s0, l)] = s1
-
+    for s0, rl in self.P.items():
+        d |= {(s0, r[0]): r[1] if len(r) == 2 else fin_state for r in rl}
     return FSM(self.VN | {fin_state}, self.S, d, {fin_state})
 ```
 
