@@ -18,12 +18,10 @@ class Grammar:
 
     def to_FSM(self):
         fin_state = "End"
+
         d = {}
-        for s0, arr in self.P.items():
-            for v in arr:
-                l = v[0]
-                s1 = v[1] if len(v) == 2 else fin_state
-                d[(s0, l)] = s1
+        for s0, rl in self.P.items():
+            d |= {(s0, r[0]): r[1] if len(r) == 2 else fin_state for r in rl}
 
         return FSM(self.VN | {fin_state}, self.S, d, {fin_state})
 
