@@ -54,7 +54,7 @@ class Grammar:
         return ''.join(w)
 
 
-class DFA:
+class NFA:
     '''
     A Finite State Machine is represented by 4 variables:
     S - set of states (strings)
@@ -80,7 +80,7 @@ class DFA:
     A -> ε
     B -> b
 
-    is transformed into the following DFA:
+    is transformed into the following NFA:
     S = {'B', 'ε', 'A'}
     s0 = 'A'
     d = {('A', 'a'): 'A', ('B', 'b'): 'ε'}
@@ -104,7 +104,7 @@ class DFA:
                    F |= {"ε"}
                elif len(tail) == 2:
                    d |= {(head, tail[0]): tail[1]}
-        return DFA(S = g.VN | F, s0 = g.S, d = d, F = F)
+        return NFA(S = g.VN | F, s0 = g.S, d = d, F = F)
 
     def verify(self, w):
         s = self.s0
@@ -150,7 +150,7 @@ if __name__ == '__main__':
             ml = len(w)
             m = w
     ic(m)
-    fsm = DFA.from_grammar(g)
+    fsm = NFA.from_grammar(g)
     ic(fsm)
 
     for i in range(10):
