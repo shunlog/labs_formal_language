@@ -61,6 +61,31 @@ class DFA:
     s0 - initial state (string)
     d - the state-transition function (dictionary: (state, rule) -> list of rules)
     F - set of final states (must be subset of S)
+
+    Each rule in the regular grammar is treated as follows:
+    1) A -> aB
+        - a transition is created: (A, a): B
+    2) A -> a
+        - a transition is created: (A, a): ε
+        - a final state is added: ε
+    3) B -> ε,
+        - a final state is added: B
+
+    Example:
+
+    The formal grammar
+
+    A -> aA
+    A -> bB
+    A -> B
+    B -> ε
+
+    is transformed into the following DFA:
+
+    S = {'ε', 'B', 'A'}
+    s0 = A
+    d = {('A', 'a'): 'A', ('A', 'b'): 'B', ('A', 'B'): 'ε'}
+    F = {'ε', 'B'}
     '''
     def __init__(self, S, s0, d, F):
         self.S = S  # states
@@ -70,12 +95,17 @@ class DFA:
 
     def from_grammar(g : Grammar):
         d = {}
-        for head, tail in g.P.items():
-            d |= {(head, v[0]): v[1] if len(v) > 1 else "ε" for v in tail}
-        return DFA(S = g.VN | {"ε"},
-                   s0 = g.S,
-                   d = d,
-                   F = {"ε"})
+        F = set()
+        for head, tails in g.P.items():
+            for tail in tails:
+               if len(tail) == 0:
+                   F |= {head}
+               elif len(tail) == 1:
+                   d |= {(head, tail[0]): "ε"}
+                   F |= {"ε"}
+               elif len(tail) == 2:
+                   d |= {(head, tail[0]): tail[1]}
+        return DFA(S = g.VN | F, s0 = g.S, d = d, F = F)
 
     def verify(self, w):
         s = self.s0
@@ -99,12 +129,20 @@ if __name__ == '__main__':
     # S = "S"
 
     # Variant #2
-    VN = {"S", "R", "L"}
-    VT = {"a", "b", "c", "d", "e", "f"}
-    P = {("S"): [( "a" , "S" ), ( "b", "S" ), ( "c", "R" ), ( "d", "L" )],
-         ("R"): [( "d", "L" ), ( "e" )],
-         ("L"): [( "f", "L" ), ( "e", "L" ), ( "d" )]}
-    S = "S"
+    # VN = {"S", "R", "L"}
+    # VT = {"a", "b", "c", "d", "e", "f"}
+    # P = {("S"): [( "a" , "S" ), ( "b", "S" ), ( "c", "R" ), ( "d", "L" )],
+    #      ("R"): [( "d", "L" ), ( "e" )],
+    #      ("L"): [( "f", "L" ), ( "e", "L" ), ( "d" )]}
+    # S = "S"
+
+    VN = {"A", "B"}
+    VT = {"a", "b"}
+    P = {
+        ("A"): [("a", "A"), ("b", "B"), ("B")],
+        ("B"): [()]
+    }
+    S = "A"
 
     g = Grammar(VN, VT, P, S)
     m, ml = "", 0
