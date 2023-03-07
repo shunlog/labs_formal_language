@@ -158,6 +158,32 @@ class NFA:
 
 
 class DFA:
+    '''
+    A Deterministic automaton is similar to an NFA,
+    with the difference that states are now represented by sets, and not strings.
+    For example, in the transitions dict,
+    each destination state is a set denoting a single "node" in the DFA graph,
+    not multiple possible states like in the case of an NFA.
+    The other variables, S, s0 and F also reflect this change.
+
+    Example:
+
+    The NFA:
+    S = {'B', 'ε', 'A'}
+    s0 = 'A'
+    d = {('A', 'a'): {'A', 'B'}, ('B', 'b'): {'ε'}}
+    F = {'ε', 'A'}
+
+    is transformed into the following DFA:
+    S = {{'A'}, {'A', 'B'}, {'ε'}}
+    s0 = {'A'}
+    d = {
+        ({'A'}, 'a'): {'A', 'B'},
+        ({'A', 'B'}, 'a'): {'A', 'B'},
+        ({'A', 'B'}, 'b'): {'ε'}
+    }
+    F = {{'A'}, {'A', 'B'}, {'ε'}}
+    '''
     def __init__(self):
         pass
 
