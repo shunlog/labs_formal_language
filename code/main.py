@@ -25,7 +25,7 @@ class Grammar:
     VT = {"a", "b"}
     P = {
         ("A"): [("a", "B"), ("a", "A"), ()],
-        ("B"): [("b")]
+        ("B"): [("b",)]
     }
     S = "A"
     '''
@@ -34,6 +34,30 @@ class Grammar:
         self.VT = VT
         self.P = P
         self.S = S
+
+    def type(self):
+
+        def rule_type(head, tail):
+            if len(head) == 1 and \
+                (len(tail) == 0 or \
+                len(tail) == 1 and tail[0] in self.VT or \
+                len(tail) == 2 and tail[0] in self.VT and tail[1] in self.VN):
+                return 3
+            elif len(head) == 1:
+                return 2
+            else:
+                for i,l in enumerate(head):
+                    if l not in self.VN:
+                        continue
+                    a = head[:i]
+                    b = head[i+1:]
+                    if a == tail[:i] and \
+                       b == tail[-len(b):] and \
+                       len(head) <= len(tail):
+                        return 1
+                return 0
+
+        return min([rule_type(h, t) for h in self.P.keys() for t in self.P[h]])
 
     def constr_word(self):
         '''Assuming *strictly* right-regular grammar,
@@ -138,23 +162,26 @@ if __name__ == '__main__':
     # Deterministic Regular grammar
     VN = {"A", "B"}
     VT = {"a", "b"}
-    P = {("A"): [("a", "B"), ("a", "A"), ()],
-        ("B"): [("b")]}
+    # P = {("A"): [("a", "B"), ("a", "A"), ()],
+    #     ("B"): [("b",)]}
+    P = {("abAbC"): [("abAbC")]}
     S = "A"
 
     g = Grammar(VN, VT, P, S)
-    m, ml = "", 0
-    for _ in range(1000):
-        w = g.constr_word()
-        if len(w) > ml:
-            ml = len(w)
-            m = w
-    ic(m)
-    fsm = NFA.from_grammar(g)
-    ic(fsm)
+    ic(g.type())
 
-    for i in range(10):
-        w = g.constr_word()
-        ic(w)
-        assert(fsm.verify(w))
-        assert(not fsm.verify(w+"!"))
+    # m, ml = "", 0
+    # for _ in range(1000):
+    #     w = g.constr_word()
+    #     if len(w) > ml:
+    #         ml = len(w)
+    #         m = w
+    # ic(m)
+    # fsm = NFA.from_grammar(g)
+    # ic(fsm)
+
+    # for i in range(10):
+    #     w = g.constr_word()
+    #     ic(w)
+    #     assert(fsm.verify(w))
+    #     assert(not fsm.verify(w+"!"))
