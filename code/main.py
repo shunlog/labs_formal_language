@@ -36,15 +36,21 @@ class Grammar:
         self.S = S
 
     def constr_word(self):
-        '''Assuming right-regular grammar,
+        '''Assuming *strictly* right-regular grammar,
         build a word by randomly picking rules to rewrite'''
         from random import choice
         s = self.S  # current state
         w = ""  # word
-        while s in self.VN:
-            rule = choice(self.P[(s)])
-            w += rule[0]
-            s = rule[1]
+        while True:
+            tail = choice(self.P[(s)])
+            if len(tail) == 2:
+                w += tail[0]
+                s = tail[1]
+            elif len(tail) == 1:
+                w += tail[0]
+                break
+            elif len(tail) == 0:
+                break
         return ''.join(w)
 
 
@@ -64,9 +70,8 @@ class FSM:
 
     def from_grammar(g : Grammar):
         d = {}
-        for s0, rl in g.P.items():
-            d |= {(s0, r[0]): r[1] for r in rl}
-
+        for head, tail in g.P.items():
+            d |= {(head, v[0]): v[1] if len(v) > 1 else "ε" for v in tail}
         return FSM(S = g.VN | {"ε"},
                    s0 = g.S,
                    d = d,
@@ -97,8 +102,8 @@ if __name__ == '__main__':
     VN = {"S", "R", "L"}
     VT = {"a", "b", "c", "d", "e", "f"}
     P = {("S"): [( "a" , "S" ), ( "b", "S" ), ( "c", "R" ), ( "d", "L" )],
-         ("R"): [( "d", "L" ), ( "e", "ε" )],
-         ("L"): [( "f", "L" ), ( "e", "L" ), ( "d", "ε" )]}
+         ("R"): [( "d", "L" ), ( "e" )],
+         ("L"): [( "f", "L" ), ( "e", "L" ), ( "d" )]}
     S = "S"
 
     g = Grammar(VN, VT, P, S)
