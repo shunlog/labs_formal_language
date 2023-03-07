@@ -80,10 +80,10 @@ class FSM:
     def verify(self, w):
         s = self.s0
         for l in w:
-            ns = self.d.get((s, l))
-            if not ns:
+            s2 = self.d.get((s, l))
+            if not s2:
                 return False
-            s = ns
+            s = s2
         return s in self.F
 
     def __repr__(self):
@@ -117,7 +117,7 @@ if __name__ == '__main__':
     fsm = FSM.from_grammar(g)
     ic(fsm)
 
-    # for i in range(10):
-    #     w = g.constr_word()
-    #     assert(fsm.verify(w))
-    #     assert(not fsm.verify(w+"a"))
+    for i in range(10):
+        w = g.constr_word()
+        assert(fsm.verify(w))
+        assert(not fsm.verify(w+"!"))
