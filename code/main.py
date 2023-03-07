@@ -150,6 +150,9 @@ class NFA:
 
         return Grammar(VN = self.S - {"ε"}, VT = VT, P = P, S = self.s0)
 
+    def is_deterministic(self):
+       return all([len(l) == 1 for l in self.d.values()])
+
     def __repr__(self):
         return ', '.join([str(x) for x in [self.S, self.s0, self.d, self.F]])
 
@@ -200,8 +203,8 @@ if __name__ == '__main__':
     ic(m)
     fsm = NFA.from_grammar(g)
     ic(fsm)
-    g2 = fsm.to_grammar()
-    ic(g2)
+
+    ic(fsm.is_deterministic())
 
     # for i in range(10):
     #     w = g.constr_word()

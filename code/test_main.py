@@ -59,3 +59,19 @@ def test_conversion_grammar_NFA():
     assert g.VT == g2.VT
     assert g.P == g2.P
     assert g.S == g2.S
+
+def test_is_deterministic():
+    VN = {"A", "B"}
+    VT = {"a", "b"}
+    P = {("A"): {("a", "B"), ("a", "A"), ()},
+        ("B"): {("b",)}}
+    S = "A"
+    g = Grammar(VN, VT, P, S)
+    nfa = NFA.from_grammar(g)
+    assert not nfa.is_deterministic()
+
+    P = {("A"): {("b", "B"), ("a", "A"), ()},
+        ("B"): {("b",)}}
+    g = Grammar(VN, VT, P, S)
+    nfa = NFA.from_grammar(g)
+    assert nfa.is_deterministic()
