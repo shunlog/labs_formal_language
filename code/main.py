@@ -150,15 +150,6 @@ class NFA:
 
         return Grammar(VN = self.S - {"ε"}, VT = VT, P = P, S = self.s0)
 
-    def verify(self, w):
-        s = self.s0
-        for l in w:
-            s2 = self.d.get((s, l))
-            if not s2:
-                return False
-            s = s2
-        return s in self.F
-
     def __repr__(self):
         return ', '.join([str(x) for x in [self.S, self.s0, self.d, self.F]])
 
@@ -169,6 +160,15 @@ class DFA:
 
     def from_NFA():
         pass
+
+    def verify(self, w):
+        s = self.s0
+        for l in w:
+            s2 = self.d.get((s, l))
+            if not s2:
+                return False
+            s = s2
+        return s in self.F
 
     
 if __name__ == '__main__':
