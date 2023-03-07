@@ -51,8 +51,9 @@ class Grammar:
                         continue
                     a = head[:i]
                     b = head[i+1:]
+                    ic(tail[-len(b):])
                     if a == tail[:i] and \
-                       b == tail[-len(b):] and \
+                       b == (tail[-len(b):] if len(b) != 0 else '') and \
                        len(head) <= len(tail):
                         return 1
                 return 0
@@ -162,9 +163,8 @@ if __name__ == '__main__':
     # Deterministic Regular grammar
     VN = {"A", "B"}
     VT = {"a", "b"}
-    # P = {("A"): [("a", "B"), ("a", "A"), ()],
-    #     ("B"): [("b",)]}
-    P = {("abAbC"): [("abAbC")]}
+    P = {("A"): [("a", "B"), ("a", "A"), ()],
+        ("B"): [("b",)]}
     S = "A"
 
     g = Grammar(VN, VT, P, S)
