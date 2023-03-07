@@ -54,7 +54,7 @@ class Grammar:
         return ''.join(w)
 
 
-class FSM:
+class DFA:
     '''
     A Finite State Machine is represented by 4 variables:
     S - set of states (strings)
@@ -72,7 +72,7 @@ class FSM:
         d = {}
         for head, tail in g.P.items():
             d |= {(head, v[0]): v[1] if len(v) > 1 else "ε" for v in tail}
-        return FSM(S = g.VN | {"ε"},
+        return DFA(S = g.VN | {"ε"},
                    s0 = g.S,
                    d = d,
                    F = {"ε"})
@@ -114,7 +114,7 @@ if __name__ == '__main__':
             ml = len(w)
             m = w
     ic(m)
-    fsm = FSM.from_grammar(g)
+    fsm = DFA.from_grammar(g)
     ic(fsm)
 
     for i in range(10):
