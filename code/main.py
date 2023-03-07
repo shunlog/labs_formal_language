@@ -15,17 +15,17 @@ class Grammar:
     The formal grammar
 
     A -> aA
-    A -> bB
-    A -> B
-    B -> ε
+    A -> aB
+    A -> ε
+    B -> b
 
     Is represented by the following variables
 
     VN = {"A", "B"}
     VT = {"a", "b"}
     P = {
-        ("A"): [("a", "A"), ("b", "B"), ("B")],
-        ("B"): [()]
+        ("A"): [("a", "B"), ("a", "A"), ()],
+        ("B"): [("b")]
     }
     S = "A"
     '''
@@ -76,16 +76,15 @@ class DFA:
     The formal grammar
 
     A -> aA
-    A -> bB
-    A -> B
-    B -> ε
+    A -> aB
+    A -> ε
+    B -> b
 
     is transformed into the following DFA:
-
-    S = {'ε', 'B', 'A'}
-    s0 = A
-    d = {('A', 'a'): 'A', ('A', 'b'): 'B', ('A', 'B'): 'ε'}
-    F = {'ε', 'B'}
+    S = {'B', 'ε', 'A'}
+    s0 = 'A'
+    d = {('A', 'a'): 'A', ('B', 'b'): 'ε'}
+    F = {'ε', 'A'}
     '''
     def __init__(self, S, s0, d, F):
         self.S = S  # states
@@ -136,12 +135,11 @@ if __name__ == '__main__':
     #      ("L"): [( "f", "L" ), ( "e", "L" ), ( "d" )]}
     # S = "S"
 
+    # Deterministic Regular grammar
     VN = {"A", "B"}
     VT = {"a", "b"}
-    P = {
-        ("A"): [("a", "A"), ("b", "B"), ("B")],
-        ("B"): [()]
-    }
+    P = {("A"): [("a", "B"), ("a", "A"), ()],
+        ("B"): [("b")]}
     S = "A"
 
     g = Grammar(VN, VT, P, S)
@@ -157,5 +155,6 @@ if __name__ == '__main__':
 
     for i in range(10):
         w = g.constr_word()
+        ic(w)
         assert(fsm.verify(w))
         assert(not fsm.verify(w+"!"))
