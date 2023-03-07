@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from icecream import ic
+from collections import defaultdict
 
 class Grammar:
     '''
@@ -24,8 +25,8 @@ class Grammar:
     VN = {"A", "B"}
     VT = {"a", "b"}
     P = {
-        ("A"): [("a", "B"), ("a", "A"), ()],
-        ("B"): [("b",)]
+        ("A"): {("a", "B"), ("a", "A"), ()},
+        ("B"): {("b",)}
     }
     S = "A"
     '''
@@ -34,6 +35,9 @@ class Grammar:
         self.VT = VT
         self.P = P
         self.S = S
+
+    def __repr__(self):
+        return ', '.join([str(x) for x in [self.VN, self.VT, self.P, self.S]])
 
     def type(self):
 
@@ -67,7 +71,7 @@ class Grammar:
         s = self.S  # current state
         w = ""  # word
         while True:
-            tail = choice(self.P[(s)])
+            tail = choice(list(self.P[(s)]))
             if len(tail) == 2:
                 w += tail[0]
                 s = tail[1]
@@ -108,7 +112,7 @@ class NFA:
     is transformed into the following NFA:
     S = {'B', 'ε', 'A'}
     s0 = 'A'
-    d = {('A', 'a'): 'A', ('B', 'b'): 'ε'}
+    d = {('A', 'a'): {'A', 'B'}, ('B', 'b'): {'ε'}}
     F = {'ε', 'A'}
     '''
     def __init__(self, S, s0, d, F):
@@ -118,18 +122,33 @@ class NFA:
         self.F = F # final states (subset of S)
 
     def from_grammar(g : Grammar):
-        d = {}
+        d = defaultdict(set)
         F = set()
         for head, tails in g.P.items():
             for tail in tails:
                if len(tail) == 0:
                    F |= {head}
                elif len(tail) == 1:
-                   d |= {(head, tail[0]): "ε"}
+                   d[(head, tail[0])] |= {"ε"}
                    F |= {"ε"}
                elif len(tail) == 2:
-                   d |= {(head, tail[0]): tail[1]}
+                   d[(head, tail[0])] |= {tail[1]}
+        d = dict(d)
         return NFA(S = g.VN | F, s0 = g.S, d = d, F = F)
+
+    def to_grammar(self):
+        VT = {k[1] for k in self.d.keys()}
+
+        P = defaultdict(set)
+        for k, v in self.d.items():
+            P[k[0]] |= {(k[1], s) if s != "ε" else (k[1],) for s in v}
+        for s in self.F:
+            if s == "ε":
+                continue
+            P[s] |= {tuple()}
+        P = dict(P)
+
+        return Grammar(VN = self.S - {"ε"}, VT = VT, P = P, S = self.s0)
 
     def verify(self, w):
         s = self.s0
@@ -143,42 +162,46 @@ class NFA:
     def __repr__(self):
         return ', '.join([str(x) for x in [self.S, self.s0, self.d, self.F]])
 
-if __name__ == '__main__':
-    # Variant #3 is non-deterministic (didn't reserve enough time for that)
-    # VN=["S", "D", "R"]
-    # VT=["a", "b", "c", "d", "f"]
-    # P={"S": ["aS", "bD", "fR"],
-    #     "D": ["cD", "dR", "d"],
-    #     "R": ["bR", "f"]}
-    # S = "S"
 
+class DFA:
+    def __init__(self):
+        pass
+
+    def from_NFA():
+        pass
+
+    
+if __name__ == '__main__':
     # Variant #2
     # VN = {"S", "R", "L"}
     # VT = {"a", "b", "c", "d", "e", "f"}
-    # P = {("S"): [( "a" , "S" ), ( "b", "S" ), ( "c", "R" ), ( "d", "L" )],
-    #      ("R"): [( "d", "L" ), ( "e" )],
-    #      ("L"): [( "f", "L" ), ( "e", "L" ), ( "d" )]}
+    # P = {("S"): {( "a" , "S" ), ( "b", "S" ), ( "c", "R" ), ( "d", "L" )},
+    #      ("R"): {( "d", "L" ), ( "e" )},
+    #      ("L"): {( "f", "L" ), ( "e", "L" ), ( "d" )}}
     # S = "S"
 
-    # Deterministic Regular grammar
+    # Nondeterministic Regular grammar
     VN = {"A", "B"}
     VT = {"a", "b"}
-    P = {("A"): [("a", "B"), ("a", "A"), ()],
-        ("B"): [("b",)]}
+    P = {("A"): {("a", "B"), ("a", "A"), ()},
+        ("B"): {("b",)}}
     S = "A"
 
     g = Grammar(VN, VT, P, S)
+    ic(g)
     ic(g.type())
 
-    # m, ml = "", 0
-    # for _ in range(1000):
-    #     w = g.constr_word()
-    #     if len(w) > ml:
-    #         ml = len(w)
-    #         m = w
-    # ic(m)
-    # fsm = NFA.from_grammar(g)
-    # ic(fsm)
+    m, ml = "", 0
+    for _ in range(1000):
+        w = g.constr_word()
+        if len(w) > ml:
+            ml = len(w)
+            m = w
+    ic(m)
+    fsm = NFA.from_grammar(g)
+    ic(fsm)
+    g2 = fsm.to_grammar()
+    ic(g2)
 
     # for i in range(10):
     #     w = g.constr_word()
