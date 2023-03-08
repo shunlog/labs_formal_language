@@ -1,19 +1,19 @@
-- [Implementation of formal languages](#org8a41e7d)
-- [Objectives](#orgb49b04a)
-  - [Lab 1](#org9efd35a)
-  - [Lab 2](#orgaca57fb)
-    - [Convert NFA to Grammar](#orgd4dec3b)
-    - [Find out if FA is nondeterministic](#org50bb6d4)
-    - [Convert NFA to DFA](#orgaffa3d4)
-    - [Visualize the finite automatons](#orgc1cf991)
-- [Implementation](#org8ff2fed)
-- [Try it out](#org5783402)
-- [Theory](#orgff14d69)
+- [Implementation of formal languages](#orgece79e2)
+- [Objectives](#orgb90ecaa)
+  - [Lab 1](#orgc186267)
+  - [Lab 2](#orgb40179a)
+    - [Convert NFA to Grammar](#org5c62409)
+    - [Find out if FA is nondeterministic](#org94d42d2)
+    - [Convert NFA to DFA](#orgde81c25)
+    - [Visualize the finite automatons](#orgef9966d)
+- [Implementation](#org6ab59eb)
+- [Try it out](#orgae2c552)
+- [Theory](#org5613e72)
 
 
 
 
-<a id="org8a41e7d"></a>
+<a id="orgece79e2"></a>
 
 # Implementation of formal languages
 
@@ -24,12 +24,12 @@ Author
 : Balan Artiom
 
 
-<a id="orgb49b04a"></a>
+<a id="orgb90ecaa"></a>
 
 # Objectives
 
 
-<a id="org9efd35a"></a>
+<a id="orgc186267"></a>
 
 ## Lab 1
 
@@ -45,7 +45,7 @@ Author
     -   check that the generated words are valid according to the FSM
 
 
-<a id="orgaca57fb"></a>
+<a id="orgb40179a"></a>
 
 ## Lab 2
 
@@ -56,6 +56,7 @@ Author
 -   [X] Represent the finite automaton graphically (Optional, and can be considered as a bonus point):
 -   [X] Document everything in the README
 -   [ ] Test string validation with the new more general DFA
+-   [ ] REPLACE ALL GRAMMAR P DEFINITIONS HEADS TO ACTUAL TUPLES
 
 Here&rsquo;s the NFA I got:
 
@@ -94,7 +95,7 @@ nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
 ```
 
 
-<a id="orgd4dec3b"></a>
+<a id="org5c62409"></a>
 
 ### Convert NFA to Grammar
 
@@ -105,10 +106,6 @@ g = nfa.to_grammar()
 print(g.type())
 ```
 
-```text
-3
-```
-
 Or print out the grammar if I format it a bit:
 
 ```python
@@ -116,16 +113,8 @@ for l,r in g.P.items():
     print(''.join(l), '->', ' | '.join([' '.join(t) for t in r]))
 ```
 
-```text
-q0 -> a q1
-q1 -> b q1 | a q2
-q2 -> b q2 | b q3
-q3 -> a q1 | b q4
-q4 ->
-```
 
-
-<a id="org50bb6d4"></a>
+<a id="org94d42d2"></a>
 
 ### Find out if FA is nondeterministic
 
@@ -136,22 +125,14 @@ We can find that out:
 print(nfa.is_deterministic())
 ```
 
-```text
-False
-```
 
-
-<a id="orgaffa3d4"></a>
+<a id="orgde81c25"></a>
 
 ### Convert NFA to DFA
 
 ```python
 dfa = nfa.to_DFA()
 print(dfa)
-```
-
-```text
-{frozenset({'q3', 'q4', 'q2'}), frozenset({'q1'}), frozenset({'q2'}), frozenset({'q0'}), frozenset({'q3', 'q2'})}, {'a', 'b'}, {'q0'}, {(frozenset({'q0'}), 'a'): {'q1'}, (frozenset({'q1'}), 'a'): {'q2'}, (frozenset({'q1'}), 'b'): {'q1'}, (frozenset({'q2'}), 'b'): {'q3', 'q2'}, (frozenset({'q3', 'q2'}), 'a'): {'q1'}, (frozenset({'q3', 'q2'}), 'b'): {'q3', 'q4', 'q2'}, (frozenset({'q3', 'q4', 'q2'}), 'a'): {'q1'}, (frozenset({'q3', 'q4', 'q2'}), 'b'): {'q3', 'q4', 'q2'}}, {frozenset({'q3', 'q4', 'q2'})}
 ```
 
 Now that we have a DFA, we can easily validate some strings according to the grammar.
@@ -162,22 +143,14 @@ l = [g.constr_word() for _ in range(5)]
 print(l)
 ```
 
-```text
-['aabbb', 'abbabb', 'aabbbbaabababaabbb', 'abbbbbbbabaabaabb', 'abbbbbabbbb']
-```
-
 Let&rsquo;s verify that they&rsquo;re all valid:
 
 ```python
 print(all(dfa.verify(w) for w in l))
 ```
 
-```text
-True
-```
 
-
-<a id="orgc1cf991"></a>
+<a id="orgef9966d"></a>
 
 ### Visualize the finite automatons
 
@@ -188,7 +161,7 @@ fn = nfa.draw('./img', 'variant_3_nfa')
 print(fn)
 ```
 
-![img](img/variant_3_nfa.gv.svg)
+<>
 
 And the DFA:
 
@@ -197,17 +170,17 @@ fn = dfa.draw('./img', 'variant_3_dfa')
 print(fn)
 ```
 
-![img](img/variant_3_dfa.gv.svg)
+<>
 
 
-<a id="org8ff2fed"></a>
+<a id="org6ab59eb"></a>
 
 # Implementation
 
 I wrote very extensive comments inside source code files, so refer to those please.
 
 
-<a id="org5783402"></a>
+<a id="orgae2c552"></a>
 
 # Try it out
 
@@ -218,7 +191,7 @@ but they&rsquo;re not very extensive.
 Also pls don&rsquo;t look inside, I&rsquo;ll refactor them I promise.
 
 
-<a id="orgff14d69"></a>
+<a id="org5613e72"></a>
 
 # Theory
 
