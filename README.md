@@ -1,33 +1,34 @@
-
-# Table of Contents
-
-1.  [Implementation of formal languages](#orga85c043)
-2.  [Objectives](#org98ba3df)
-    1.  [Lab 1](#org36c819b)
-    2.  [Lab 2](#orgf24bf14)
-        1.  [Convert NFA to Grammar](#orge9b501e)
-        2.  [Find out if FA is nondeterministic](#orgd72b554)
-        3.  [Convert NFA to DFA](#orgf24bf66)
-        4.  [Visualize the finite automatons](#org2888e42)
-3.  [Implementation](#org2ecb4e3)
-4.  [Theory](#org1d264fe)
+- [Implementation of formal languages](#orgdedd13b)
+- [Objectives](#orga50e6c3)
+  - [Lab 1](#orge771af6)
+  - [Lab 2](#orgceac484)
+    - [Convert NFA to Grammar](#org433e403)
+    - [Find out if FA is nondeterministic](#org16335b2)
+    - [Convert NFA to DFA](#org14d90c4)
+    - [Visualize the finite automatons](#org5d13b6c)
+- [Implementation](#org7636aa8)
+- [Theory](#org41cfd2c)
 
 
 
-<a id="orga85c043"></a>
+
+<a id="orgdedd13b"></a>
 
 # Implementation of formal languages
 
--   **Course:** Formal Languages & Finite Automata
--   **Author:** Balan Artiom
+Course
+: Formal Languages &amp; Finite Automata
+
+Author
+: Balan Artiom
 
 
-<a id="org98ba3df"></a>
+<a id="orga50e6c3"></a>
 
 # Objectives
 
 
-<a id="org36c819b"></a>
+<a id="orge771af6"></a>
 
 ## Lab 1
 
@@ -43,7 +44,7 @@
     -   check that the generated words are valid according to the FSM
 
 
-<a id="orgf24bf14"></a>
+<a id="orgceac484"></a>
 
 ## Lab 2
 
@@ -55,121 +56,151 @@
 -   [X] Document everything in the README
 -   [ ] Test string validation with the new more general DFA
 
-Here's the NFA I got:
+Here&rsquo;s the NFA I got:
 
-    Q = {q0,q1,q2,q3,q4},
-    ∑ = {a,b},
-    F = {q4},
-    δ(q0,a) = q1,
-    δ(q1,b) = q1,
-    δ(q1,a) = q2,
-    δ(q2,b) = q2,
-    δ(q2,b) = q3,
-    δ(q3,b) = q4,
-    δ(q3,a) = q1.
+```text
+Q = {q0,q1,q2,q3,q4},
+∑ = {a,b},
+F = {q4},
+δ(q0,a) = q1,
+δ(q1,b) = q1,
+δ(q1,a) = q2,
+δ(q2,b) = q2,
+δ(q2,b) = q3,
+δ(q3,b) = q4,
+δ(q3,a) = q1.
+```
 
 After manually rewriting it like this:
 
-    S = {"q0","q1","q2","q3","q4"}
-    A = {"a","b"}
-    s0 = "q0"
-    F = {"q4"}
-    d = {("q0","a"): {"q1"},
-         ("q1","b"): {"q1"},
-         ("q1","a"): {"q2"},
-         ("q2","b"): {"q2", "q3"},
-         ("q3","b"): {"q4"},
-         ("q3","a"): {"q1"}}
+```python
+S = {"q0","q1","q2","q3","q4"}
+A = {"a","b"}
+s0 = "q0"
+F = {"q4"}
+d = {("q0","a"): {"q1"},
+     ("q1","b"): {"q1"},
+     ("q1","a"): {"q2"},
+     ("q2","b"): {"q2", "q3"},
+     ("q3","b"): {"q4"},
+     ("q3","a"): {"q1"}}
+```
 
 I can initialize an NFA, and then do many things with it.
 
-    nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
+```python
+nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
+```
 
 
-<a id="orge9b501e"></a>
+<a id="org433e403"></a>
 
 ### Convert NFA to Grammar
 
 I can find out the type of the resulting grammar in the Chomsky hierarchy:
 Or print out the grammar if I format it a bit:
 
-    for l,r in g.P.items():
-        print(''.join(l), '->', ' | '.join([' '.join(t) for t in r]))
+```python
+for l,r in g.P.items():
+    print(''.join(l), '->', ' | '.join([' '.join(t) for t in r]))
+```
 
-    q0 -> a q1
-    q1 -> b q1 | a q2
-    q2 -> b q2 | b q3
-    q3 -> b q4 | a q1
-    q4 ->
+```text
+q0 -> a q1
+q1 -> a q2 | b q1
+q2 -> b q3 | b q2
+q3 -> a q1 | b q4
+q4 ->
+```
 
 
-<a id="orgd72b554"></a>
+<a id="org16335b2"></a>
 
 ### Find out if FA is nondeterministic
 
-Even though it's an NFA, it could be that it doesn't have nondeterministic transitions.
+Even though it&rsquo;s an NFA, it could be that it doesn&rsquo;t have nondeterministic transitions.
 We can find that out:
 
-    print(nfa.is_deterministic())
+```python
+print(nfa.is_deterministic())
+```
 
-    False
+```text
+False
+```
 
 
-<a id="orgf24bf66"></a>
+<a id="org14d90c4"></a>
 
 ### Convert NFA to DFA
 
-    dfa = nfa.to_DFA()
-    print(dfa)
+```python
+dfa = nfa.to_DFA()
+print(dfa)
+```
 
-    {frozenset({'q3', 'q2'}), frozenset({'q3', 'q4', 'q2'}), frozenset({'q0'}), frozenset({'q2'}), frozenset({'q1'})}, {'a', 'b'}, {'q0'}, {(frozenset({'q0'}), 'a'): {'q1'}, (frozenset({'q1'}), 'a'): {'q2'}, (frozenset({'q1'}), 'b'): {'q1'}, (frozenset({'q2'}), 'b'): {'q3', 'q2'}, (frozenset({'q3', 'q2'}), 'a'): {'q1'}, (frozenset({'q3', 'q2'}), 'b'): {'q3', 'q4', 'q2'}, (frozenset({'q3', 'q4', 'q2'}), 'a'): {'q1'}, (frozenset({'q3', 'q4', 'q2'}), 'b'): {'q3', 'q4', 'q2'}}, {frozenset({'q3', 'q4', 'q2'})}
+```text
+{frozenset({'q1'}), frozenset({'q0'}), frozenset({'q2'}), frozenset({'q2', 'q3'}), frozenset({'q2', 'q4', 'q3'})}, {'b', 'a'}, {'q0'}, {(frozenset({'q0'}), 'a'): {'q1'}, (frozenset({'q1'}), 'b'): {'q1'}, (frozenset({'q1'}), 'a'): {'q2'}, (frozenset({'q2'}), 'b'): {'q2', 'q3'}, (frozenset({'q2', 'q3'}), 'b'): {'q2', 'q4', 'q3'}, (frozenset({'q2', 'q3'}), 'a'): {'q1'}, (frozenset({'q2', 'q4', 'q3'}), 'b'): {'q2', 'q4', 'q3'}, (frozenset({'q2', 'q4', 'q3'}), 'a'): {'q1'}}, {frozenset({'q2', 'q4', 'q3'})}
+```
 
 Now that we have a DFA, we can easily validate some strings according to the grammar.
-But first, let's generate a few:
+But first, let&rsquo;s generate a few:
 
-    l = [g.constr_word() for _ in range(5)]
-    print(l)
+```python
+l = [g.constr_word() for _ in range(5)]
+print(l)
+```
 
-    ['aabbaabababaababbabababbbbbbaabababababb', 'abbbbabbbabbabb', 'abbbbabbbbbaababbababbababbbabbb', 'abbabbbb', 'aabbbbbbbbb']
+```text
+['aabbababbbababbabbbabbb', 'ababaabbbbbbbbababbababababb', 'aabababbbabbabbbbbbbbbbbbbaabaabababbb', 'aabbbbb', 'ababbbaabb']
+```
 
-Let's verify that they're all valid:
+Let&rsquo;s verify that they&rsquo;re all valid:
 
-    print(all(dfa.verify(w) for w in l))
+```python
+print(all(dfa.verify(w) for w in l))
+```
 
-    True
+```text
+True
+```
 
 
-<a id="org2888e42"></a>
+<a id="org5d13b6c"></a>
 
 ### Visualize the finite automatons
 
-Here's the NFA:
+Here&rsquo;s the NFA:
 
-    fn = nfa.draw('./img', 'variant_3_nfa')
-    print(fn)
+```python
+fn = nfa.draw('./img', 'variant_3_nfa')
+print(fn)
+```
 
 ![img](img/variant_3_nfa.gv.svg)
 
 And the DFA:
 
-    fn = dfa.draw('./img', 'variant_3_dfa')
-    print(fn)
+```python
+fn = dfa.draw('./img', 'variant_3_dfa')
+print(fn)
+```
 
 ![img](img/variant_3_dfa.gv.svg)
 
 
-<a id="org2ecb4e3"></a>
+<a id="org7636aa8"></a>
 
 # Implementation
 
 I wrote very extensive comments inside source code files, so refer to those please.
 
 
-<a id="org1d264fe"></a>
+<a id="org41cfd2c"></a>
 
 # Theory
 
-An instance of a **formal language** is a set of *words* which are composed of *letters*.
+An instance of a **formal language** is a set of _words_ which are composed of _letters_.
 The set of words can be defined in many ways:
 
 -   by simply enumerating all the valid elements (words)
