@@ -1,4 +1,4 @@
-from grammar import Grammar
+from .grammar import Grammar
 from collections import defaultdict
 from icecream import ic
 
