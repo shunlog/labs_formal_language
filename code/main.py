@@ -5,7 +5,7 @@ from automata import *
 
 
 if __name__ == '__main__':
-    # Nondeterministic Regular grammar
+    # Example Nondeterministic Regular grammar
     VN = {"A", "B"}
     VT = {"a", "b"}
     P = {("A"): {("a", "B"), ("a", "A"), ()},
@@ -33,3 +33,20 @@ if __name__ == '__main__':
     #     ic(w)
     #     assert(fsm.verify(w))
     #     assert(not fsm.verify(w+"!"))
+
+    # Variant #3 NFA
+    S = {"q0","q1","q2","q3","q4"}
+    A = {"a","b"}
+    s0 = "q0"
+    F = {"q4"}
+    d = {("q0","a"): "q1",
+         ("q1","b"): "q1",
+         ("q1","a"): "q2",
+         ("q2","b"): "q2",
+         ("q2","b"): "q3",
+         ("q3","b"): "q4",
+         ("q3","a"): "q1"}
+
+    nfa3 = NFA(S, A, s0, F, d)
+
+    ic(nfa3)
