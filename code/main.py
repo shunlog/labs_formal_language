@@ -21,3 +21,6 @@ if __name__ == '__main__':
     ic(nfa)
     dfa = nfa.to_DFA()
     ic(dfa)
+
+    nfa.draw('./img', 'variant_3_nfa')
+    fn = dfa.draw('./img', 'variant_3_dfa')

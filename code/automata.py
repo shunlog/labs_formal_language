@@ -22,6 +22,25 @@ class FA:
     def __repr__(self):
         return ', '.join([str(x) for x in [self.S, self.A, self.s0, self.d, self.F]])
 
+    def draw(self, dirname, fn):
+        import graphviz
+        dot = graphviz.Digraph(fn, format='svg')
+        dot.attr(rankdir='LR')
+
+        for s in self._get_final_states():
+            dot.attr('node', shape='doublecircle')
+            dot.node(s)
+
+        for s in self._get_nonfinal_states():
+            dot.attr('node', shape='circle')
+            dot.node(s)
+
+        for s0, s1, label in self._get_edges():
+            dot.edge(s0, s1, label=label)
+
+        fn = dot.render(directory=dirname).replace('\\', '/')
+        return fn
+
 
 class DFA(FA):
     '''
@@ -61,6 +80,18 @@ class DFA(FA):
                 return False
             s = s2
         return s in self.F
+
+    def _get_nonfinal_states(self):
+        return [str(set(T)) for T in self.S - self.F]
+
+    def _get_final_states(self):
+        return [str(set(T)) for T in self.F]
+
+    def _get_edges(self):
+        e = []
+        for k, v in self.d.items():
+            e.append((str(set(k[0])), str(v), str(k[1])))
+        return e
 
 
 class NFA(FA):
@@ -151,3 +182,17 @@ class NFA(FA):
 
     def is_deterministic(self):
        return all([len(l) == 1 for l in self.d.values()])
+
+    def _get_nonfinal_states(self):
+        return self.S - self.F
+
+    def _get_final_states(self):
+        return self.F
+
+    def _get_edges(self):
+        e = []
+        for k, v in self.d.items():
+            for s in v:
+                e.append((k[0], str(s), str(k[1])))
+        return e
+

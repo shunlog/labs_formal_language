@@ -7,3 +7,7 @@ tmp/
 *.egg
 build
 htmlcov
+
+/code/img/*
+!/code/img/variant_3_nfa.gv.svg
+!/code/img/variant_3_dfa.gv.svg
