@@ -4,17 +4,20 @@ from collections import defaultdict
 class NFA:
     '''
     This Nondeterministic finite automaton is represented by 4 variables:
-    S - set of states (strings)
-    s0 - initial state (string)
-    d - the state-transition function (dictionary: (state, rule) -> list of rules)
+    S - set of states (set of strings)
+    A - alphabet, which is a set of symbols (set of strings)
+    s0 - starting state (a string)
+    d - the state-transition function (dictionary: tuple(state, symbol) -> set of states)
     F - set of final states (must be subset of S)
 
     Each rule in the regular grammar is treated as follows:
     1) A -> aB
         - a transition is created: (A, a): B
+        - "a" is added to the alphabet
     2) A -> a
         - a transition is created: (A, a): ε
         - a final state is added: ε
+        - "a" is added to the alphabet
     3) B -> ε,
         - a final state is added: B
 
@@ -29,20 +32,23 @@ class NFA:
 
     is transformed into the following NFA:
     S = {'B', 'ε', 'A'}
+    A = {'a', 'b'}
     s0 = 'A'
     d = {('A', 'a'): {'A', 'B'}, ('B', 'b'): {'ε'}}
     F = {'ε', 'A'}
     '''
-    def __init__(self, S, s0, d, F):
-        self.S = S  # states
-        self.s0 = s0  # initial state
-        self.d = d  # transitions
-        self.F = F # final states (subset of S)
+    def __init__(self, S, A, s0, d, F):
+        self.S = S
+        self.A = A
+        self.s0 = s0
+        self.d = d
+        self.F = F
 
     def from_grammar(g : Grammar):
         '''This function only recognizes *strictly* regular grammars'''
         d = defaultdict(set)
         F = set()
+        A = set()
         for head, tails in g.P.items():
             for tail in tails:
                if len(tail) == 0:
@@ -50,10 +56,12 @@ class NFA:
                elif len(tail) == 1:
                    d[(head, tail[0])] |= {"ε"}
                    F |= {"ε"}
+                   A |= {tail[0]}
                elif len(tail) == 2:
                    d[(head, tail[0])] |= {tail[1]}
+                   A |= {tail[0]}
         d = dict(d)
-        return NFA(S = g.VN | F, s0 = g.S, d = d, F = F)
+        return NFA(S = g.VN | F, A = A, s0 = g.S, d = d, F = F)
 
     def to_grammar(self) -> Grammar:
         VT = {k[1] for k in self.d.keys()}
@@ -73,7 +81,7 @@ class NFA:
        return all([len(l) == 1 for l in self.d.values()])
 
     def __repr__(self):
-        return ', '.join([str(x) for x in [self.S, self.s0, self.d, self.F]])
+        return ', '.join([str(x) for x in [self.S, self.A, self.s0, self.d, self.F]])
 
 
 class DFA:
@@ -89,12 +97,14 @@ class DFA:
 
     The NFA:
     S = {'B', 'ε', 'A'}
+    A = {'a', 'b'}
     s0 = 'A'
     d = {('A', 'a'): {'A', 'B'}, ('B', 'b'): {'ε'}}
     F = {'ε', 'A'}
 
     is transformed into the following DFA:
     S = {{'A'}, {'A', 'B'}, {'ε'}}
+    A = {'a', 'b'}
     s0 = {'A'}
     d = {
         ({'A'}, 'a'): {'A', 'B'},
