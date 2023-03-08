@@ -1,4 +1,4 @@
-#+PROPERTY: header-args:python   :session :results output :exports both
+#+PROPERTY: header-args:python   :session :results output :exports both :eval no-export
 * Implementation of formal languages
 - Course :: Formal Languages & Finite Automata
 - Author :: Balan Artiom
