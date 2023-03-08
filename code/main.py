@@ -122,6 +122,7 @@ class NFA:
         self.F = F # final states (subset of S)
 
     def from_grammar(g : Grammar):
+        '''This function only recognizes *strictly* regular grammars'''
         d = defaultdict(set)
         F = set()
         for head, tails in g.P.items():
@@ -201,14 +202,6 @@ class DFA:
 
     
 if __name__ == '__main__':
-    # Variant #2
-    # VN = {"S", "R", "L"}
-    # VT = {"a", "b", "c", "d", "e", "f"}
-    # P = {("S"): {( "a" , "S" ), ( "b", "S" ), ( "c", "R" ), ( "d", "L" )},
-    #      ("R"): {( "d", "L" ), ( "e" )},
-    #      ("L"): {( "f", "L" ), ( "e", "L" ), ( "d" )}}
-    # S = "S"
-
     # Nondeterministic Regular grammar
     VN = {"A", "B"}
     VT = {"a", "b"}
