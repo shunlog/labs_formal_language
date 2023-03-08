@@ -49,8 +49,8 @@ def test_context_sensitive_grammar():
 def test_grammar_to_NFA_to_grammar():
     VN = {"A", "B"}
     VT = {"a", "b"}
-    P = {("A"): {("a", "B"), ("a", "A"), ()},
-        ("B"): {("b",)}}
+    P = {("A",): {("a", "B"), ("a", "A"), ()},
+        ("B",): {("b",)}}
     S = "A"
     g = Grammar(VN, VT, P, S)
     nfa = NFA.from_grammar(g)
