@@ -1,21 +1,20 @@
 
 # Table of Contents
 
-1.  [Implementation of formal languages](#org23fc264)
-2.  [Objectives](#orgf67a9af)
-    1.  [Lab 1](#orgc61ecd0)
-    2.  [Lab 2](#orgb81e659)
-        1.  [Results](#org58bd15e)
-            1.  [Convert NFA to Grammar](#org825f575)
-            2.  [Find out if FA is nondeterministic](#org4b9ed35)
-            3.  [Convert NFA to DFA](#org58ce45f)
-            4.  [Visualize the finite automatons](#orga324ea2)
-3.  [Implementation](#org2a1dfbc)
-4.  [Theory](#org07ac556)
+1.  [Implementation of formal languages](#orga85c043)
+2.  [Objectives](#org98ba3df)
+    1.  [Lab 1](#org36c819b)
+    2.  [Lab 2](#orgf24bf14)
+        1.  [Convert NFA to Grammar](#orge9b501e)
+        2.  [Find out if FA is nondeterministic](#orgd72b554)
+        3.  [Convert NFA to DFA](#orgf24bf66)
+        4.  [Visualize the finite automatons](#org2888e42)
+3.  [Implementation](#org2ecb4e3)
+4.  [Theory](#org1d264fe)
 
 
 
-<a id="org23fc264"></a>
+<a id="orga85c043"></a>
 
 # Implementation of formal languages
 
@@ -23,12 +22,12 @@
 -   **Author:** Balan Artiom
 
 
-<a id="orgf67a9af"></a>
+<a id="org98ba3df"></a>
 
 # Objectives
 
 
-<a id="orgc61ecd0"></a>
+<a id="org36c819b"></a>
 
 ## Lab 1
 
@@ -44,7 +43,7 @@
     -   check that the generated words are valid according to the FSM
 
 
-<a id="orgb81e659"></a>
+<a id="orgf24bf14"></a>
 
 ## Lab 2
 
@@ -56,12 +55,7 @@
 -   [X] Document everything in the README
 -   [ ] Test string validation with the new more general DFA
 
-
-<a id="org58bd15e"></a>
-
-### Results
-
-Here&rsquo;s the NFA I got:
+Here's the NFA I got:
 
     Q = {q0,q1,q2,q3,q4},
     ∑ = {a,b},
@@ -87,14 +81,14 @@ After manually rewriting it like this:
          ("q3","b"): {"q4"},
          ("q3","a"): {"q1"}}
 
-I can convert it to an NFA, and then do many things with it.
+I can initialize an NFA, and then do many things with it.
 
     nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
 
 
-<a id="org825f575"></a>
+<a id="orge9b501e"></a>
 
-#### Convert NFA to Grammar
+### Convert NFA to Grammar
 
 I can find out the type of the resulting grammar in the Chomsky hierarchy:
 Or print out the grammar if I format it a bit:
@@ -104,16 +98,16 @@ Or print out the grammar if I format it a bit:
 
     q0 -> a q1
     q1 -> b q1 | a q2
-    q2 -> b q3 | b q2
+    q2 -> b q2 | b q3
     q3 -> b q4 | a q1
     q4 ->
 
 
-<a id="org4b9ed35"></a>
+<a id="orgd72b554"></a>
 
-#### Find out if FA is nondeterministic
+### Find out if FA is nondeterministic
 
-Even though it&rsquo;s an NFA, it could be that it doesn&rsquo;t have nondeterministic transitions.
+Even though it's an NFA, it could be that it doesn't have nondeterministic transitions.
 We can find that out:
 
     print(nfa.is_deterministic())
@@ -121,35 +115,35 @@ We can find that out:
     False
 
 
-<a id="org58ce45f"></a>
+<a id="orgf24bf66"></a>
 
-#### Convert NFA to DFA
+### Convert NFA to DFA
 
     dfa = nfa.to_DFA()
     print(dfa)
 
-    {frozenset({'q2', 'q3'}), frozenset({'q1'}), frozenset({'q2', 'q4', 'q3'}), frozenset({'q0'}), frozenset({'q2'})}, {'a', 'b'}, {'q0'}, {(frozenset({'q0'}), 'a'): {'q1'}, (frozenset({'q1'}), 'a'): {'q2'}, (frozenset({'q1'}), 'b'): {'q1'}, (frozenset({'q2'}), 'b'): {'q2', 'q3'}, (frozenset({'q2', 'q3'}), 'a'): {'q1'}, (frozenset({'q2', 'q3'}), 'b'): {'q2', 'q4', 'q3'}, (frozenset({'q2', 'q4', 'q3'}), 'a'): {'q1'}, (frozenset({'q2', 'q4', 'q3'}), 'b'): {'q2', 'q4', 'q3'}}, {frozenset({'q2', 'q4', 'q3'})}
+    {frozenset({'q3', 'q2'}), frozenset({'q3', 'q4', 'q2'}), frozenset({'q0'}), frozenset({'q2'}), frozenset({'q1'})}, {'a', 'b'}, {'q0'}, {(frozenset({'q0'}), 'a'): {'q1'}, (frozenset({'q1'}), 'a'): {'q2'}, (frozenset({'q1'}), 'b'): {'q1'}, (frozenset({'q2'}), 'b'): {'q3', 'q2'}, (frozenset({'q3', 'q2'}), 'a'): {'q1'}, (frozenset({'q3', 'q2'}), 'b'): {'q3', 'q4', 'q2'}, (frozenset({'q3', 'q4', 'q2'}), 'a'): {'q1'}, (frozenset({'q3', 'q4', 'q2'}), 'b'): {'q3', 'q4', 'q2'}}, {frozenset({'q3', 'q4', 'q2'})}
 
 Now that we have a DFA, we can easily validate some strings according to the grammar.
-But first, let&rsquo;s generate a few:
+But first, let's generate a few:
 
     l = [g.constr_word() for _ in range(5)]
     print(l)
 
-    ['aabababb', 'aabababbb', 'aababbbbabb', 'abbbabb', 'aabbbbbbbababbbbbb']
+    ['aabbaabababaababbabababbbbbbaabababababb', 'abbbbabbbabbabb', 'abbbbabbbbbaababbababbababbbabbb', 'abbabbbb', 'aabbbbbbbbb']
 
-Let&rsquo;s verify that they&rsquo;re all valid:
+Let's verify that they're all valid:
 
     print(all(dfa.verify(w) for w in l))
 
     True
 
 
-<a id="orga324ea2"></a>
+<a id="org2888e42"></a>
 
-#### Visualize the finite automatons
+### Visualize the finite automatons
 
-Here&rsquo;s the NFA:
+Here's the NFA:
 
     fn = nfa.draw('./img', 'variant_3_nfa')
     print(fn)
@@ -164,14 +158,14 @@ And the DFA:
 ![img](img/variant_3_dfa.gv.svg)
 
 
-<a id="org2a1dfbc"></a>
+<a id="org2ecb4e3"></a>
 
 # Implementation
 
 I wrote very extensive comments inside source code files, so refer to those please.
 
 
-<a id="org07ac556"></a>
+<a id="org1d264fe"></a>
 
 # Theory
 

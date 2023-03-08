@@ -30,7 +30,7 @@ from code.automata import *
 - [X] Represent the finite automaton graphically (Optional, and can be considered as a bonus point):
 - [X] Document everything in the README
 - [ ] Test string validation with the new more general DFA
-*** Results
+
 Here's the NFA I got:
 #+begin_example
 Q = {q0,q1,q2,q3,q4},
@@ -61,14 +61,14 @@ d = {("q0","a"): {"q1"},
 
 #+RESULTS:
 
-I can convert it to an NFA, and then do many things with it.
+I can initialize an NFA, and then do many things with it.
 #+begin_src python
 nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
 #+end_src
 
 #+RESULTS:
 
-**** Convert NFA to Grammar
+*** Convert NFA to Grammar
 I can find out the type of the resulting grammar in the Chomsky hierarchy:
 #+begin_src python :exports none
 g = nfa.to_grammar()
@@ -90,7 +90,7 @@ for l,r in g.P.items():
 : q2 -> b q3 | b q2
 : q3 -> b q4 | a q1
 : q4 ->
-**** Find out if FA is nondeterministic
+*** Find out if FA is nondeterministic
 Even though it's an NFA, it could be that it doesn't have nondeterministic transitions.
 We can find that out:
 #+begin_src python
@@ -99,7 +99,7 @@ print(nfa.is_deterministic())
 
 #+RESULTS:
 : False
-**** Convert NFA to DFA
+*** Convert NFA to DFA
 #+begin_src python
 dfa = nfa.to_DFA()
 print(dfa)
@@ -125,7 +125,7 @@ print(all(dfa.verify(w) for w in l))
 
 #+RESULTS:
 : True
-**** Visualize the finite automatons
+*** Visualize the finite automatons
 Here's the NFA:
 #+begin_src python :results file
 fn = nfa.draw('./img', 'variant_3_nfa')
