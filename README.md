@@ -1,18 +1,18 @@
-- [Implementation of formal languages](#orgdedd13b)
-- [Objectives](#orga50e6c3)
-  - [Lab 1](#orge771af6)
-  - [Lab 2](#orgceac484)
-    - [Convert NFA to Grammar](#org433e403)
-    - [Find out if FA is nondeterministic](#org16335b2)
-    - [Convert NFA to DFA](#org14d90c4)
-    - [Visualize the finite automatons](#org5d13b6c)
-- [Implementation](#org7636aa8)
-- [Theory](#org41cfd2c)
+- [Implementation of formal languages](#org8737d18)
+- [Objectives](#orge9b1748)
+  - [Lab 1](#org4838717)
+  - [Lab 2](#org3515bbb)
+    - [Convert NFA to Grammar](#org902301b)
+    - [Find out if FA is nondeterministic](#org9b29795)
+    - [Convert NFA to DFA](#org546b2ce)
+    - [Visualize the finite automatons](#org302b223)
+- [Implementation](#org5c5916a)
+- [Theory](#orge2d0eb4)
 
 
 
 
-<a id="orgdedd13b"></a>
+<a id="org8737d18"></a>
 
 # Implementation of formal languages
 
@@ -23,12 +23,12 @@ Author
 : Balan Artiom
 
 
-<a id="orga50e6c3"></a>
+<a id="orge9b1748"></a>
 
 # Objectives
 
 
-<a id="orge771af6"></a>
+<a id="org4838717"></a>
 
 ## Lab 1
 
@@ -44,7 +44,7 @@ Author
     -   check that the generated words are valid according to the FSM
 
 
-<a id="orgceac484"></a>
+<a id="org3515bbb"></a>
 
 ## Lab 2
 
@@ -93,11 +93,21 @@ nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
 ```
 
 
-<a id="org433e403"></a>
+<a id="org902301b"></a>
 
 ### Convert NFA to Grammar
 
 I can find out the type of the resulting grammar in the Chomsky hierarchy:
+
+```python
+g = nfa.to_grammar()
+print(g.type())
+```
+
+```text
+3
+```
+
 Or print out the grammar if I format it a bit:
 
 ```python
@@ -107,14 +117,14 @@ for l,r in g.P.items():
 
 ```text
 q0 -> a q1
-q1 -> a q2 | b q1
-q2 -> b q3 | b q2
+q1 -> b q1 | a q2
+q2 -> b q2 | b q3
 q3 -> a q1 | b q4
 q4 ->
 ```
 
 
-<a id="org16335b2"></a>
+<a id="org9b29795"></a>
 
 ### Find out if FA is nondeterministic
 
@@ -130,7 +140,7 @@ False
 ```
 
 
-<a id="org14d90c4"></a>
+<a id="org546b2ce"></a>
 
 ### Convert NFA to DFA
 
@@ -140,7 +150,7 @@ print(dfa)
 ```
 
 ```text
-{frozenset({'q1'}), frozenset({'q0'}), frozenset({'q2'}), frozenset({'q2', 'q3'}), frozenset({'q2', 'q4', 'q3'})}, {'b', 'a'}, {'q0'}, {(frozenset({'q0'}), 'a'): {'q1'}, (frozenset({'q1'}), 'b'): {'q1'}, (frozenset({'q1'}), 'a'): {'q2'}, (frozenset({'q2'}), 'b'): {'q2', 'q3'}, (frozenset({'q2', 'q3'}), 'b'): {'q2', 'q4', 'q3'}, (frozenset({'q2', 'q3'}), 'a'): {'q1'}, (frozenset({'q2', 'q4', 'q3'}), 'b'): {'q2', 'q4', 'q3'}, (frozenset({'q2', 'q4', 'q3'}), 'a'): {'q1'}}, {frozenset({'q2', 'q4', 'q3'})}
+{frozenset({'q4', 'q2', 'q3'}), frozenset({'q1'}), frozenset({'q2', 'q3'}), frozenset({'q0'}), frozenset({'q2'})}, {'b', 'a'}, {'q0'}, {(frozenset({'q0'}), 'a'): {'q1'}, (frozenset({'q1'}), 'b'): {'q1'}, (frozenset({'q1'}), 'a'): {'q2'}, (frozenset({'q2'}), 'b'): {'q2', 'q3'}, (frozenset({'q2', 'q3'}), 'b'): {'q4', 'q2', 'q3'}, (frozenset({'q2', 'q3'}), 'a'): {'q1'}, (frozenset({'q4', 'q2', 'q3'}), 'b'): {'q4', 'q2', 'q3'}, (frozenset({'q4', 'q2', 'q3'}), 'a'): {'q1'}}, {frozenset({'q4', 'q2', 'q3'})}
 ```
 
 Now that we have a DFA, we can easily validate some strings according to the grammar.
@@ -152,7 +162,7 @@ print(l)
 ```
 
 ```text
-['aabbababbbababbabbbabbb', 'ababaabbbbbbbbababbababababb', 'aabababbbabbabbbbbbbbbbbbbaabaabababbb', 'aabbbbb', 'ababbbaabb']
+['aabbb', 'aabbbbbbbbaabb', 'ababb', 'ababbaabbb', 'aabaabb']
 ```
 
 Let&rsquo;s verify that they&rsquo;re all valid:
@@ -166,7 +176,7 @@ True
 ```
 
 
-<a id="org5d13b6c"></a>
+<a id="org302b223"></a>
 
 ### Visualize the finite automatons
 
@@ -189,14 +199,14 @@ print(fn)
 ![img](img/variant_3_dfa.gv.svg)
 
 
-<a id="org7636aa8"></a>
+<a id="org5c5916a"></a>
 
 # Implementation
 
 I wrote very extensive comments inside source code files, so refer to those please.
 
 
-<a id="org41cfd2c"></a>
+<a id="orge2d0eb4"></a>
 
 # Theory
 

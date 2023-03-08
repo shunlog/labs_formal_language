@@ -70,7 +70,7 @@ nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
 
 *** Convert NFA to Grammar
 I can find out the type of the resulting grammar in the Chomsky hierarchy:
-#+begin_src python :exports none
+#+begin_src python
 g = nfa.to_grammar()
 print(g.type())
 #+end_src
