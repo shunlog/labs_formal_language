@@ -2,8 +2,28 @@ from grammar import Grammar
 from collections import defaultdict
 from icecream import ic
 
+class FA:
+    '''
+    A finite automaton is represented by 5 variables:
+    S - set of states (set of strings)
+    A - alphabet, which is a set of symbols (set of strings)
+    s0 - starting state (a string)
+    d - the state-transition function (dictionary: tuple(state, symbol) -> set of states)
+    F - set of final states (must be subset of S)
+    '''
 
-class DFA:
+    def __init__(self, S, A, s0, d, F):
+        self.S = S
+        self.A = A
+        self.s0 = s0
+        self.d = d
+        self.F = F
+
+    def __repr__(self):
+        return ', '.join([str(x) for x in [self.S, self.A, self.s0, self.d, self.F]])
+
+
+class DFA(FA):
     '''
     This Deterministic finite automaton is similar to the NFA,
     with the distinction that states are now represented by sets, and not strings.
@@ -33,13 +53,6 @@ class DFA:
     F = {{'A'}, {'A', 'B'}, {'ε'}}
     '''
 
-    def __init__(self, S, A, s0, d, F):
-        self.S = S
-        self.A = A
-        self.s0 = s0
-        self.d = d
-        self.F = F
-
     def verify(self, w):
         s = self.s0
         for l in w:
@@ -50,15 +63,8 @@ class DFA:
         return s in self.F
 
 
-class NFA:
+class NFA(FA):
     '''
-    This Nondeterministic finite automaton is represented by 4 variables:
-    S - set of states (set of strings)
-    A - alphabet, which is a set of symbols (set of strings)
-    s0 - starting state (a string)
-    d - the state-transition function (dictionary: tuple(state, symbol) -> set of states)
-    F - set of final states (must be subset of S)
-
     Each rule in the regular grammar is treated as follows:
     1) A -> aB
         - a transition is created: (A, a): B
@@ -86,12 +92,6 @@ class NFA:
     d = {('A', 'a'): {'A', 'B'}, ('B', 'b'): {'ε'}}
     F = {'ε', 'A'}
     '''
-    def __init__(self, S, A, s0, d, F):
-        self.S = S
-        self.A = A
-        self.s0 = s0
-        self.d = d
-        self.F = F
 
     def from_grammar(g : Grammar):
         '''This function only recognizes *strictly* regular grammars'''
@@ -151,8 +151,3 @@ class NFA:
 
     def is_deterministic(self):
        return all([len(l) == 1 for l in self.d.values()])
-
-    def __repr__(self):
-        return ', '.join([str(x) for x in [self.S, self.A, self.s0, self.d, self.F]])
-
-
