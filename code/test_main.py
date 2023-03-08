@@ -98,24 +98,24 @@ def test_is_deterministic():
     assert nfa.is_deterministic()
 
 def test_NFA_to_DFA():
-    VN = {"A", "B"}
+    VN = {"q0", "q1"}
     VT = {"a", "b"}
-    P = {("A"): {("a", "B"), ("a", "A"), ()},
-        ("B"): {("b",)}}
-    S = "A"
+    P = {("q0"): {("a", "q1"), ("a", "q0"), ()},
+        ("q1"): {("b",)}}
+    S = "q0"
     g = Grammar(VN, VT, P, S)
     nfa = NFA.from_grammar(g)
 
     dfa = nfa.to_DFA()
 
-    S = {frozenset({'A'}), frozenset({'A', 'B'}), frozenset({'ε'})}
+    S = {frozenset({"q0"}), frozenset({"q0", "q1"}), frozenset({'ε'})}
     A = {'a', 'b'}
-    s0 = {'A'}
-    d = {(frozenset({"A"}), "a"): {"A", "B"},
-         (frozenset({"A", "B"}), "a"): {"A", "B"},
-         (frozenset({"A", "B"}), "b"): {"ε"}}
-    F = {frozenset({'A'}),
-         frozenset({'A', 'B'}),
+    s0 = {"q0"}
+    d = {(frozenset({"q0"}), "a"): {"q0", "q1"},
+         (frozenset({"q0", "q1"}), "a"): {"q0", "q1"},
+         (frozenset({"q0", "q1"}), "b"): {"ε"}}
+    F = {frozenset({"q0"}),
+         frozenset({"q0", "q1"}),
          frozenset({'ε'})}
 
     assert dfa.S == S

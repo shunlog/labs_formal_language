@@ -130,7 +130,7 @@ class NFA:
         '''For an explanation of the algo, check out the dragon book'''
 
         def move(T, a):
-            '''Returns the set of states reachable from T via symbol s'''
+            '''Returns the set of states reachable from any state in T via symbol a'''
             return {s for S in T if (u := self.d.get((S, a))) for s in u}
 
         dstat = {frozenset({self.s0}): False} # Dstates (store marked/unmarked sets of states T)
@@ -147,7 +147,7 @@ class NFA:
                 dtran[(T, a)] = U
 
         F = {T for T in dstat if any(s in self.F for s in T)}
-        return DFA(S = dstat.keys(), A = self.A, s0 = set(self.s0), d = dtran, F = F)
+        return DFA(S = set(dstat.keys()), A = self.A, s0 = {self.s0,}, d = dtran, F = F)
 
     def is_deterministic(self):
        return all([len(l) == 1 for l in self.d.values()])
