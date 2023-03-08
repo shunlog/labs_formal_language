@@ -148,11 +148,11 @@ class NFA(FA):
 
         P = defaultdict(set)
         for k, v in self.d.items():
-            P[k[0]] |= {(k[1], s) if s != "ε" else (k[1],) for s in v}
+            P[k[0],] |= {(k[1], s) if s != "ε" else (k[1],) for s in v}
         for s in self.F:
             if s == "ε":
                 continue
-            P[s] |= {tuple()}
+            P[s,] |= {tuple()}
         P = dict(P)
 
         return Grammar(VN = self.S - {"ε"}, VT = VT, P = P, S = self.s0)
