@@ -1,15 +1,15 @@
-- [Implementation of formal languages](#org57162d4)
-- [Theory](#org7e5eb98)
-  - [Lexical analysis](#org7e7597f)
-  - [Ambiguous grammar](#org024c165)
-- [Objectives](#org938ffe8)
-- [Results](#org1b17fb4)
-- [Implementation](#orge6667a2)
+- [Implementation of formal languages](#org50276bc)
+- [Theory](#orge4cf3c0)
+  - [Lexical analysis](#orgb1b0d51)
+  - [Ambiguous grammar](#org2806adf)
+- [Objectives](#org4ba6191)
+- [Results](#orgc8b7ffa)
+- [Implementation](#org39b001a)
 
 
 
 
-<a id="org57162d4"></a>
+<a id="org50276bc"></a>
 
 # Implementation of formal languages
 
@@ -20,12 +20,12 @@ Author
 : Balan Artiom
 
 
-<a id="org7e5eb98"></a>
+<a id="orge4cf3c0"></a>
 
 # Theory
 
 
-<a id="org7e7597f"></a>
+<a id="orgb1b0d51"></a>
 
 ## Lexical analysis
 
@@ -43,7 +43,7 @@ It&rsquo;s useful to store the location and length of each lexeme.
 The data structure unit used to store lexemes together with information about them is called a token.
 
 
-<a id="org024c165"></a>
+<a id="org2806adf"></a>
 
 ## Ambiguous grammar
 
@@ -72,16 +72,18 @@ Usually, whitespace doesn&rsquo;t make it past the lexer, but is still necessary
 For example, `elsex` is an **idendtifier**, but `else x` is the keyword **else** and the **identifier** _x_.
 
 
-<a id="org938ffe8"></a>
+<a id="org4ba6191"></a>
 
 # Objectives
 
 -   [X] Implement a lexer and show how it works.
 
 
-<a id="org1b17fb4"></a>
+<a id="orgc8b7ffa"></a>
 
 # Results
+
+I wrote a lexer for python-like syntax, hence, all the example strings are valid python code.
 
 Let&rsquo;s parse a simple variable assignment:
 
@@ -106,8 +108,145 @@ Similarly, numbers are represented by `NUMBER` tokens, with their value as the t
 | `TokenType.NUMBER` | `2`         |
 | `TokenType.EOF`    | `None`      |
 
+Now let&rsquo;s see how a lexer recognizes indentation:
 
-<a id="orge6667a2"></a>
+```python
+def t(arg):
+    print(arg)
+```
+
+| Token name         | Token value |
+|--------------------|-------------|
+| `TokenType.DEFN`   | `None`      |
+| `TokenType.ID`     | `t`         |
+| `(`                | `None`      |
+| `TokenType.ID`     | `arg`       |
+| `)`                | `None`      |
+| `:`                | `None`      |
+| `TokenType.INDENT` | `None`      |
+| `TokenType.ID`     | `print`     |
+| `(`                | `None`      |
+| `TokenType.ID`     | `arg`       |
+| `)`                | `None`      |
+| `TokenType.DEDENT` | `None`      |
+| `TokenType.EOF`    | `None`      |
+
+Did you catch that?
+The lexer generated two additional &ldquo;invisible&rdquo; tokens
+to let the parser know about the indented block: `INDENT` and `DEDENT`.
+
+You could visualize the token placement like this:
+
+```text
+1. def t(arg):
+     v INDENT
+2.    print(arg)
+3.
+  ^ DEDENT
+```
+
+Let&rsquo;s see a more complicated example:
+
+```python
+if a:
+    if b:
+        foo()
+bar()
+```
+
+| Token name         | Token value |
+|--------------------|-------------|
+| `TokenType.IF`     | `None`      |
+| `TokenType.ID`     | `a`         |
+| `:`                | `None`      |
+| `TokenType.INDENT` | `None`      |
+| `TokenType.IF`     | `None`      |
+| `TokenType.ID`     | `b`         |
+| `:`                | `None`      |
+| `TokenType.INDENT` | `None`      |
+| `TokenType.ID`     | `foo`       |
+| `(`                | `None`      |
+| `)`                | `None`      |
+| `TokenType.DEDENT` | `None`      |
+| `TokenType.DEDENT` | `None`      |
+| `TokenType.ID`     | `bar`       |
+| `(`                | `None`      |
+| `)`                | `None`      |
+| `TokenType.EOF`    | `None`      |
+
+Let&rsquo;s visualize this too:
+
+```text
+1. if a:
+     v INDENT
+2.    if b:
+          v INDENT
+3.         foo()
+  ^ 2 x DEDENT
+4. bar()
+```
+
+Notice how two `DEDENT` tokens were generated before `bar()`,
+because we &ldquo;closed&rdquo; two indented blocks.
+
+The lexer recognizes comments too and ignores them:
+
+```python
+ # this line has a bad indent
+def t(arg):
+    print(arg)  # this comment is inline
+```
+
+| Token name         | Token value |
+|--------------------|-------------|
+| `TokenType.DEFN`   | `None`      |
+| `TokenType.ID`     | `t`         |
+| `(`                | `None`      |
+| `TokenType.ID`     | `arg`       |
+| `)`                | `None`      |
+| `:`                | `None`      |
+| `TokenType.INDENT` | `None`      |
+| `TokenType.ID`     | `print`     |
+| `(`                | `None`      |
+| `TokenType.ID`     | `arg`       |
+| `)`                | `None`      |
+| `TokenType.DEDENT` | `None`      |
+| `TokenType.EOF`    | `None`      |
+
+Notice that the first line has a bad indent (first line can&rsquo;t be indented in python),
+but since it&rsquo;s a comment, we can ignore this issue (one more edge-case to consider).
+
+There&rsquo;s one type of indentation error that can be recognized by the lexer (and 3 others that can only be recognized by the parser),
+and that&rsquo;s the &ldquo;inconsistent dedent&rdquo;:
+
+```python
+def foo(a):
+    if a == 1:
+        return 1
+   return 0
+```
+
+The lexer simply raises an exception for this example.
+
+
+<a id="org39b001a"></a>
 
 # Implementation
+
+Indentation handling is implemented as described in the [python docs](https://docs.python.org/3/reference/lexical_analysis.html#indentation).
+
+The entire &ldquo;lexer&rdquo; is a single function `get_tokens(s) -> ls`
+that takes a string to be tokenized, and returns a list of all the tokens.
+
+Initially I tried wrapping the tokenizer inside a class, but it didn&rsquo;t make sense
+and only made things more obscure and complicated.
+I don&rsquo;t see why you would need to maintain the state of a lexer by reading tokens one by one,
+when you could instead get all the tokens at once.
+And if you don&rsquo;t need a state, there&rsquo;s no need for an object.
+
+The `get_tokens` function reads characters using either `getch()`  or `peek()`,
+depending on whether it wants to also consume the character.
+
+The entire function is a loop that tokenizes the entire string,
+until there&rsquo;s no more characters left, after which it generates the last token, `EOF`.
 
