@@ -75,7 +75,7 @@ class DFA(FA):
     def verify(self, w):
         s = self.s0
         for l in w:
-            s2 = self.d.get((s, l))
+            s2 = self.d.get((frozenset(s), l))
             if not s2:
                 return False
             s = s2
