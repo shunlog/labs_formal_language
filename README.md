@@ -12,7 +12,7 @@ Balan Artiom
   the grammar based on Chomsky hierarchy.
 - [x] Implement conversion of a finite automaton to a regular grammar.
 - [x] Determine whether your FA is deterministic or non-deterministic.
-- [ ] Implement some functionality that would convert an NDFA to a DFA.
+- [x] Implement some functionality that would convert an NDFA to a DFA.
 - [ ] Represent the finite automaton graphically (Optional, and can be
   considered as a bonus point):
 - [ ] Document everything in the README

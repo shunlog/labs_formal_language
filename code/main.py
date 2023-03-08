@@ -25,8 +25,10 @@ if __name__ == '__main__':
     ic(m)
     fsm = NFA.from_grammar(g)
     ic(fsm)
-
     ic(fsm.is_deterministic())
+
+    dfa = fsm.to_DFA()
+
 
     # for i in range(10):
     #     w = g.constr_word()
@@ -35,18 +37,19 @@ if __name__ == '__main__':
     #     assert(not fsm.verify(w+"!"))
 
     # Variant #3 NFA
-    S = {"q0","q1","q2","q3","q4"}
-    A = {"a","b"}
-    s0 = "q0"
-    F = {"q4"}
-    d = {("q0","a"): "q1",
-         ("q1","b"): "q1",
-         ("q1","a"): "q2",
-         ("q2","b"): "q2",
-         ("q2","b"): "q3",
-         ("q3","b"): "q4",
-         ("q3","a"): "q1"}
+    # S = {"q0","q1","q2","q3","q4"}
+    # A = {"a","b"}
+    # s0 = "q0"
+    # F = {"q4"}
+    # d = {("q0","a"): "q1",
+    #      ("q1","b"): "q1",
+    #      ("q1","a"): "q2",
+    #      ("q2","b"): "q2",
+    #      ("q2","b"): "q3",
+    #      ("q3","b"): "q4",
+    #      ("q3","a"): "q1"}
 
-    nfa3 = NFA(S, A, s0, F, d)
+    # nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
+    # ic(nfa)
 
-    ic(nfa3)
+    # dfa = nfa.to_DFA()

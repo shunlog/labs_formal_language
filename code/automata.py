@@ -1,5 +1,54 @@
 from grammar import Grammar
 from collections import defaultdict
+from icecream import ic
+
+
+class DFA:
+    '''
+    This Deterministic finite automaton is similar to the NFA,
+    with the distinction that states are now represented by sets, and not strings.
+    For example, in the transitions dict,
+    each destination state is a set denoting a single "node" in the DFA graph,
+    not multiple possible states like in the case of an NFA.
+    The other variables, S, s0 and F also reflect this change.
+
+    Example:
+
+    The NFA:
+    S = {'B', 'ε', 'A'}
+    A = {'a', 'b'}
+    s0 = 'A'
+    d = {('A', 'a'): {'A', 'B'}, ('B', 'b'): {'ε'}}
+    F = {'ε', 'A'}
+
+    is transformed into the following DFA:
+    S = {{'A'}, {'A', 'B'}, {'ε'}}
+    A = {'a', 'b'}
+    s0 = {'A'}
+    d = {
+        ({'A'}, 'a'): {'A', 'B'},
+        ({'A', 'B'}, 'a'): {'A', 'B'},
+        ({'A', 'B'}, 'b'): {'ε'}
+    }
+    F = {{'A'}, {'A', 'B'}, {'ε'}}
+    '''
+
+    def __init__(self, S, A, s0, d, F):
+        self.S = S
+        self.A = A
+        self.s0 = s0
+        self.d = d
+        self.F = F
+
+    def verify(self, w):
+        s = self.s0
+        for l in w:
+            s2 = self.d.get((s, l))
+            if not s2:
+                return False
+            s = s2
+        return s in self.F
+
 
 class NFA:
     '''
@@ -77,6 +126,29 @@ class NFA:
 
         return Grammar(VN = self.S - {"ε"}, VT = VT, P = P, S = self.s0)
 
+    def to_DFA(self) -> DFA:
+        '''For an explanation of the algo, check out the dragon book'''
+
+        def move(T, a):
+            '''Returns the set of states reachable from T via symbol s'''
+            return {s for S in T if (u := self.d.get((S, a))) for s in u}
+
+        dstat = {frozenset({self.s0}): False} # Dstates (store marked/unmarked sets of states T)
+        dtran = {} # Dtran (transition table)
+        while not all(dstat.values()):
+            T = next((k for k,v in dstat.items() if not v))
+            dstat[T] = True
+            for a in self.A:
+                U = move(T, a)
+                if not U:
+                    continue
+                if frozenset(U) not in dstat:
+                    dstat[frozenset(U)] = False
+                dtran[(T, a)] = U
+
+        F = {T for T in dstat if any(s in self.F for s in T)}
+        return DFA(S = dstat.keys(), A = self.A, s0 = set(self.s0), d = dtran, F = F)
+
     def is_deterministic(self):
        return all([len(l) == 1 for l in self.d.values()])
 
@@ -84,46 +156,3 @@ class NFA:
         return ', '.join([str(x) for x in [self.S, self.A, self.s0, self.d, self.F]])
 
 
-class DFA:
-    '''
-    This Deterministic finite automaton is similar to the NFA,
-    with the distinction that states are now represented by sets, and not strings.
-    For example, in the transitions dict,
-    each destination state is a set denoting a single "node" in the DFA graph,
-    not multiple possible states like in the case of an NFA.
-    The other variables, S, s0 and F also reflect this change.
-
-    Example:
-
-    The NFA:
-    S = {'B', 'ε', 'A'}
-    A = {'a', 'b'}
-    s0 = 'A'
-    d = {('A', 'a'): {'A', 'B'}, ('B', 'b'): {'ε'}}
-    F = {'ε', 'A'}
-
-    is transformed into the following DFA:
-    S = {{'A'}, {'A', 'B'}, {'ε'}}
-    A = {'a', 'b'}
-    s0 = {'A'}
-    d = {
-        ({'A'}, 'a'): {'A', 'B'},
-        ({'A', 'B'}, 'a'): {'A', 'B'},
-        ({'A', 'B'}, 'b'): {'ε'}
-    }
-    F = {{'A'}, {'A', 'B'}, {'ε'}}
-    '''
-    def __init__(self):
-        pass
-
-    def from_NFA():
-        pass
-
-    def verify(self, w):
-        s = self.s0
-        for l in w:
-            s2 = self.d.get((s, l))
-            if not s2:
-                return False
-            s = s2
-        return s in self.F

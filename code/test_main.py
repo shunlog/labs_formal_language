@@ -45,7 +45,7 @@ def test_context_sensitive_grammar():
     g = Grammar(VN, VT, P, S)
     assert g.type() == 1
 
-def test_conversion_grammar_NFA():
+def test_grammar_to_NFA_to_grammar():
     VN = {"A", "B"}
     VT = {"a", "b"}
     P = {("A"): {("a", "B"), ("a", "A"), ()},
@@ -59,6 +59,27 @@ def test_conversion_grammar_NFA():
     assert g.VT == g2.VT
     assert g.P == g2.P
     assert g.S == g2.S
+
+def test_grammar_to_NFA():
+    VN = {"A", "B"}
+    VT = {"a", "b"}
+    P = {("A"): {("a", "B"), ("a", "A"), ()},
+        ("B"): {("b",)}}
+    S = "A"
+    g = Grammar(VN, VT, P, S)
+    nfa = NFA.from_grammar(g)
+
+    S = {'B', 'ε', 'A'}
+    A = {'a', 'b'}
+    s0 = 'A'
+    d = {('A', 'a'): {'A', 'B'}, ('B', 'b'): {'ε'}}
+    F = {'ε', 'A'}
+
+    assert nfa.S == S
+    assert nfa.A == A
+    assert nfa.s0 == s0
+    assert nfa.d == d
+    assert nfa.F == F
 
 def test_is_deterministic():
     VN = {"A", "B"}
@@ -75,3 +96,30 @@ def test_is_deterministic():
     g = Grammar(VN, VT, P, S)
     nfa = NFA.from_grammar(g)
     assert nfa.is_deterministic()
+
+def test_NFA_to_DFA():
+    VN = {"A", "B"}
+    VT = {"a", "b"}
+    P = {("A"): {("a", "B"), ("a", "A"), ()},
+        ("B"): {("b",)}}
+    S = "A"
+    g = Grammar(VN, VT, P, S)
+    nfa = NFA.from_grammar(g)
+
+    dfa = nfa.to_DFA()
+
+    S = {frozenset({'A'}), frozenset({'A', 'B'}), frozenset({'ε'})}
+    A = {'a', 'b'}
+    s0 = {'A'}
+    d = {(frozenset({"A"}), "a"): {"A", "B"},
+         (frozenset({"A", "B"}), "a"): {"A", "B"},
+         (frozenset({"A", "B"}), "b"): {"ε"}}
+    F = {frozenset({'A'}),
+         frozenset({'A', 'B'}),
+         frozenset({'ε'})}
+
+    assert dfa.S == S
+    assert dfa.A == A
+    assert dfa.s0 == s0
+    assert dfa.d == d
+    assert dfa.F == F
