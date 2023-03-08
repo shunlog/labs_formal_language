@@ -1,18 +1,19 @@
-- [Implementation of formal languages](#org8737d18)
-- [Objectives](#orge9b1748)
-  - [Lab 1](#org4838717)
-  - [Lab 2](#org3515bbb)
-    - [Convert NFA to Grammar](#org902301b)
-    - [Find out if FA is nondeterministic](#org9b29795)
-    - [Convert NFA to DFA](#org546b2ce)
-    - [Visualize the finite automatons](#org302b223)
-- [Implementation](#org5c5916a)
-- [Theory](#orge2d0eb4)
+- [Implementation of formal languages](#org8a41e7d)
+- [Objectives](#orgb49b04a)
+  - [Lab 1](#org9efd35a)
+  - [Lab 2](#orgaca57fb)
+    - [Convert NFA to Grammar](#orgd4dec3b)
+    - [Find out if FA is nondeterministic](#org50bb6d4)
+    - [Convert NFA to DFA](#orgaffa3d4)
+    - [Visualize the finite automatons](#orgc1cf991)
+- [Implementation](#org8ff2fed)
+- [Try it out](#org5783402)
+- [Theory](#orgff14d69)
 
 
 
 
-<a id="org8737d18"></a>
+<a id="org8a41e7d"></a>
 
 # Implementation of formal languages
 
@@ -23,12 +24,12 @@ Author
 : Balan Artiom
 
 
-<a id="orge9b1748"></a>
+<a id="orgb49b04a"></a>
 
 # Objectives
 
 
-<a id="org4838717"></a>
+<a id="org9efd35a"></a>
 
 ## Lab 1
 
@@ -44,7 +45,7 @@ Author
     -   check that the generated words are valid according to the FSM
 
 
-<a id="org3515bbb"></a>
+<a id="orgaca57fb"></a>
 
 ## Lab 2
 
@@ -93,7 +94,7 @@ nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
 ```
 
 
-<a id="org902301b"></a>
+<a id="orgd4dec3b"></a>
 
 ### Convert NFA to Grammar
 
@@ -124,7 +125,7 @@ q4 ->
 ```
 
 
-<a id="org9b29795"></a>
+<a id="org50bb6d4"></a>
 
 ### Find out if FA is nondeterministic
 
@@ -140,7 +141,7 @@ False
 ```
 
 
-<a id="org546b2ce"></a>
+<a id="orgaffa3d4"></a>
 
 ### Convert NFA to DFA
 
@@ -150,7 +151,7 @@ print(dfa)
 ```
 
 ```text
-{frozenset({'q4', 'q2', 'q3'}), frozenset({'q1'}), frozenset({'q2', 'q3'}), frozenset({'q0'}), frozenset({'q2'})}, {'b', 'a'}, {'q0'}, {(frozenset({'q0'}), 'a'): {'q1'}, (frozenset({'q1'}), 'b'): {'q1'}, (frozenset({'q1'}), 'a'): {'q2'}, (frozenset({'q2'}), 'b'): {'q2', 'q3'}, (frozenset({'q2', 'q3'}), 'b'): {'q4', 'q2', 'q3'}, (frozenset({'q2', 'q3'}), 'a'): {'q1'}, (frozenset({'q4', 'q2', 'q3'}), 'b'): {'q4', 'q2', 'q3'}, (frozenset({'q4', 'q2', 'q3'}), 'a'): {'q1'}}, {frozenset({'q4', 'q2', 'q3'})}
+{frozenset({'q3', 'q4', 'q2'}), frozenset({'q1'}), frozenset({'q2'}), frozenset({'q0'}), frozenset({'q3', 'q2'})}, {'a', 'b'}, {'q0'}, {(frozenset({'q0'}), 'a'): {'q1'}, (frozenset({'q1'}), 'a'): {'q2'}, (frozenset({'q1'}), 'b'): {'q1'}, (frozenset({'q2'}), 'b'): {'q3', 'q2'}, (frozenset({'q3', 'q2'}), 'a'): {'q1'}, (frozenset({'q3', 'q2'}), 'b'): {'q3', 'q4', 'q2'}, (frozenset({'q3', 'q4', 'q2'}), 'a'): {'q1'}, (frozenset({'q3', 'q4', 'q2'}), 'b'): {'q3', 'q4', 'q2'}}, {frozenset({'q3', 'q4', 'q2'})}
 ```
 
 Now that we have a DFA, we can easily validate some strings according to the grammar.
@@ -162,7 +163,7 @@ print(l)
 ```
 
 ```text
-['aabbb', 'aabbbbbbbbaabb', 'ababb', 'ababbaabbb', 'aabaabb']
+['aabbb', 'abbabb', 'aabbbbaabababaabbb', 'abbbbbbbabaabaabb', 'abbbbbabbbb']
 ```
 
 Let&rsquo;s verify that they&rsquo;re all valid:
@@ -176,7 +177,7 @@ True
 ```
 
 
-<a id="org302b223"></a>
+<a id="orgc1cf991"></a>
 
 ### Visualize the finite automatons
 
@@ -199,14 +200,25 @@ print(fn)
 ![img](img/variant_3_dfa.gv.svg)
 
 
-<a id="org5c5916a"></a>
+<a id="org8ff2fed"></a>
 
 # Implementation
 
 I wrote very extensive comments inside source code files, so refer to those please.
 
 
-<a id="orge2d0eb4"></a>
+<a id="org5783402"></a>
+
+# Try it out
+
+You can starts playing inside `main.py`.
+
+There are a few tests that you can run with `pytest`,
+but they&rsquo;re not very extensive.
+Also pls don&rsquo;t look inside, I&rsquo;ll refactor them I promise.
+
+
+<a id="orgff14d69"></a>
 
 # Theory
 

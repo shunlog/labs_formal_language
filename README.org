@@ -146,6 +146,12 @@ print(fn)
 
 * Implementation
 I wrote very extensive comments inside source code files, so refer to those please.
+* Try it out
+You can starts playing inside =main.py=.
+
+There are a few tests that you can run with =pytest=,
+but they're not very extensive.
+Also pls don't look inside, I'll refactor them I promise.
 
 * Theory
 An instance of a *formal language* is a set of /words/ which are composed of /letters/.
