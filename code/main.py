@@ -85,7 +85,7 @@ class Grammar:
 
 class NFA:
     '''
-    A Finite State Machine is represented by 4 variables:
+    This Nondeterministic finite automaton is represented by 4 variables:
     S - set of states (strings)
     s0 - initial state (string)
     d - the state-transition function (dictionary: (state, rule) -> list of rules)
@@ -159,8 +159,8 @@ class NFA:
 
 class DFA:
     '''
-    A Deterministic automaton is similar to an NFA,
-    with the difference that states are now represented by sets, and not strings.
+    This Deterministic finite automaton is similar to the NFA,
+    with the distinction that states are now represented by sets, and not strings.
     For example, in the transitions dict,
     each destination state is a set denoting a single "node" in the DFA graph,
     not multiple possible states like in the case of an NFA.
