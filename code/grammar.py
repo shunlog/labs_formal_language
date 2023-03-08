@@ -62,11 +62,12 @@ class Grammar:
     def constr_word(self):
         '''Assuming *strictly* right-regular grammar,
         build a word by randomly picking rules to rewrite'''
+
         from random import choice
         s = self.S  # current state
         w = ""  # word
         while True:
-            tail = choice(list(self.P[(s)]))
+            tail = choice(list(self.P[s,]))
             if len(tail) == 2:
                 w += tail[0]
                 s = tail[1]
