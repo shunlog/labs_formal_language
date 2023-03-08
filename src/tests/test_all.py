@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-from main import *
+from src.grammar import *
+from src.automata import *
 
 def test_regular_grammar():
     '''

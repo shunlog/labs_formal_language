@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 from icecream import ic
 
-from code.grammar import *
-from code.automata import *
+from src.grammar import *
+from src.automata import *
 
 
 if __name__ == '__main__':
