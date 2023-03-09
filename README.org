@@ -5,8 +5,8 @@
 
 * Objectives
 #+begin_src python :exports none
-from code.grammar import *
-from code.automata import *
+from src.grammar import *
+from src.automata import *
 #+end_src
 
 #+RESULTS:
@@ -89,7 +89,7 @@ for l,r in g.P.items():
 : q0 -> a q1
 : q1 -> b q1 | a q2
 : q2 -> b q3 | b q2
-: q3 -> b q4 | a q1
+: q3 -> a q1 | b q4
 : q4 ->
 *** Find out if FA is nondeterministic
 Even though it's an NFA, it could be that it doesn't have nondeterministic transitions.
@@ -107,7 +107,7 @@ print(dfa)
 #+end_src
 
 #+RESULTS:
-: {frozenset({'q2', 'q3'}), frozenset({'q1'}), frozenset({'q2', 'q4', 'q3'}), frozenset({'q0'}), frozenset({'q2'})}, {'a', 'b'}, {'q0'}, {(frozenset({'q0'}), 'a'): {'q1'}, (frozenset({'q1'}), 'a'): {'q2'}, (frozenset({'q1'}), 'b'): {'q1'}, (frozenset({'q2'}), 'b'): {'q2', 'q3'}, (frozenset({'q2', 'q3'}), 'a'): {'q1'}, (frozenset({'q2', 'q3'}), 'b'): {'q2', 'q4', 'q3'}, (frozenset({'q2', 'q4', 'q3'}), 'a'): {'q1'}, (frozenset({'q2', 'q4', 'q3'}), 'b'): {'q2', 'q4', 'q3'}}, {frozenset({'q2', 'q4', 'q3'})}
+: {frozenset({'q2'}), frozenset({'q3', 'q2'}), frozenset({'q0'}), frozenset({'q3', 'q4', 'q2'}), frozenset({'q1'})}, {'b', 'a'}, {'q0'}, {(frozenset({'q0'}), 'a'): {'q1'}, (frozenset({'q1'}), 'b'): {'q1'}, (frozenset({'q1'}), 'a'): {'q2'}, (frozenset({'q2'}), 'b'): {'q3', 'q2'}, (frozenset({'q3', 'q2'}), 'b'): {'q3', 'q4', 'q2'}, (frozenset({'q3', 'q2'}), 'a'): {'q1'}, (frozenset({'q3', 'q4', 'q2'}), 'b'): {'q3', 'q4', 'q2'}, (frozenset({'q3', 'q4', 'q2'}), 'a'): {'q1'}}, {frozenset({'q3', 'q4', 'q2'})}
 
 Now that we have a DFA, we can easily validate some strings according to the grammar.
 But first, let's generate a few:
@@ -117,7 +117,7 @@ print(l)
 #+end_src
 
 #+RESULTS:
-: ['aabaabbbbbaabbaabaabbaabb', 'abbbabb', 'aabbbbbbbb', 'aabbbbbbb', 'aababbbabbbababbbbbb']
+: ['ababb', 'aabababbbabbabababbb', 'abbbabb', 'aababbabbbaabb', 'aabbaabaabb']
 
 Let's verify that they're all valid:
 #+begin_src python

@@ -6,6 +6,7 @@ class Grammar:
     P - list of productions represented by a dictionary, where
         keys are rules and values are lists of rules.
         A rule is a tuple of terminals and nonterminals
+    S - starting state (string)
 
     Example:
 
@@ -26,7 +27,7 @@ class Grammar:
     }
     S = "A"
     '''
-    def __init__(self, VN, VT, P, S):
+    def __init__(self, VN : set, VT : set, P : dict, S : str):
         self.VN = VN
         self.VT = VT
         self.P = P

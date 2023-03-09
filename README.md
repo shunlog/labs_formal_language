@@ -1,19 +1,19 @@
-- [Implementation of formal languages](#org32e78d3)
-- [Objectives](#org11e68a4)
-  - [Lab 1](#orge2eedf0)
-  - [Lab 2](#orgc21a4c2)
-    - [Convert NFA to Grammar](#org943ff29)
-    - [Find out if FA is nondeterministic](#orgc6ff86e)
-    - [Convert NFA to DFA](#orgd3c5887)
-    - [Visualize the finite automatons](#org7a45da4)
-- [Implementation](#orgbea8f81)
-- [Try it out](#orgd91ae96)
-- [Theory](#orgcd3733e)
+- [Implementation of formal languages](#org0eee068)
+- [Objectives](#orga0f2fd0)
+  - [Lab 1](#org252a3d6)
+  - [Lab 2](#org9d04c77)
+    - [Convert NFA to Grammar](#org1a713c9)
+    - [Find out if FA is nondeterministic](#org3eb10f5)
+    - [Convert NFA to DFA](#orgb3b5b77)
+    - [Visualize the finite automatons](#org01bc8d2)
+- [Implementation](#orgba9a202)
+- [Try it out](#org54c5c81)
+- [Theory](#org08b4208)
 
 
 
 
-<a id="org32e78d3"></a>
+<a id="org0eee068"></a>
 
 # Implementation of formal languages
 
@@ -24,12 +24,12 @@ Author
 : Balan Artiom
 
 
-<a id="org11e68a4"></a>
+<a id="orga0f2fd0"></a>
 
 # Objectives
 
 
-<a id="orge2eedf0"></a>
+<a id="org252a3d6"></a>
 
 ## Lab 1
 
@@ -45,7 +45,7 @@ Author
     -   check that the generated words are valid according to the FSM
 
 
-<a id="orgc21a4c2"></a>
+<a id="org9d04c77"></a>
 
 ## Lab 2
 
@@ -95,7 +95,7 @@ nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
 ```
 
 
-<a id="org943ff29"></a>
+<a id="org1a713c9"></a>
 
 ### Convert NFA to Grammar
 
@@ -126,7 +126,7 @@ q4 ->
 ```
 
 
-<a id="orgc6ff86e"></a>
+<a id="org3eb10f5"></a>
 
 ### Find out if FA is nondeterministic
 
@@ -142,7 +142,7 @@ False
 ```
 
 
-<a id="orgd3c5887"></a>
+<a id="orgb3b5b77"></a>
 
 ### Convert NFA to DFA
 
@@ -178,7 +178,7 @@ True
 ```
 
 
-<a id="org7a45da4"></a>
+<a id="org01bc8d2"></a>
 
 ### Visualize the finite automatons
 
@@ -201,14 +201,14 @@ print(fn)
 ![img](img/variant_3_dfa.gv.svg)
 
 
-<a id="orgbea8f81"></a>
+<a id="orgba9a202"></a>
 
 # Implementation
 
 I wrote very extensive comments inside source code files, so refer to those please.
 
 
-<a id="orgd91ae96"></a>
+<a id="org54c5c81"></a>
 
 # Try it out
 
@@ -219,7 +219,7 @@ but they&rsquo;re not very extensive.
 Also pls don&rsquo;t look inside, I&rsquo;ll refactor them I promise.
 
 
-<a id="orgcd3733e"></a>
+<a id="org08b4208"></a>
 
 # Theory
 
