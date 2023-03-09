@@ -170,3 +170,16 @@ A regular grammar is one in which all production rules in P are of one of the fo
 - A → ε
 where A, B, S ∈ N are non-terminal symbols, a ∈ Σ is a terminal symbol,
 and ε denotes the empty string, i.e. the string of length 0. S is called the start symbol.
+
+[[https://en.wikipedia.org/wiki/Automata_theory][Automata]] can be used to recognize formal languages, for example described by grammars.
+There are different [[https://en.wikipedia.org/wiki/Automata_theory#Types_of_automata][types of automata]] that can describe different types of languages.
+For example:
+- A finite automaton (NFA/DFA, state machine) can describe a regular grammar (type 3)
+- A pushdown automaton (PDA) can describe a context-free grammar (type 2)
+
+A DFA is equivalent in power to an NFA, even though NFA's are more flexible ([[https://en.wikipedia.org/wiki/Automata_theory#Hierarchy_in_terms_of_powers][Hierarchy in terms of powers]]).
+
+- The conversion NFA -> DFA can be done using the [[https://en.wikipedia.org/wiki/Powerset_construction][powerset construction]].
+- The conversion regular grammar -> NFA and viceversa is straightforward.
+- The conversion Grammar -> DFA can't really be done directly,
+  instead go through the steps: Grammar -> NFA -> DFA.

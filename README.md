@@ -1,19 +1,19 @@
-- [Implementation of formal languages](#org839bb44)
-- [Objectives](#orgded985f)
-  - [Lab 1](#orgaa785e7)
-  - [Lab 2](#org2877b55)
-    - [Convert NFA to Grammar](#org648a32b)
-    - [Find out if FA is nondeterministic](#orgf39d246)
-    - [Convert NFA to DFA](#orgced884f)
-    - [Visualize the finite automata](#org9534a5a)
-- [Implementation](#orgda4ebb8)
-- [Try it out](#org67f7660)
-- [Theory](#org2e2ca78)
+- [Implementation of formal languages](#org08dbd1f)
+- [Objectives](#org428f4c0)
+  - [Lab 1](#org1c45913)
+  - [Lab 2](#orgafc610a)
+    - [Convert NFA to Grammar](#org53669c0)
+    - [Find out if FA is nondeterministic](#org930811b)
+    - [Convert NFA to DFA](#orgc0aa168)
+    - [Visualize the finite automata](#org615ac52)
+- [Implementation](#org1f3cacb)
+- [Try it out](#orgb17b3d1)
+- [Theory](#org7b8ffbd)
 
 
 
 
-<a id="org839bb44"></a>
+<a id="org08dbd1f"></a>
 
 # Implementation of formal languages
 
@@ -24,12 +24,12 @@ Author
 : Balan Artiom
 
 
-<a id="orgded985f"></a>
+<a id="org428f4c0"></a>
 
 # Objectives
 
 
-<a id="orgaa785e7"></a>
+<a id="org1c45913"></a>
 
 ## Lab 1
 
@@ -45,7 +45,7 @@ Author
     -   check that the generated words are valid according to the FSM
 
 
-<a id="org2877b55"></a>
+<a id="orgafc610a"></a>
 
 ## Lab 2
 
@@ -95,7 +95,7 @@ nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
 ```
 
 
-<a id="org648a32b"></a>
+<a id="org53669c0"></a>
 
 ### Convert NFA to Grammar
 
@@ -126,7 +126,7 @@ q4 ->
 ```
 
 
-<a id="orgf39d246"></a>
+<a id="org930811b"></a>
 
 ### Find out if FA is nondeterministic
 
@@ -142,7 +142,7 @@ False
 ```
 
 
-<a id="orgced884f"></a>
+<a id="orgc0aa168"></a>
 
 ### Convert NFA to DFA
 
@@ -178,7 +178,7 @@ True
 ```
 
 
-<a id="org9534a5a"></a>
+<a id="org615ac52"></a>
 
 ### Visualize the finite automata
 
@@ -201,14 +201,14 @@ print(fn)
 ![img](img/variant_3_dfa.gv.svg)
 
 
-<a id="orgda4ebb8"></a>
+<a id="org1f3cacb"></a>
 
 # Implementation
 
 I wrote very extensive comments inside source code files, so refer to those please.
 
 
-<a id="org67f7660"></a>
+<a id="orgb17b3d1"></a>
 
 # Try it out
 
@@ -219,7 +219,7 @@ but they&rsquo;re not very extensive.
 Also pls don&rsquo;t look inside, I&rsquo;ll refactor them I promise.
 
 
-<a id="org2e2ca78"></a>
+<a id="org7b8ffbd"></a>
 
 # Theory
 
@@ -241,4 +241,18 @@ A regular grammar is one in which all production rules in P are of one of the fo
 
 where A, B, S ∈ N are non-terminal symbols, a ∈ Σ is a terminal symbol,
 and ε denotes the empty string, i.e. the string of length 0. S is called the start symbol.
+
+[Automata](https://en.wikipedia.org/wiki/Automata_theory) can be used to recognize formal languages, for example described by grammars.
+There are different [types of automata](https://en.wikipedia.org/wiki/Automata_theory#Types_of_automata) that can describe different types of languages.
+For example:
+
+-   A finite automaton (NFA/DFA, state machine) can describe a regular grammar (type 3)
+-   A pushdown automaton (PDA) can describe a context-free grammar (type 2)
+
+A DFA is equivalent in power to an NFA, even though NFA&rsquo;s are more flexible ([Hierarchy in terms of powers](https://en.wikipedia.org/wiki/Automata_theory#Hierarchy_in_terms_of_powers)).
+
+-   The conversion NFA -&gt; DFA can be done using the [powerset construction](https://en.wikipedia.org/wiki/Powerset_construction).
+-   The conversion regular grammar -&gt; NFA and viceversa is straightforward.
+-   The conversion Grammar -&gt; DFA can&rsquo;t really be done directly,
+    instead go through the steps: Grammar -&gt; NFA -&gt; DFA.
 
