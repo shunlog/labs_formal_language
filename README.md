@@ -1,19 +1,19 @@
-- [Implementation of formal languages](#org08dbd1f)
-- [Objectives](#org428f4c0)
-  - [Lab 1](#org1c45913)
-  - [Lab 2](#orgafc610a)
-    - [Convert NFA to Grammar](#org53669c0)
-    - [Find out if FA is nondeterministic](#org930811b)
-    - [Convert NFA to DFA](#orgc0aa168)
-    - [Visualize the finite automata](#org615ac52)
-- [Implementation](#org1f3cacb)
-- [Try it out](#orgb17b3d1)
-- [Theory](#org7b8ffbd)
+- [Implementation of formal languages](#org59cdab7)
+- [Objectives](#org214f1ba)
+  - [Lab 1](#org25079a6)
+  - [Lab 2](#org02b8a84)
+    - [Convert NFA to Grammar](#org9b3a64b)
+    - [Find out if FA is nondeterministic](#orgdfe85f2)
+    - [Convert NFA to DFA](#orgf9f6d14)
+    - [Visualize the finite automata](#orgfc85c7f)
+- [Implementation](#org15e870e)
+- [Try it out](#orgd45a7a5)
+- [Theory](#org3feb3b1)
 
 
 
 
-<a id="org08dbd1f"></a>
+<a id="org59cdab7"></a>
 
 # Implementation of formal languages
 
@@ -24,12 +24,12 @@ Author
 : Balan Artiom
 
 
-<a id="org428f4c0"></a>
+<a id="org214f1ba"></a>
 
 # Objectives
 
 
-<a id="org1c45913"></a>
+<a id="org25079a6"></a>
 
 ## Lab 1
 
@@ -45,7 +45,7 @@ Author
     -   check that the generated words are valid according to the FSM
 
 
-<a id="orgafc610a"></a>
+<a id="org02b8a84"></a>
 
 ## Lab 2
 
@@ -55,8 +55,7 @@ Author
 -   [X] Implement some functionality that would convert an NDFA to a DFA.
 -   [X] Represent the finite automaton graphically (Optional, and can be considered as a bonus point):
 -   [X] Document everything in the README
--   [ ] Test string validation with the new more general DFA
--   [ ] REPLACE ALL GRAMMAR P DEFINITIONS HEADS TO ACTUAL TUPLES
+-   [X] Test string validation with the new more general DFA
 
 Here&rsquo;s the NFA I got:
 
@@ -95,7 +94,7 @@ nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
 ```
 
 
-<a id="org53669c0"></a>
+<a id="org9b3a64b"></a>
 
 ### Convert NFA to Grammar
 
@@ -126,7 +125,7 @@ q4 ->
 ```
 
 
-<a id="org930811b"></a>
+<a id="orgdfe85f2"></a>
 
 ### Find out if FA is nondeterministic
 
@@ -142,7 +141,7 @@ False
 ```
 
 
-<a id="orgc0aa168"></a>
+<a id="orgf9f6d14"></a>
 
 ### Convert NFA to DFA
 
@@ -178,7 +177,7 @@ True
 ```
 
 
-<a id="org615ac52"></a>
+<a id="orgfc85c7f"></a>
 
 ### Visualize the finite automata
 
@@ -201,14 +200,14 @@ print(fn)
 ![img](img/variant_3_dfa.gv.svg)
 
 
-<a id="org1f3cacb"></a>
+<a id="org15e870e"></a>
 
 # Implementation
 
 I wrote very extensive comments inside source code files, so refer to those please.
 
 
-<a id="orgb17b3d1"></a>
+<a id="orgd45a7a5"></a>
 
 # Try it out
 
@@ -219,7 +218,7 @@ but they&rsquo;re not very extensive.
 Also pls don&rsquo;t look inside, I&rsquo;ll refactor them I promise.
 
 
-<a id="org7b8ffbd"></a>
+<a id="org3feb3b1"></a>
 
 # Theory
 

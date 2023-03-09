@@ -123,3 +123,4 @@ def test_DFA_verify_word():
         w = g.constr_word()
         ic(w)
         assert dfa.verify(w)
+        assert not dfa.verify(w + "!")

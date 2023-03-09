@@ -29,8 +29,7 @@ from src.automata import *
 - [X] Implement some functionality that would convert an NDFA to a DFA.
 - [X] Represent the finite automaton graphically (Optional, and can be considered as a bonus point):
 - [X] Document everything in the README
-- [ ] Test string validation with the new more general DFA
-- [ ] REPLACE ALL GRAMMAR P DEFINITIONS HEADS TO ACTUAL TUPLES
+- [X] Test string validation with the new more general DFA
 
 Here's the NFA I got:
 #+begin_example
