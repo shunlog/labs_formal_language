@@ -1,19 +1,20 @@
-- [Implementation of formal languages](#org59cdab7)
-- [Objectives](#org214f1ba)
-  - [Lab 1](#org25079a6)
-  - [Lab 2](#org02b8a84)
-    - [Convert NFA to Grammar](#org9b3a64b)
-    - [Find out if FA is nondeterministic](#orgdfe85f2)
-    - [Convert NFA to DFA](#orgf9f6d14)
-    - [Visualize the finite automata](#orgfc85c7f)
-- [Implementation](#org15e870e)
-- [Try it out](#orgd45a7a5)
-- [Theory](#org3feb3b1)
+- [Implementation of formal languages](#orgc0cfab0)
+- [Objectives](#org4338a12)
+  - [Lab 1](#orgb97cf85)
+  - [Lab 2](#orgad4b010)
+    - [Convert NFA to Grammar](#org18cb3d1)
+    - [Find out if FA is nondeterministic](#org67d62ff)
+    - [Convert NFA to DFA](#org3b683d9)
+    - [Visualize the finite automata](#orgba3c578)
+    - [Convert Grammar to NFA to DFA (lab 1)](#orga40bca9)
+- [Implementation](#orgfb7bd70)
+- [Try it out](#org036ba8f)
+- [Theory](#orgfd241c5)
 
 
 
 
-<a id="org59cdab7"></a>
+<a id="orgc0cfab0"></a>
 
 # Implementation of formal languages
 
@@ -24,12 +25,12 @@ Author
 : Balan Artiom
 
 
-<a id="org214f1ba"></a>
+<a id="org4338a12"></a>
 
 # Objectives
 
 
-<a id="org25079a6"></a>
+<a id="orgb97cf85"></a>
 
 ## Lab 1
 
@@ -45,7 +46,7 @@ Author
     -   check that the generated words are valid according to the FSM
 
 
-<a id="org02b8a84"></a>
+<a id="orgad4b010"></a>
 
 ## Lab 2
 
@@ -94,7 +95,7 @@ nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
 ```
 
 
-<a id="org9b3a64b"></a>
+<a id="org18cb3d1"></a>
 
 ### Convert NFA to Grammar
 
@@ -119,13 +120,13 @@ for l,r in g.P.items():
 ```text
 q0 -> a q1
 q1 -> b q1 | a q2
-q2 -> b q3 | b q2
-q3 -> a q1 | b q4
+q2 -> b q2 | b q3
+q3 -> b q4 | a q1
 q4 ->
 ```
 
 
-<a id="orgdfe85f2"></a>
+<a id="org67d62ff"></a>
 
 ### Find out if FA is nondeterministic
 
@@ -141,7 +142,7 @@ False
 ```
 
 
-<a id="orgf9f6d14"></a>
+<a id="org3b683d9"></a>
 
 ### Convert NFA to DFA
 
@@ -151,7 +152,7 @@ print(dfa)
 ```
 
 ```text
-{frozenset({'q2'}), frozenset({'q3', 'q2'}), frozenset({'q0'}), frozenset({'q3', 'q4', 'q2'}), frozenset({'q1'})}, {'b', 'a'}, {'q0'}, {(frozenset({'q0'}), 'a'): {'q1'}, (frozenset({'q1'}), 'b'): {'q1'}, (frozenset({'q1'}), 'a'): {'q2'}, (frozenset({'q2'}), 'b'): {'q3', 'q2'}, (frozenset({'q3', 'q2'}), 'b'): {'q3', 'q4', 'q2'}, (frozenset({'q3', 'q2'}), 'a'): {'q1'}, (frozenset({'q3', 'q4', 'q2'}), 'b'): {'q3', 'q4', 'q2'}, (frozenset({'q3', 'q4', 'q2'}), 'a'): {'q1'}}, {frozenset({'q3', 'q4', 'q2'})}
+{frozenset({'q4', 'q2', 'q3'}), frozenset({'q2'}), frozenset({'q1'}), frozenset({'q0'}), frozenset({'q2', 'q3'})}, {'a', 'b'}, {'q0'}, {(frozenset({'q0'}), 'a'): {'q1'}, (frozenset({'q1'}), 'a'): {'q2'}, (frozenset({'q1'}), 'b'): {'q1'}, (frozenset({'q2'}), 'b'): {'q2', 'q3'}, (frozenset({'q2', 'q3'}), 'a'): {'q1'}, (frozenset({'q2', 'q3'}), 'b'): {'q4', 'q2', 'q3'}, (frozenset({'q4', 'q2', 'q3'}), 'a'): {'q1'}, (frozenset({'q4', 'q2', 'q3'}), 'b'): {'q4', 'q2', 'q3'}}, {frozenset({'q4', 'q2', 'q3'})}
 ```
 
 Now that we have a DFA, we can easily validate some strings according to the grammar.
@@ -163,7 +164,7 @@ print(l)
 ```
 
 ```text
-['ababb', 'aabababbbabbabababbb', 'abbbabb', 'aababbabbbaabb', 'aabbaabaabb']
+['aabbb', 'ababbababbbababb', 'abbbabbb', 'ababbb', 'aabbbb']
 ```
 
 Let&rsquo;s verify that they&rsquo;re all valid:
@@ -177,7 +178,7 @@ True
 ```
 
 
-<a id="orgfc85c7f"></a>
+<a id="orgba3c578"></a>
 
 ### Visualize the finite automata
 
@@ -200,14 +201,81 @@ print(fn)
 ![img](img/variant_3_dfa.gv.svg)
 
 
-<a id="org15e870e"></a>
+<a id="orga40bca9"></a>
+
+### Convert Grammar to NFA to DFA (lab 1)
+
+Extending on the previous lab task,
+I can now do some things with the grammar I got:
+
+```text
+VN={S, D, R},
+VT={a, b, c, d, f},
+P={
+    S → aS
+    S → bD
+    S → fR
+    D → cD
+    D → dR
+    R → bR
+    R → f
+    D → d
+}
+```
+
+After converting it manually to a Grammar data structure, of course:
+
+```python
+VN = {"S", "D", "R"}
+VT = {"a", "b", "c", "d", "f"}
+S = "S"
+P = {("S",): {("a", "S"), ("b", "D"), ("f", "R")},
+     ("D",): {("c", "D"), ("d", "R"), ("d")},
+     ("R",): {("b", "R"), ("f")}}
+g = Grammar(VN=VN, VT=VT, P=P, S=S)
+```
+
+Note that the keys in the `P` dict are tuples. Remember kids, `(A) !=  tuple(A) == (A,)`.
+
+Now, let&rsquo;s convert the grammar to an NFA:
+
+```python
+nfa = NFA.from_grammar(g)
+print(nfa.draw('img', 'lab1_v3_nfa'))
+```
+
+![img](img/lab1_v3_nfa.gv.svg)
+
+Hmm, looks like it&rsquo;s not deterministic because of those two &ldquo;d&rdquo; transitions from the &ldquo;D&rdquo; state. Let&rsquo;s check:
+
+```python
+print(nfa.is_deterministic())
+```
+
+```text
+False
+```
+
+Yeah, it isn&rsquo;t. OK, no problem. We can just convert it to a DFA:
+
+```python
+dfa = nfa.to_DFA()
+print(dfa.draw('img', 'lab1_v3_dfa'))
+```
+
+![img](img/lab1_v3_dfa.gv.svg)
+
+Looks better!
+
+
+<a id="orgfb7bd70"></a>
 
 # Implementation
 
 I wrote very extensive comments inside source code files, so refer to those please.
 
 
-<a id="orgd45a7a5"></a>
+<a id="org036ba8f"></a>
 
 # Try it out
 
@@ -218,7 +286,7 @@ but they&rsquo;re not very extensive.
 Also pls don&rsquo;t look inside, I&rsquo;ll refactor them I promise.
 
 
-<a id="org3feb3b1"></a>
+<a id="orgfd241c5"></a>
 
 # Theory
 

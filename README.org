@@ -87,8 +87,8 @@ for l,r in g.P.items():
 #+RESULTS:
 : q0 -> a q1
 : q1 -> b q1 | a q2
-: q2 -> b q3 | b q2
-: q3 -> a q1 | b q4
+: q2 -> b q2 | b q3
+: q3 -> b q4 | a q1
 : q4 ->
 *** Find out if FA is nondeterministic
 Even though it's an NFA, it could be that it doesn't have nondeterministic transitions.
@@ -106,7 +106,7 @@ print(dfa)
 #+end_src
 
 #+RESULTS:
-: {frozenset({'q2'}), frozenset({'q3', 'q2'}), frozenset({'q0'}), frozenset({'q3', 'q4', 'q2'}), frozenset({'q1'})}, {'b', 'a'}, {'q0'}, {(frozenset({'q0'}), 'a'): {'q1'}, (frozenset({'q1'}), 'b'): {'q1'}, (frozenset({'q1'}), 'a'): {'q2'}, (frozenset({'q2'}), 'b'): {'q3', 'q2'}, (frozenset({'q3', 'q2'}), 'b'): {'q3', 'q4', 'q2'}, (frozenset({'q3', 'q2'}), 'a'): {'q1'}, (frozenset({'q3', 'q4', 'q2'}), 'b'): {'q3', 'q4', 'q2'}, (frozenset({'q3', 'q4', 'q2'}), 'a'): {'q1'}}, {frozenset({'q3', 'q4', 'q2'})}
+: {frozenset({'q4', 'q2', 'q3'}), frozenset({'q2'}), frozenset({'q1'}), frozenset({'q0'}), frozenset({'q2', 'q3'})}, {'a', 'b'}, {'q0'}, {(frozenset({'q0'}), 'a'): {'q1'}, (frozenset({'q1'}), 'a'): {'q2'}, (frozenset({'q1'}), 'b'): {'q1'}, (frozenset({'q2'}), 'b'): {'q2', 'q3'}, (frozenset({'q2', 'q3'}), 'a'): {'q1'}, (frozenset({'q2', 'q3'}), 'b'): {'q4', 'q2', 'q3'}, (frozenset({'q4', 'q2', 'q3'}), 'a'): {'q1'}, (frozenset({'q4', 'q2', 'q3'}), 'b'): {'q4', 'q2', 'q3'}}, {frozenset({'q4', 'q2', 'q3'})}
 
 Now that we have a DFA, we can easily validate some strings according to the grammar.
 But first, let's generate a few:
@@ -116,7 +116,7 @@ print(l)
 #+end_src
 
 #+RESULTS:
-: ['ababb', 'aabababbbabbabababbb', 'abbbabb', 'aababbabbbaabb', 'aabbaabaabb']
+: ['aabbb', 'ababbababbbababb', 'abbbabbb', 'ababbb', 'aabbbb']
 
 Let's verify that they're all valid:
 #+begin_src python
@@ -143,7 +143,67 @@ print(fn)
 
 #+RESULTS:
 [[file:img/variant_3_dfa.gv.svg]]
+*** Convert Grammar to NFA to DFA (lab 1)
+Extending on the previous lab task,
+I can now do some things with the grammar I got:
+#+begin_example
+VN={S, D, R},
+VT={a, b, c, d, f},
+P={
+    S → aS
+    S → bD
+    S → fR
+    D → cD
+    D → dR
+    R → bR
+    R → f
+    D → d
+}
+#+end_example
 
+After converting it manually to a Grammar data structure, of course:
+#+begin_src python
+VN = {"S", "D", "R"}
+VT = {"a", "b", "c", "d", "f"}
+S = "S"
+P = {("S",): {("a", "S"), ("b", "D"), ("f", "R")},
+     ("D",): {("c", "D"), ("d", "R"), ("d")},
+     ("R",): {("b", "R"), ("f")}}
+g = Grammar(VN=VN, VT=VT, P=P, S=S)
+#+end_src
+
+#+RESULTS:
+
+Note that the keys in the =P= dict are tuples. Remember kids, src_python{(A) !=  tuple(A) == (A,)}.
+
+Now, let's convert the grammar to an NFA:
+#+begin_src python :results file
+nfa = NFA.from_grammar(g)
+print(nfa.draw('img', 'lab1_v3_nfa'))
+#+end_src
+
+#+RESULTS:
+[[file:img/lab1_v3_nfa.gv.svg]]
+
+
+Hmm, looks like it's not deterministic because of those two "d" transitions from the "D" state. Let's check:
+#+begin_src python
+print(nfa.is_deterministic())
+#+end_src
+
+#+RESULTS:
+: False
+
+Yeah, it isn't. OK, no problem. We can just convert it to a DFA:
+#+begin_src python :results file
+dfa = nfa.to_DFA()
+print(dfa.draw('img', 'lab1_v3_dfa'))
+#+end_src
+
+#+RESULTS:
+[[file:img/lab1_v3_dfa.gv.svg]]
+
+Looks better!
 * Implementation
 I wrote very extensive comments inside source code files, so refer to those please.
 * Try it out

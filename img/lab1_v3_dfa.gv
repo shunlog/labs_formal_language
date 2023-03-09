@@ -1,0 +1,22 @@
+digraph lab1_v3_dfa {
+	rankdir=LR
+	node [shape=doublecircle]
+	"{'ε', 'R'}"
+	node [shape=doublecircle]
+	"{'ε'}"
+	node [shape=circle]
+	"{'S'}"
+	node [shape=circle]
+	"{'D'}"
+	node [shape=circle]
+	"{'R'}"
+	"{'S'}" -> "{'S'}" [label=a]
+	"{'S'}" -> "{'D'}" [label=b]
+	"{'S'}" -> "{'R'}" [label=f]
+	"{'D'}" -> "{'D'}" [label=c]
+	"{'D'}" -> "{'ε', 'R'}" [label=d]
+	"{'R'}" -> "{'R'}" [label=b]
+	"{'R'}" -> "{'ε'}" [label=f]
+	"{'ε', 'R'}" -> "{'R'}" [label=b]
+	"{'ε', 'R'}" -> "{'ε'}" [label=f]
+}

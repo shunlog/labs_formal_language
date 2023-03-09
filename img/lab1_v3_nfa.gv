@@ -1,0 +1,19 @@
+digraph lab1_v3_nfa {
+	rankdir=LR
+	node [shape=doublecircle]
+	"ε"
+	node [shape=circle]
+	D
+	node [shape=circle]
+	S
+	node [shape=circle]
+	R
+	S -> R [label=f]
+	S -> D [label=b]
+	S -> S [label=a]
+	D -> D [label=c]
+	D -> "ε" [label=d]
+	D -> R [label=d]
+	R -> R [label=b]
+	R -> "ε" [label=f]
+}
