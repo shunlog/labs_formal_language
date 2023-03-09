@@ -26,14 +26,6 @@ def test_context_sensitive_grammar():
     g = Grammar(VN, VT, P, S)
     assert g.type() == 1
 
-    P = {("abbC"): {("abAbC")}}
-    g = Grammar(VN, VT, P, S)
-    assert g.type() != 1
-
-    P = {("abAbC"): {("abbC")}}
-    g = Grammar(VN, VT, P, S)
-    assert g.type() != 1
-
     P = {("abAbC"): {("abxxxbC")}}
     g = Grammar(VN, VT, P, S)
     assert g.type() == 1
@@ -45,6 +37,18 @@ def test_context_sensitive_grammar():
     P = {("bCA"): {("bCB")}}
     g = Grammar(VN, VT, P, S)
     assert g.type() == 1
+
+def test_type0_grammar():
+    VN = {"A", "B"}
+    VT = {"a", "b"}
+    S = "A"
+    P = {("abbC"): {("abAbC")}}
+    g = Grammar(VN, VT, P, S)
+    assert g.type() == 0
+
+    P = {("abAbC"): {("abbC")}}
+    g = Grammar(VN, VT, P, S)
+    assert g.type() == 0
 
 def test_grammar_to_NFA():
     VN = {"A", "B"}
