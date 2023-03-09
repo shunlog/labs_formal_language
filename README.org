@@ -126,7 +126,7 @@ print(all(dfa.verify(w) for w in l))
 
 #+RESULTS:
 : True
-*** Visualize the finite automatons
+*** Visualize the finite automata
 Here's the NFA:
 #+begin_src python :results file
 fn = nfa.draw('./img', 'variant_3_nfa')

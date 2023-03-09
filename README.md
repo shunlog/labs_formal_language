@@ -1,19 +1,19 @@
-- [Implementation of formal languages](#org0eee068)
-- [Objectives](#orga0f2fd0)
-  - [Lab 1](#org252a3d6)
-  - [Lab 2](#org9d04c77)
-    - [Convert NFA to Grammar](#org1a713c9)
-    - [Find out if FA is nondeterministic](#org3eb10f5)
-    - [Convert NFA to DFA](#orgb3b5b77)
-    - [Visualize the finite automatons](#org01bc8d2)
-- [Implementation](#orgba9a202)
-- [Try it out](#org54c5c81)
-- [Theory](#org08b4208)
+- [Implementation of formal languages](#org839bb44)
+- [Objectives](#orgded985f)
+  - [Lab 1](#orgaa785e7)
+  - [Lab 2](#org2877b55)
+    - [Convert NFA to Grammar](#org648a32b)
+    - [Find out if FA is nondeterministic](#orgf39d246)
+    - [Convert NFA to DFA](#orgced884f)
+    - [Visualize the finite automata](#org9534a5a)
+- [Implementation](#orgda4ebb8)
+- [Try it out](#org67f7660)
+- [Theory](#org2e2ca78)
 
 
 
 
-<a id="org0eee068"></a>
+<a id="org839bb44"></a>
 
 # Implementation of formal languages
 
@@ -24,12 +24,12 @@ Author
 : Balan Artiom
 
 
-<a id="orga0f2fd0"></a>
+<a id="orgded985f"></a>
 
 # Objectives
 
 
-<a id="org252a3d6"></a>
+<a id="orgaa785e7"></a>
 
 ## Lab 1
 
@@ -45,7 +45,7 @@ Author
     -   check that the generated words are valid according to the FSM
 
 
-<a id="org9d04c77"></a>
+<a id="org2877b55"></a>
 
 ## Lab 2
 
@@ -95,7 +95,7 @@ nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
 ```
 
 
-<a id="org1a713c9"></a>
+<a id="org648a32b"></a>
 
 ### Convert NFA to Grammar
 
@@ -126,7 +126,7 @@ q4 ->
 ```
 
 
-<a id="org3eb10f5"></a>
+<a id="orgf39d246"></a>
 
 ### Find out if FA is nondeterministic
 
@@ -142,7 +142,7 @@ False
 ```
 
 
-<a id="orgb3b5b77"></a>
+<a id="orgced884f"></a>
 
 ### Convert NFA to DFA
 
@@ -178,9 +178,9 @@ True
 ```
 
 
-<a id="org01bc8d2"></a>
+<a id="org9534a5a"></a>
 
-### Visualize the finite automatons
+### Visualize the finite automata
 
 Here&rsquo;s the NFA:
 
@@ -201,14 +201,14 @@ print(fn)
 ![img](img/variant_3_dfa.gv.svg)
 
 
-<a id="orgba9a202"></a>
+<a id="orgda4ebb8"></a>
 
 # Implementation
 
 I wrote very extensive comments inside source code files, so refer to those please.
 
 
-<a id="org54c5c81"></a>
+<a id="org67f7660"></a>
 
 # Try it out
 
@@ -219,7 +219,7 @@ but they&rsquo;re not very extensive.
 Also pls don&rsquo;t look inside, I&rsquo;ll refactor them I promise.
 
 
-<a id="org08b4208"></a>
+<a id="org2e2ca78"></a>
 
 # Theory
 
