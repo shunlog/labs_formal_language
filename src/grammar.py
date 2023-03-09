@@ -4,8 +4,10 @@ class Grammar:
     VN - list of nonterminals (strings)
     VT - list of terminals (strings)
     P - list of productions represented by a dictionary, where
-        keys are rules and values are lists of rules.
-        A rule is a tuple of terminals and nonterminals
+        keys are rules and values are sets of rules.
+        A rule is a tuple of terminals and nonterminals.
+        Although, a rule can also be represented by a string
+        if every symbol is a single character in length.
     S - starting state (string)
 
     Example:
@@ -27,7 +29,9 @@ class Grammar:
     }
     S = "A"
     '''
-    def __init__(self, VN : set, VT : set, P : dict, S : str):
+    Rule = tuple[str]
+
+    def __init__(self, VN: set[str], VT: set[str], P: dict[Rule, set[Rule]], S: str):
         self.VN = VN
         self.VT = VT
         self.P = P

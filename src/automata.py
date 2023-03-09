@@ -12,7 +12,7 @@ class FA:
     F - set of final states (must be subset of S)
     '''
 
-    def __init__(self, S, A, s0, d, F):
+    def __init__(self, S: set[str], A: set[str], s0: str, d: dict[tuple[set[str], str], set[str]], F: set[str]):
         self.S = S
         self.A = A
         self.s0 = s0
@@ -47,8 +47,9 @@ class DFA(FA):
     This Deterministic finite automaton is similar to the NFA,
     with the distinction that states are now represented by sets, and not strings.
     For example, in the transitions dict,
-    each destination state is a set denoting a single "node" in the DFA graph,
-    not multiple possible states like in the case of an NFA.
+    a value is a set of states denoting a single "node" in the DFA graph,
+    not multiple possible states like in the case of an NFA,
+    whereas the keys are now represented by tuple[set[State], Symbol]
     The other variables, S, s0 and F also reflect this change.
 
     Example:
