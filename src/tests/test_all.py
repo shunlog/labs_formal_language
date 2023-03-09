@@ -2,13 +2,7 @@
 from src.grammar import *
 from src.automata import *
 
-def test_regular_grammar():
-    '''
-    A -> aA
-    A -> aB
-    A -> ε
-    B -> b
-    '''
+def test_type3_grammar():
     VN = {"A", "B"}
     VT = {"a", "b"}
     S = "A"
@@ -18,7 +12,7 @@ def test_regular_grammar():
 
     assert g.type() == 3
 
-def test_context_sensitive_grammar():
+def test_type1_grammar():
     VN = {"A", "B"}
     VT = {"a", "b"}
     S = "A"
