@@ -127,10 +127,14 @@ class NFA(FA):
 
     def from_grammar(g : Grammar):
         '''This function only recognizes *strictly* regular grammars'''
+        assert g.type() == 3
         d = defaultdict(set)
         F = set()
         A = set()
+
         for head, tails in g.P.items():
+            head = head[0]  # in a regular grammar, head is a single nonterminal
+
             for tail in tails:
                if len(tail) == 0:
                    F |= {head}
@@ -141,7 +145,8 @@ class NFA(FA):
                elif len(tail) == 2:
                    d[(head, tail[0])] |= {tail[1]}
                    A |= {tail[0]}
-        d = dict(d)
+
+        d = dict(d)  # demote from defaultdict
         return NFA(S = g.VN | F, A = A, s0 = g.S, d = d, F = F)
 
     def to_grammar(self) -> Grammar:

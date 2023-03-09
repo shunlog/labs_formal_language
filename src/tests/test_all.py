@@ -105,3 +105,21 @@ def test_NFA_to_DFA():
     assert dfa.s0 == s0
     assert dfa.d == d
     assert dfa.F == F
+
+def test_DFA_verify_word():
+    VN = {"A", "B"}
+    VT = {"a", "b"}
+    S = "A"
+    P = {("A",): {("a", "B"), ("a", "A")},
+         ("B",): {("b",)}}
+    g = Grammar(VN=VN, VT=VT, P=P, S=S)
+    ic(g)
+    nfa = NFA.from_grammar(g)
+    ic(nfa)
+    dfa = nfa.to_DFA()
+    ic(dfa)
+
+    for _ in range(10):
+        w = g.constr_word()
+        ic(w)
+        assert dfa.verify(w)

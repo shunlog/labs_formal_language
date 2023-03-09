@@ -67,6 +67,7 @@ class Grammar:
     def constr_word(self):
         '''Assuming *strictly* right-regular grammar,
         build a word by randomly picking rules to rewrite'''
+        assert self.type() == 3
 
         from random import choice
         s = self.S  # current state
