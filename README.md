@@ -1,20 +1,20 @@
-- [Implementation of formal languages](#orgc0cfab0)
-- [Objectives](#org4338a12)
-  - [Lab 1](#orgb97cf85)
-  - [Lab 2](#orgad4b010)
-    - [Convert NFA to Grammar](#org18cb3d1)
-    - [Find out if FA is nondeterministic](#org67d62ff)
-    - [Convert NFA to DFA](#org3b683d9)
-    - [Visualize the finite automata](#orgba3c578)
-    - [Convert Grammar to NFA to DFA (lab 1)](#orga40bca9)
-- [Implementation](#orgfb7bd70)
-- [Try it out](#org036ba8f)
-- [Theory](#orgfd241c5)
+- [Implementation of formal languages](#org56c7832)
+- [Objectives](#orgc89bcfc)
+  - [Lab 1](#orgc9492ce)
+  - [Lab 2](#orgaa94c5b)
+    - [Convert NFA to Grammar](#org527350e)
+    - [Find out if FA is nondeterministic](#org3baaa4a)
+    - [Convert NFA to DFA](#org846893a)
+    - [Visualize the finite automata](#orgd4b56e0)
+    - [Convert Grammar to NFA to DFA (lab 1)](#orga90cb79)
+- [Implementation](#org990f2f7)
+- [Try it out](#org46edfd5)
+- [Theory](#org499c630)
 
 
 
 
-<a id="orgc0cfab0"></a>
+<a id="org56c7832"></a>
 
 # Implementation of formal languages
 
@@ -25,12 +25,12 @@ Author
 : Balan Artiom
 
 
-<a id="org4338a12"></a>
+<a id="orgc89bcfc"></a>
 
 # Objectives
 
 
-<a id="orgb97cf85"></a>
+<a id="orgc9492ce"></a>
 
 ## Lab 1
 
@@ -46,7 +46,7 @@ Author
     -   check that the generated words are valid according to the FSM
 
 
-<a id="orgad4b010"></a>
+<a id="orgaa94c5b"></a>
 
 ## Lab 2
 
@@ -95,7 +95,7 @@ nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
 ```
 
 
-<a id="org18cb3d1"></a>
+<a id="org527350e"></a>
 
 ### Convert NFA to Grammar
 
@@ -126,7 +126,7 @@ q4 ->
 ```
 
 
-<a id="org67d62ff"></a>
+<a id="org3baaa4a"></a>
 
 ### Find out if FA is nondeterministic
 
@@ -142,7 +142,7 @@ False
 ```
 
 
-<a id="org3b683d9"></a>
+<a id="org846893a"></a>
 
 ### Convert NFA to DFA
 
@@ -178,7 +178,7 @@ True
 ```
 
 
-<a id="orgba3c578"></a>
+<a id="orgd4b56e0"></a>
 
 ### Visualize the finite automata
 
@@ -201,7 +201,7 @@ print(fn)
 ![img](img/variant_3_dfa.gv.svg)
 
 
-<a id="orga40bca9"></a>
+<a id="orga90cb79"></a>
 
 ### Convert Grammar to NFA to DFA (lab 1)
 
@@ -235,7 +235,7 @@ P = {("S",): {("a", "S"), ("b", "D"), ("f", "R")},
 g = Grammar(VN=VN, VT=VT, P=P, S=S)
 ```
 
-Note that the keys in the `P` dict are tuples. Remember kids, `(A) !=  tuple(A) == (A,)`.
+Note that the keys in the `P` dict are tuples. Remember kids, `(A)` is not a tuple, but `(A,)` is.
 
 Now, let&rsquo;s convert the grammar to an NFA:
 
@@ -268,14 +268,14 @@ print(dfa.draw('img', 'lab1_v3_dfa'))
 Looks better!
 
 
-<a id="orgfb7bd70"></a>
+<a id="org990f2f7"></a>
 
 # Implementation
 
 I wrote very extensive comments inside source code files, so refer to those please.
 
 
-<a id="org036ba8f"></a>
+<a id="org46edfd5"></a>
 
 # Try it out
 
@@ -286,7 +286,7 @@ but they&rsquo;re not very extensive.
 Also pls don&rsquo;t look inside, I&rsquo;ll refactor them I promise.
 
 
-<a id="orgfd241c5"></a>
+<a id="org499c630"></a>
 
 # Theory
 

@@ -174,7 +174,7 @@ g = Grammar(VN=VN, VT=VT, P=P, S=S)
 
 #+RESULTS:
 
-Note that the keys in the =P= dict are tuples. Remember kids, src_python{(A) !=  tuple(A) == (A,)}.
+Note that the keys in the =P= dict are tuples. Remember kids, =(A)= is not a tuple, but =(A,)= is.
 
 Now, let's convert the grammar to an NFA:
 #+begin_src python :results file
