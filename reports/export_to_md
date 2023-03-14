@@ -10,8 +10,6 @@
  'org-babel-load-languages
  '((octave . t) (python . t)(emacs-lisp . t)))
 
-(dolist (file '("lab1.org" "lab2.org"))
-  (find-file file)
-  (org-blackfriday-export-as-markdown)
-  (set-buffer "*Org BLACKFRIDAY Export*")
-  (write-file (concat "../" (file-name-with-extension file "md"))))
+
+(find-file (car (last command-line-args)))
+(org-blackfriday-export-to-markdown)

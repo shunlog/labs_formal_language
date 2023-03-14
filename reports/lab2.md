@@ -1,20 +1,18 @@
-- [Implementation of formal languages](#orgdfee556)
-- [Objectives](#orgb63110b)
-  - [Lab 1](#org6ee6924)
-  - [Lab 2](#org225367b)
-    - [Convert NFA to Grammar](#org6685f6a)
-    - [Find out if FA is nondeterministic](#org24083e7)
-    - [Convert NFA to DFA](#orgd496fc3)
-    - [Visualize the finite automata](#org7a117f2)
-    - [Convert Grammar to NFA to DFA (lab 1)](#org577ea9e)
-- [Implementation](#org384c3c1)
-- [Try it out](#orge055dac)
-- [Theory](#org6e4132f)
+- [Implementation of formal languages](#orgf857c5c)
+- [Theory](#orgfeb45a9)
+- [Objectives](#org3bb4b1e)
+- [Results](#orgbe81483)
+    - [Convert NFA to Grammar](#org79139df)
+    - [Find out if FA is nondeterministic](#org8a085d6)
+    - [Convert NFA to DFA](#orgced14ed)
+    - [Visualize the finite automata](#orgadf16d3)
+    - [Convert Grammar to NFA to DFA (lab 1)](#orgf085352)
+- [Implementation](#orga726321)
 
 
 
 
-<a id="orgdfee556"></a>
+<a id="orgf857c5c"></a>
 
 # Implementation of formal languages
 
@@ -25,30 +23,47 @@ Author
 : Balan Artiom
 
 
-<a id="orgb63110b"></a>
+<a id="orgfeb45a9"></a>
+
+# Theory
+
+An instance of a **formal language** is a set of _words_ which are composed of _letters_.
+The set of words can be defined in many ways:
+
+-   by simply enumerating all the valid elements (words)
+-   by defining an alphabet and a grammar
+
+An **alphabet** is a set of letters.
+
+A **grammar** is a set of rules that define how to form valid words from the alphabet.
+
+A regular grammar is one in which all production rules in P are of one of the following forms:
+
+-   A → a
+-   A → aB
+-   A → ε
+
+where A, B, S ∈ N are non-terminal symbols, a ∈ Σ is a terminal symbol,
+and ε denotes the empty string, i.e. the string of length 0. S is called the start symbol.
+
+[Automata](https://en.wikipedia.org/wiki/Automata_theory) can be used to recognize formal languages, for example described by grammars.
+There are different [types of automata](https://en.wikipedia.org/wiki/Automata_theory#Types_of_automata) that can describe different types of languages.
+For example:
+
+-   A finite automaton (NFA/DFA, state machine) can describe a regular grammar (type 3)
+-   A pushdown automaton (PDA) can describe a context-free grammar (type 2)
+
+A DFA is equivalent in power to an NFA, even though NFA&rsquo;s are more flexible ([Hierarchy in terms of powers](https://en.wikipedia.org/wiki/Automata_theory#Hierarchy_in_terms_of_powers)).
+
+-   The conversion NFA -&gt; DFA can be done using the [powerset construction](https://en.wikipedia.org/wiki/Powerset_construction).
+-   The conversion regular grammar -&gt; NFA and viceversa is straightforward.
+-   The conversion Grammar -&gt; DFA can&rsquo;t really be done directly,
+    instead go through the steps: Grammar -&gt; NFA -&gt; DFA.
+
+
+<a id="org3bb4b1e"></a>
 
 # Objectives
-
-
-<a id="org6ee6924"></a>
-
-## Lab 1
-
--   [X] Implement a  `Grammar` and a `FiniteAutomaton`, with the respective methods:
-    -   `Grammar`
-        -   `generateString()`
-        -   `convert_to_FSM()`
-    -   `FiniteAutomaton`
-        -   `check_string()`
--   [X] Showcase the code:
-    -   generate 5 words with the grammar
-    -   create a FSM from the grammar
-    -   check that the generated words are valid according to the FSM
-
-
-<a id="org225367b"></a>
-
-## Lab 2
 
 -   [X] Provide a function in your grammar type/class that could classify the grammar based on Chomsky hierarchy.
 -   [X] Implement conversion of a finite automaton to a regular grammar.
@@ -57,6 +72,11 @@ Author
 -   [X] Represent the finite automaton graphically (Optional, and can be considered as a bonus point):
 -   [X] Document everything in the README
 -   [X] Test string validation with the new more general DFA
+
+
+<a id="orgbe81483"></a>
+
+# Results
 
 Here&rsquo;s the NFA I got:
 
@@ -95,7 +115,7 @@ nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
 ```
 
 
-<a id="org6685f6a"></a>
+<a id="org79139df"></a>
 
 ### Convert NFA to Grammar
 
@@ -126,7 +146,7 @@ q4 ->
 ```
 
 
-<a id="org24083e7"></a>
+<a id="org8a085d6"></a>
 
 ### Find out if FA is nondeterministic
 
@@ -142,7 +162,7 @@ False
 ```
 
 
-<a id="orgd496fc3"></a>
+<a id="orgced14ed"></a>
 
 ### Convert NFA to DFA
 
@@ -178,7 +198,7 @@ True
 ```
 
 
-<a id="org7a117f2"></a>
+<a id="orgadf16d3"></a>
 
 ### Visualize the finite automata
 
@@ -201,7 +221,7 @@ print(fn)
 ![img](img/variant_3_dfa.gv.svg)
 
 
-<a id="org577ea9e"></a>
+<a id="orgf085352"></a>
 
 ### Convert Grammar to NFA to DFA (lab 1)
 
@@ -268,58 +288,9 @@ print(dfa.draw('img', 'lab1_v3_dfa'))
 Looks better!
 
 
-<a id="org384c3c1"></a>
+<a id="orga726321"></a>
 
 # Implementation
 
 I wrote very extensive comments inside source code files, so refer to those please.
-
-
-<a id="orge055dac"></a>
-
-# Try it out
-
-You can starts playing inside `main.py`.
-
-There are a few tests that you can run with `pytest`,
-but they&rsquo;re not very extensive.
-Also pls don&rsquo;t look inside, I&rsquo;ll refactor them I promise.
-
-
-<a id="org6e4132f"></a>
-
-# Theory
-
-An instance of a **formal language** is a set of _words_ which are composed of _letters_.
-The set of words can be defined in many ways:
-
--   by simply enumerating all the valid elements (words)
--   by defining an alphabet and a grammar
-
-An **alphabet** is a set of letters.
-
-A **grammar** is a set of rules that define how to form valid words from the alphabet.
-
-A regular grammar is one in which all production rules in P are of one of the following forms:
-
--   A → a
--   A → aB
--   A → ε
-
-where A, B, S ∈ N are non-terminal symbols, a ∈ Σ is a terminal symbol,
-and ε denotes the empty string, i.e. the string of length 0. S is called the start symbol.
-
-[Automata](https://en.wikipedia.org/wiki/Automata_theory) can be used to recognize formal languages, for example described by grammars.
-There are different [types of automata](https://en.wikipedia.org/wiki/Automata_theory#Types_of_automata) that can describe different types of languages.
-For example:
-
--   A finite automaton (NFA/DFA, state machine) can describe a regular grammar (type 3)
--   A pushdown automaton (PDA) can describe a context-free grammar (type 2)
-
-A DFA is equivalent in power to an NFA, even though NFA&rsquo;s are more flexible ([Hierarchy in terms of powers](https://en.wikipedia.org/wiki/Automata_theory#Hierarchy_in_terms_of_powers)).
-
--   The conversion NFA -&gt; DFA can be done using the [powerset construction](https://en.wikipedia.org/wiki/Powerset_construction).
--   The conversion regular grammar -&gt; NFA and viceversa is straightforward.
--   The conversion Grammar -&gt; DFA can&rsquo;t really be done directly,
-    instead go through the steps: Grammar -&gt; NFA -&gt; DFA.
 

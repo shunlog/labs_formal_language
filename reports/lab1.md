@@ -1,13 +1,13 @@
-- [Implementation of formal languages](#org707c70b)
-- [Theory](#org55d726e)
-- [Objectives](#org69c3e2c)
-- [Implementation](#org3ba0e93)
-  - [Deterministic or not?](#org9189a5d)
+- [Implementation of formal languages](#orgb1ff54f)
+- [Theory](#org030647e)
+- [Objectives](#org2544032)
+- [Implementation](#org0bd294b)
+  - [Deterministic or not?](#org0bffcc3)
 
 
 
 
-<a id="org707c70b"></a>
+<a id="orgb1ff54f"></a>
 
 # Implementation of formal languages
 
@@ -18,7 +18,7 @@ Author
 : Balan Artiom
 
 
-<a id="org55d726e"></a>
+<a id="org030647e"></a>
 
 # Theory
 
@@ -42,7 +42,7 @@ where A, B, S ∈ N are non-terminal symbols, a ∈ Σ is a terminal symbol,
 and ε denotes the empty string, i.e. the string of length 0. S is called the start symbol.
 
 
-<a id="org69c3e2c"></a>
+<a id="org2544032"></a>
 
 # Objectives
 
@@ -61,7 +61,7 @@ Showcase the code:
 -   check that the generated words are valid according to the FSM
 
 
-<a id="org3ba0e93"></a>
+<a id="org0bd294b"></a>
 
 # Implementation
 
@@ -108,7 +108,7 @@ def verify(self, w):
 ```
 
 
-<a id="org9189a5d"></a>
+<a id="org0bffcc3"></a>
 
 ## Deterministic or not?
 
