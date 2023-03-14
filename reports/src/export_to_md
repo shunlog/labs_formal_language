@@ -1,0 +1,17 @@
+#!/usr/bin/env doomscript
+
+(require 'doom-start)
+(require 'ob)
+(require 'ox-hugo)
+(setq
+ org-confirm-babel-evaluate 'nil
+ org-src-preserve-indentation 't)
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((octave . t) (python . t)(emacs-lisp . t)))
+
+(dolist (file '("lab1.org" "lab2.org"))
+  (find-file file)
+  (org-blackfriday-export-as-markdown)
+  (set-buffer "*Org BLACKFRIDAY Export*")
+  (write-file (concat "../" (file-name-with-extension file "md"))))

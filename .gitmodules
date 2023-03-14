@@ -1,0 +1,3 @@
+[submodule "angryowl"]
+	path = angryowl
+	url = https://github.com/shunlog/angryowl
