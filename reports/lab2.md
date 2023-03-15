@@ -292,11 +292,7 @@ Looks better!
 
 # Implementation
 
-I wrote very extensive comments inside source code files, so refer to those please.
-
-### API
-
-This part of the documentation covers all the interfaces of **angryowl**.
+Here is the implementation description.
 
 #### Grammar
 
@@ -306,9 +302,9 @@ This part of the documentation covers all the interfaces of **angryowl**.
 A grammar is represented by 4 variables:
 
 
-;* **Parameters**
+* **Parameters**
 
-
+    
     * **VN** – list of nonterminals (strings)
 
 
@@ -357,7 +353,7 @@ alias of `tuple`[`str`]
 Assuming *strictly* right-regular grammar.
 
 
-;* **Returns**
+* **Returns**
 
     A string built using rules from the grammar picked at random.
 
@@ -370,9 +366,9 @@ Assuming *strictly* right-regular grammar.
 A finite automaton is represented by 5 variables.
 
 
-;* **Parameters**
+* **Parameters**
 
-
+    
     * **S** – set of states (set of strings)
 
 
@@ -396,7 +392,7 @@ Each rule in the regular grammar is treated as follows:
 
 1. A -> aB
 
->
+> 
 >     * a transition is created: (A, a): B
 
 
@@ -405,7 +401,7 @@ Each rule in the regular grammar is treated as follows:
 
 2. A -> a
 
->
+> 
 >     * a transition is created: (A, a): ε
 
 
@@ -417,7 +413,7 @@ Each rule in the regular grammar is treated as follows:
 
 3. B -> ε
 
->
+> 
 >     * a final state is added: B
 
 For example, the formal grammar:
@@ -483,4 +479,3 @@ d = {
 }
 F = {{'A'}, {'A', 'B'}, {'ε'}}
 ```
-
