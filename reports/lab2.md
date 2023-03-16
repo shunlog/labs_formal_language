@@ -1,18 +1,18 @@
-- [Implementation of formal languages](#orgf8191f4)
-- [Theory](#orgd5f3527)
-- [Objectives](#orgce8c013)
-- [Results](#org7709b3f)
-    - [Convert NFA to Grammar](#org8a42a60)
-    - [Find out if FA is nondeterministic](#org4fe69a3)
-    - [Convert NFA to DFA](#org6b93b56)
-    - [Visualize the finite automata](#org4a4f11e)
-    - [Convert Grammar to NFA to DFA (lab 1)](#orgbaea10e)
-- [Implementation](#org298a493)
+- [Implementation of formal languages](#orgfbc9b88)
+- [Theory](#orgc0a6cbb)
+- [Objectives](#orge6d91c5)
+- [Results](#org9e2a654)
+    - [Convert NFA to Grammar](#org36da4b3)
+    - [Find out if FA is nondeterministic](#org33ae12d)
+    - [Convert NFA to DFA](#org7edf659)
+    - [Visualize the finite automata](#orgbea3700)
+    - [Convert Grammar to NFA to DFA (lab 1)](#orge76695c)
+- [Implementation](#org0866a21)
 
 
 
 
-<a id="orgf8191f4"></a>
+<a id="orgfbc9b88"></a>
 
 # Implementation of formal languages
 
@@ -23,7 +23,7 @@ Author
 : Balan Artiom
 
 
-<a id="orgd5f3527"></a>
+<a id="orgc0a6cbb"></a>
 
 # Theory
 
@@ -61,7 +61,7 @@ A DFA is equivalent in power to an NFA, even though NFA&rsquo;s are more flexibl
     instead go through the steps: Grammar -&gt; NFA -&gt; DFA.
 
 
-<a id="orgce8c013"></a>
+<a id="orge6d91c5"></a>
 
 # Objectives
 
@@ -74,7 +74,7 @@ A DFA is equivalent in power to an NFA, even though NFA&rsquo;s are more flexibl
 -   [X] Test string validation with the new more general DFA
 
 
-<a id="org7709b3f"></a>
+<a id="org9e2a654"></a>
 
 # Results
 
@@ -115,7 +115,7 @@ nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
 ```
 
 
-<a id="org8a42a60"></a>
+<a id="org36da4b3"></a>
 
 ### Convert NFA to Grammar
 
@@ -146,7 +146,7 @@ q4 ->
 ```
 
 
-<a id="org4fe69a3"></a>
+<a id="org33ae12d"></a>
 
 ### Find out if FA is nondeterministic
 
@@ -162,7 +162,7 @@ False
 ```
 
 
-<a id="org6b93b56"></a>
+<a id="org7edf659"></a>
 
 ### Convert NFA to DFA
 
@@ -198,7 +198,7 @@ True
 ```
 
 
-<a id="org4a4f11e"></a>
+<a id="orgbea3700"></a>
 
 ### Visualize the finite automata
 
@@ -221,7 +221,7 @@ print(fn)
 ![img](img/variant_3_dfa.gv.svg)
 
 
-<a id="orgbaea10e"></a>
+<a id="orge76695c"></a>
 
 ### Convert Grammar to NFA to DFA (lab 1)
 
@@ -288,194 +288,207 @@ print(dfa.draw('img', 'lab1_v3_dfa'))
 Looks better!
 
 
-<a id="org298a493"></a>
+<a id="org0866a21"></a>
 
 # Implementation
 
-Here is the implementation description.
-
-#### Grammar
-
-
-##### _class_ angryowl.grammar.Grammar(VN: set[str], VT: set[str], P: dict[tuple[str], set[tuple[str]]], S: str)
-
-A grammar is represented by 4 variables:
-
-
-* **Parameters**
-
-    
-    * **VN** – list of nonterminals (strings)
-
-
-    * **VT** – list of terminals (strings)
-
-
-    * **P** – list of productions represented by a dictionary, where
-    keys are rules and values are sets of rules.
-    A rule is a tuple of terminals and nonterminals.
-    Although, a rule can also be represented by a string
-    if every symbol is a single character in length.
-
-
-    * **S** – starting state (string)
-
-
-For example, the formal grammar:
-
-```default
-A -> aA
-A -> aB
-A -> ε
-B -> b
-```
-
-Is represented by the following variables:
-
-```default
-VN = {"A", "B"}
-VT = {"a", "b"}
-P = {
-    ("A",): {("a", "B"), ("a", "A"), ()},
-    ("B",): {("b",)}
-}
-S = "A"
-```
-
-
-###### Rule()
-
-alias of `tuple`[`str`]
-
-
-###### constr_word()
-
-Assuming *strictly* right-regular grammar.
-
-
-* **Returns**
-
-    A string built using rules from the grammar picked at random.
-
-
-#### Automata
-
-
-##### _class_ angryowl.automata.FA(S: set[str], A: set[str], s0: str, d: dict[tuple[set[str], str], set[str]], F: set[str])
-
-A finite automaton is represented by 5 variables.
-
-
-* **Parameters**
-
-    
-    * **S** – set of states (set of strings)
-
-
-    * **A** – alphabet, which is a set of symbols (set of strings)
-
-
-    * **s0** – starting state (a string)
-
-
-    * **d** – the state-transition function (dictionary: tuple(state, symbol) -> set of states)
-
-
-    * **F** – set of final states (must be subset of S)
-
-
-
-##### _class_ angryowl.automata.NFA(S: set[str], A: set[str], s0: str, d: dict[tuple[set[str], str], set[str]], F: set[str])
-
-Each rule in the regular grammar is treated as follows:
-
-
-1. A -> aB
-
-> 
->     * a transition is created: (A, a): B
-
-
->     * “a” is added to the alphabet
-
-
-2. A -> a
-
-> 
->     * a transition is created: (A, a): ε
-
-
->     * a final state is added: ε
-
-
->     * “a” is added to the alphabet
-
-
-3. B -> ε
-
-> 
->     * a final state is added: B
-
-For example, the formal grammar:
-
-```default
-A -> aA
-A -> aB
-A -> ε
-B -> b
-```
-
-is transformed into the following NFA:
-
-```default
-S = {'B', 'ε', 'A'}
-A = {'a', 'b'}
-s0 = 'A'
-d = {('A', 'a'): {'A', 'B'}, ('B', 'b'): {'ε'}}
-F = {'ε', 'A'}
-```
-
-
-###### from_grammar()
-
-This function only recognizes *strictly* regular grammars
-
-
-###### to_DFA()
-
-For an explanation of the algo, check out the dragon book.
-
-
-##### _class_ angryowl.automata.DFA(S: set[str], A: set[str], s0: str, d: dict[tuple[set[str], str], set[str]], F: set[str])
-
-This Deterministic finite automaton is similar to the NFA,
+<section id="grammar">
+<h2>Grammar<a class="headerlink" href="#grammar" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="angryowl.grammar.Grammar">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">angryowl.grammar.</span></span><span class="sig-name descname"><span class="pre">Grammar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">VN</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">VT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.grammar.Grammar" title="Permalink to this definition">¶</a></dt>
+<dd><p>A grammar is represented by 4 variables:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>VN</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – set of nonterminals</p></li>
+<li><p><strong>VT</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – set of terminals</p></li>
+<li><p><strong>P</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>]</em><em>]</em>) – list of productions.</p></li>
+<li><p><strong>S</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – starting state</p></li>
+</ul>
+</dd>
+</dl>
+<p>For example, the formal grammar:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">-&gt;</span> <span class="n">aA</span>
+<span class="n">A</span> <span class="o">-&gt;</span> <span class="n">aB</span>
+<span class="n">A</span> <span class="o">-&gt;</span> <span class="n">ε</span>
+<span class="n">B</span> <span class="o">-&gt;</span> <span class="n">b</span>
+</pre></div>
+</div>
+<p>Is represented by the following variables:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">VN</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">}</span>
+<span class="n">VT</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">}</span>
+<span class="n">P</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,):</span> <span class="p">{(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">),</span> <span class="p">()},</span>
+    <span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,):</span> <span class="p">{(</span><span class="s2">&quot;b&quot;</span><span class="p">,)}</span>
+<span class="p">}</span>
+<span class="n">S</span> <span class="o">=</span> <span class="s2">&quot;A&quot;</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="angryowl.grammar.Grammar.Rule">
+<span class="sig-name descname"><span class="pre">Rule</span></span><a class="headerlink" href="#angryowl.grammar.Grammar.Rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="angryowl.grammar.Grammar.constr_word">
+<span class="sig-name descname"><span class="pre">constr_word</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.grammar.Grammar.constr_word" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assuming <em>strictly</em> right-regular grammar.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A string built using rules from the grammar picked at random.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="automata">
+<h2>Automata<a class="headerlink" href="#automata" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="angryowl.automata.FA">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">angryowl.automata.</span></span><span class="sig-name descname"><span class="pre">FA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.automata.FA" title="Permalink to this definition">¶</a></dt>
+<dd><p>A finite automaton is represented by 5 variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>S</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – set of states</p></li>
+<li><p><strong>A</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – alphabet, which is a set of symbols</p></li>
+<li><p><strong>s0</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – starting state</p></li>
+<li><p><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>]</em>) – the state-transition function</p></li>
+<li><p><strong>F</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – set of final states</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="angryowl.automata.NFA">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">angryowl.automata.</span></span><span class="sig-name descname"><span class="pre">NFA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.automata.NFA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Each rule in the regular grammar is treated as follows:</p>
+<ol class="arabic">
+<li><p>A -&gt; aB</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>a transition is created: (A, a): B</p></li>
+<li><p>“a” is added to the alphabet</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>A -&gt; a</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>a transition is created: (A, a): ε</p></li>
+<li><p>a final state is added: ε</p></li>
+<li><p>“a” is added to the alphabet</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>B -&gt; ε</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>a final state is added: B</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+<p>For example, the formal grammar:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">-&gt;</span> <span class="n">aA</span>
+<span class="n">A</span> <span class="o">-&gt;</span> <span class="n">aB</span>
+<span class="n">A</span> <span class="o">-&gt;</span> <span class="n">ε</span>
+<span class="n">B</span> <span class="o">-&gt;</span> <span class="n">b</span>
+</pre></div>
+</div>
+<p>is transformed into the following NFA:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;ε&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">}</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">}</span>
+<span class="n">s0</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span>
+<span class="n">d</span> <span class="o">=</span> <span class="p">{(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">):</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">},</span> <span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">):</span> <span class="p">{</span><span class="s1">&#39;ε&#39;</span><span class="p">}}</span>
+<span class="n">F</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ε&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>S</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>A</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>s0</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p></li>
+<li><p><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>F</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="angryowl.automata.NFA.from_grammar">
+<span class="sig-name descname"><span class="pre">from_grammar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.automata.NFA.from_grammar" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function only recognizes <em>strictly</em> regular grammars</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>g</strong> (<a class="reference internal" href="#angryowl.grammar.Grammar" title="angryowl.grammar.Grammar"><em>Grammar</em></a>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="angryowl.automata.NFA.to_DFA">
+<span class="sig-name descname"><span class="pre">to_DFA</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.automata.NFA.to_DFA" title="Permalink to this definition">¶</a></dt>
+<dd><p>For an explanation of the algo, check out the dragon book.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#angryowl.automata.DFA" title="angryowl.automata.DFA"><em>DFA</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="angryowl.automata.DFA">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">angryowl.automata.</span></span><span class="sig-name descname"><span class="pre">DFA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.automata.DFA" title="Permalink to this definition">¶</a></dt>
+<dd><p>This Deterministic finite automaton is similar to the NFA,
 with the distinction that states are now represented by sets, and not strings.
 For example, in the transitions dict,
 a value is a set of states denoting a single “node” in the DFA graph,
 not multiple possible states like in the case of an NFA,
 whereas the keys are now represented by tuple[set[State], Symbol]
-The other variables, S, s0 and F also reflect this change.
+The other variables, S, s0 and F also reflect this change.</p>
+<p>For example, the NFA:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;ε&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">}</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">}</span>
+<span class="n">s0</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span>
+<span class="n">d</span> <span class="o">=</span> <span class="p">{(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">):</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">},</span> <span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">):</span> <span class="p">{</span><span class="s1">&#39;ε&#39;</span><span class="p">}}</span>
+<span class="n">F</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ε&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>is transformed into the following DFA:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="p">{{</span><span class="s1">&#39;A&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;ε&#39;</span><span class="p">}}</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">}</span>
+<span class="n">s0</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">}</span>
+<span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">},</span> <span class="s1">&#39;a&#39;</span><span class="p">):</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">},</span>
+    <span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">},</span> <span class="s1">&#39;a&#39;</span><span class="p">):</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">},</span>
+    <span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">},</span> <span class="s1">&#39;b&#39;</span><span class="p">):</span> <span class="p">{</span><span class="s1">&#39;ε&#39;</span><span class="p">}</span>
+<span class="p">}</span>
+<span class="n">F</span> <span class="o">=</span> <span class="p">{{</span><span class="s1">&#39;A&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;ε&#39;</span><span class="p">}}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>S</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>A</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>s0</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p></li>
+<li><p><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>F</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
-For example, the NFA:
+</section>
 
-```default
-S = {'B', 'ε', 'A'}
-A = {'a', 'b'}
-s0 = 'A'
-d = {('A', 'a'): {'A', 'B'}, ('B', 'b'): {'ε'}}
-F = {'ε', 'A'}
-```
-
-is transformed into the following DFA:
-
-```default
-S = {{'A'}, {'A', 'B'}, {'ε'}}
-A = {'a', 'b'}
-s0 = {'A'}
-d = {
-    ({'A'}, 'a'): {'A', 'B'},
-    ({'A', 'B'}, 'a'): {'A', 'B'},
-    ({'A', 'B'}, 'b'): {'ε'}
-}
-F = {{'A'}, {'A', 'B'}, {'ε'}}
-```
