@@ -1,18 +1,18 @@
-- [Implementation of formal languages](#orgfbc9b88)
-- [Theory](#orgc0a6cbb)
-- [Objectives](#orge6d91c5)
-- [Results](#org9e2a654)
-    - [Convert NFA to Grammar](#org36da4b3)
-    - [Find out if FA is nondeterministic](#org33ae12d)
-    - [Convert NFA to DFA](#org7edf659)
-    - [Visualize the finite automata](#orgbea3700)
-    - [Convert Grammar to NFA to DFA (lab 1)](#orge76695c)
-- [Implementation](#org0866a21)
+- [Implementation of formal languages](#org43bd49c)
+- [Theory](#orgf8a82cb)
+- [Objectives](#org79ba97e)
+- [Results](#org109e4ec)
+    - [Convert NFA to Grammar](#org2dd7893)
+    - [Find out if FA is nondeterministic](#org9a6ced3)
+    - [Convert NFA to DFA](#orga078d69)
+    - [Visualize the finite automata](#org3dfb5de)
+    - [Convert Grammar to NFA to DFA (lab 1)](#org2fb39f9)
+- [Implementation](#orgf79a47e)
 
 
 
 
-<a id="orgfbc9b88"></a>
+<a id="org43bd49c"></a>
 
 # Implementation of formal languages
 
@@ -23,7 +23,7 @@ Author
 : Balan Artiom
 
 
-<a id="orgc0a6cbb"></a>
+<a id="orgf8a82cb"></a>
 
 # Theory
 
@@ -61,7 +61,7 @@ A DFA is equivalent in power to an NFA, even though NFA&rsquo;s are more flexibl
     instead go through the steps: Grammar -&gt; NFA -&gt; DFA.
 
 
-<a id="orge6d91c5"></a>
+<a id="org79ba97e"></a>
 
 # Objectives
 
@@ -74,7 +74,7 @@ A DFA is equivalent in power to an NFA, even though NFA&rsquo;s are more flexibl
 -   [X] Test string validation with the new more general DFA
 
 
-<a id="org9e2a654"></a>
+<a id="org109e4ec"></a>
 
 # Results
 
@@ -115,7 +115,7 @@ nfa = NFA(S=S, A=A, s0=s0, d=d, F=F)
 ```
 
 
-<a id="org36da4b3"></a>
+<a id="org2dd7893"></a>
 
 ### Convert NFA to Grammar
 
@@ -146,7 +146,7 @@ q4 ->
 ```
 
 
-<a id="org33ae12d"></a>
+<a id="org9a6ced3"></a>
 
 ### Find out if FA is nondeterministic
 
@@ -162,7 +162,7 @@ False
 ```
 
 
-<a id="org7edf659"></a>
+<a id="orga078d69"></a>
 
 ### Convert NFA to DFA
 
@@ -198,7 +198,7 @@ True
 ```
 
 
-<a id="orgbea3700"></a>
+<a id="org3dfb5de"></a>
 
 ### Visualize the finite automata
 
@@ -221,7 +221,7 @@ print(fn)
 ![img](img/variant_3_dfa.gv.svg)
 
 
-<a id="orge76695c"></a>
+<a id="org2fb39f9"></a>
 
 ### Convert Grammar to NFA to DFA (lab 1)
 
@@ -288,26 +288,32 @@ print(dfa.draw('img', 'lab1_v3_dfa'))
 Looks better!
 
 
-<a id="org0866a21"></a>
+<a id="orgf79a47e"></a>
 
 # Implementation
+
+Following is the documentation of each class and method.
+
 
 <section id="grammar">
 <h2>Grammar<a class="headerlink" href="#grammar" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="angryowl.grammar.Grammar">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">angryowl.grammar.</span></span><span class="sig-name descname"><span class="pre">Grammar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">VN</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">VT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.grammar.Grammar" title="Permalink to this definition">¶</a></dt>
-<dd><p>A grammar is represented by 4 variables:</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">angryowl.grammar.</span></span><span class="sig-name descname"><span class="pre">Grammar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">VN</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><span class="pre">set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">VT</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><span class="pre">set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><span class="pre">set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.grammar.Grammar" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference external" href="https://en.wikipedia.org/wiki/Formal_grammar#Formal_definition">formal grammar</a>
+is defined by 4 components:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>VN</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – set of nonterminals</p></li>
 <li><p><strong>VT</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – set of terminals</p></li>
-<li><p><strong>P</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>]</em><em>]</em>) – list of productions.</p></li>
+<li><p><strong>P</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>]</em><em>]</em>) – list of productions</p></li>
 <li><p><strong>S</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – starting state</p></li>
 </ul>
 </dd>
 </dl>
+<p>The list of productions is represented by a dictionary,
+each rule being a mapping of a string of symbols onto another string of symbols.</p>
 <p>For example, the formal grammar:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">-&gt;</span> <span class="n">aA</span>
 <span class="n">A</span> <span class="o">-&gt;</span> <span class="n">aB</span>
@@ -326,18 +332,59 @@ Looks better!
 </pre></div>
 </div>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="angryowl.grammar.Grammar.Rule">
-<span class="sig-name descname"><span class="pre">Rule</span></span><a class="headerlink" href="#angryowl.grammar.Grammar.Rule" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="angryowl.grammar.Grammar.SymbolsStr">
+<span class="sig-name descname"><span class="pre">SymbolsStr</span></span><a class="headerlink" href="#angryowl.grammar.Grammar.SymbolsStr" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="angryowl.grammar.Grammar.Type">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.grammar.Grammar.Type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grammar classes according to the <a class="reference external" href="https://en.wikipedia.org/wiki/Chomsky_hierarchy">Chomsky hierarchy</a>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="angryowl.grammar.Grammar.Type.UNRESTRICTED_GRAMMAR">
+<span class="sig-name descname"><span class="pre">UNRESTRICTED_GRAMMAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#angryowl.grammar.Grammar.Type.UNRESTRICTED_GRAMMAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="angryowl.grammar.Grammar.Type.CONTEXT_SENSITIVE">
+<span class="sig-name descname"><span class="pre">CONTEXT_SENSITIVE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#angryowl.grammar.Grammar.Type.CONTEXT_SENSITIVE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="angryowl.grammar.Grammar.Type.CONTEXT_FREE">
+<span class="sig-name descname"><span class="pre">CONTEXT_FREE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#angryowl.grammar.Grammar.Type.CONTEXT_FREE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="angryowl.grammar.Grammar.Type.REGULAR">
+<span class="sig-name descname"><span class="pre">REGULAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#angryowl.grammar.Grammar.Type.REGULAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="angryowl.grammar.Grammar.type">
+<span class="sig-name descname"><span class="pre">type</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#angryowl.grammar.Grammar.Type" title="angryowl.grammar.Grammar.Type"><span class="pre">Type</span></a></span></span><a class="headerlink" href="#angryowl.grammar.Grammar.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the type of the grammar object according to the <a class="reference external" href="https://en.wikipedia.org/wiki/Chomsky_hierarchy">Chomsky hierarchy</a>.</p>
+<p>If we determine the type of each production rule in the grammar,
+then the type of the grammar will be the least restrictive type among them
+(i.e. with the lowest type number).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#angryowl.grammar.Grammar.Type" title="angryowl.grammar.Grammar.Type"><em>Type</em></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="angryowl.grammar.Grammar.constr_word">
-<span class="sig-name descname"><span class="pre">constr_word</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.grammar.Grammar.constr_word" title="Permalink to this definition">¶</a></dt>
-<dd><p>Assuming <em>strictly</em> right-regular grammar.</p>
+<span class="sig-name descname"><span class="pre">constr_word</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#angryowl.grammar.Grammar.constr_word" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assuming a <a class="reference external" href="https://en.wikipedia.org/wiki/Regular_grammar#Strictly_regular_grammars">*strictly* regular grammar</a>,
+construct a word using rules from the grammar picked at random.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A string built using rules from the grammar picked at random.</p>
+<dd class="field-odd"><p>A random string that is valid according to the grammar.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
@@ -352,25 +399,56 @@ Looks better!
 <h2>Automata<a class="headerlink" href="#automata" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="angryowl.automata.FA">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">angryowl.automata.</span></span><span class="sig-name descname"><span class="pre">FA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.automata.FA" title="Permalink to this definition">¶</a></dt>
-<dd><p>A finite automaton is represented by 5 variables.</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">angryowl.automata.</span></span><span class="sig-name descname"><span class="pre">FA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><span class="pre">set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><span class="pre">set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><span class="pre">set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><span class="pre">set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><span class="pre">set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.automata.FA" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference external" href="https://en.wikipedia.org/wiki/Finite-state_machine#Mathematical_model">formal automaton</a>
+is represented by 5 variables.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>S</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – set of states</p></li>
-<li><p><strong>A</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – alphabet, which is a set of symbols</p></li>
-<li><p><strong>s0</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – starting state</p></li>
+<li><p><strong>A</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – alphabet (set of symbols)</p></li>
+<li><p><strong>s0</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – initial state</p></li>
 <li><p><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>]</em>) – the state-transition function</p></li>
 <li><p><strong>F</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – set of final states</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="angryowl.automata.FA.is_deterministic">
+<span class="sig-name descname"><span class="pre">is_deterministic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#angryowl.automata.FA.is_deterministic" title="Permalink to this definition">¶</a></dt>
+<dd><p>See what determinism means on <a class="reference external" href="https://en.wikipedia.org/wiki/Nondeterministic_finite_automaton#">wikipedia</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the FA is deterministic, otherwise False.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="angryowl.automata.NFA">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">angryowl.automata.</span></span><span class="sig-name descname"><span class="pre">NFA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.automata.NFA" title="Permalink to this definition">¶</a></dt>
-<dd><p>Each rule in the regular grammar is treated as follows:</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="angryowl.automata.FA.verify">
+<span class="sig-name descname"><span class="pre">verify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#angryowl.automata.FA.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assuming the automaton is deterministic,
+verify whether it accepts the given string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if string is accepted, otherwise False.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="angryowl.automata.FA.from_grammar">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_grammar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#angryowl.grammar.Grammar" title="angryowl.grammar.Grammar"><span class="pre">Grammar</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#angryowl.automata.FA" title="angryowl.automata.FA"><span class="pre">FA</span></a></span></span><a class="headerlink" href="#angryowl.automata.FA.from_grammar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a <a class="reference external" href="https://en.wikipedia.org/wiki/Regular_grammar#Strictly_regular_grammars">*strictly* regular grammar</a>
+to an NFA.</p>
+<p>There are 3 forms of production rules in a strictly regular grammar.
+The algorithm basically executes a list of actions for each production rule:</p>
 <ol class="arabic">
 <li><p>A -&gt; aB</p>
 <blockquote>
@@ -414,49 +492,38 @@ Looks better!
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>S</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p></li>
-<li><p><strong>A</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p></li>
-<li><p><strong>s0</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p></li>
-<li><p><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>F</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p></li>
-</ul>
+<dd class="field-odd"><p><strong>g</strong> (<a class="reference internal" href="#angryowl.grammar.Grammar" title="angryowl.grammar.Grammar"><em>Grammar</em></a>) – A <em>strictly</em> regular grammar.</p>
 </dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="angryowl.automata.NFA.from_grammar">
-<span class="sig-name descname"><span class="pre">from_grammar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.automata.NFA.from_grammar" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function only recognizes <em>strictly</em> regular grammars</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>g</strong> (<a class="reference internal" href="#angryowl.grammar.Grammar" title="angryowl.grammar.Grammar"><em>Grammar</em></a>) – </p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An <a class="reference internal" href="#angryowl.automata.FA" title="angryowl.automata.FA"><code class="xref py py-class docutils literal notranslate"><span class="pre">angryowl.automata.FA</span></code></a> instance.</p>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="angryowl.automata.NFA.to_DFA">
-<span class="sig-name descname"><span class="pre">to_DFA</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.automata.NFA.to_DFA" title="Permalink to this definition">¶</a></dt>
-<dd><p>For an explanation of the algo, check out the dragon book.</p>
-<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#angryowl.automata.DFA" title="angryowl.automata.DFA"><em>DFA</em></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#angryowl.automata.FA" title="angryowl.automata.FA"><em>FA</em></a></p>
 </dd>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="angryowl.automata.FA.to_grammar">
+<span class="sig-name descname"><span class="pre">to_grammar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#angryowl.grammar.Grammar" title="angryowl.grammar.Grammar"><span class="pre">Grammar</span></a></span></span><a class="headerlink" href="#angryowl.automata.FA.to_grammar" title="Permalink to this definition">¶</a></dt>
+<dd><p>The inverse of <a class="reference internal" href="#angryowl.automata.FA.from_grammar" title="angryowl.automata.FA.from_grammar"><code class="xref py py-func docutils literal notranslate"><span class="pre">angryowl.automata.FA.from_grammar()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a strictly regular grammar corresponding to the current FA.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#angryowl.grammar.Grammar" title="angryowl.grammar.Grammar"><em>Grammar</em></a></p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="angryowl.automata.DFA">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">angryowl.automata.</span></span><span class="sig-name descname"><span class="pre">DFA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.automata.DFA" title="Permalink to this definition">¶</a></dt>
-<dd><p>This Deterministic finite automaton is similar to the NFA,
-with the distinction that states are now represented by sets, and not strings.
-For example, in the transitions dict,
-a value is a set of states denoting a single “node” in the DFA graph,
-not multiple possible states like in the case of an NFA,
-whereas the keys are now represented by tuple[set[State], Symbol]
-The other variables, S, s0 and F also reflect this change.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="angryowl.automata.FA.to_DFA">
+<span class="sig-name descname"><span class="pre">to_DFA</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.automata.FA.to_DFA" title="Permalink to this definition">¶</a></dt>
+<dd><p>If this FA is nondeterministic, convert it to a deterministic one.</p>
+<p>See the <a class="reference external" href="https://suif.stanford.edu/dragonbook/">Dragon book</a>
+for a better explanation of the algorithm.
+In short, the states in the NFA become sets of states in the DFA.</p>
 <p>For example, the NFA:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;ε&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">}</span>
 <span class="n">A</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">}</span>
@@ -470,25 +537,37 @@ The other variables, S, s0 and F also reflect this change.</p>
 <span class="n">A</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">}</span>
 <span class="n">s0</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">}</span>
 <span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">},</span> <span class="s1">&#39;a&#39;</span><span class="p">):</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">},</span>
-    <span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">},</span> <span class="s1">&#39;a&#39;</span><span class="p">):</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">},</span>
-    <span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">},</span> <span class="s1">&#39;b&#39;</span><span class="p">):</span> <span class="p">{</span><span class="s1">&#39;ε&#39;</span><span class="p">}</span>
+    <span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">},</span> <span class="s1">&#39;a&#39;</span><span class="p">):</span> <span class="p">{{</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">}},</span>
+    <span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">},</span> <span class="s1">&#39;a&#39;</span><span class="p">):</span> <span class="p">{{</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">}},</span>
+    <span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">},</span> <span class="s1">&#39;b&#39;</span><span class="p">):</span> <span class="p">{{</span><span class="s1">&#39;ε&#39;</span><span class="p">}}</span>
 <span class="p">}</span>
 <span class="n">F</span> <span class="o">=</span> <span class="p">{{</span><span class="s1">&#39;A&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;ε&#39;</span><span class="p">}}</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="angryowl.automata.FA.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#angryowl.automata.FA.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualize the FA diagram using <a class="reference external" href="https://graphviz.org/">graphviz</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>S</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p></li>
-<li><p><strong>A</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p></li>
-<li><p><strong>s0</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p></li>
-<li><p><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>F</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p></li>
+<li><p><strong>dirname</strong> – Directory to which the file will be exported.</p></li>
+<li><p><strong>fn</strong> – Name of the diagram (filename minus extension).</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path of the exported file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+</section>
 </section>
 
