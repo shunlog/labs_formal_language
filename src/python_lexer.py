@@ -30,12 +30,9 @@ def get_tokens(s):
 
     def getch():
         nonlocal p
-        nonlocal s
-        if p + 1 < len(s):
-            ch = s[p]
-            p += 1
-            return ch
-        return ""
+        ch = peek()
+        p += 1
+        return ch
 
     def peek():
         nonlocal p
