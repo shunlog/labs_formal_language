@@ -44,26 +44,35 @@ def get_tokens(s: str) -> list[Token]:
     indent_stack = [0]
     ls = []
 
-    def getch():
+    def getch(n=1):
+        # return next character and advance
         nonlocal p
-        ch = peek()
-        p += 1
+        ch = peek(n)
+        p += n
         return ch
 
-    def peek():
+    def peek(n=1):
+        # return next character without advancing
         nonlocal p
         nonlocal s
-        if p + 1 < len(s):
-            return s[p]
+        if p + n < len(s):
+            return s[p:p+n]
         return ""
 
     while True:
+
+        # handle indent
         if peek() == "\n":
             getch()
             n = 0
             while peek() == " ":
                 getch()
                 n += 1
+            # ignore commented lines
+            if peek() == "#":
+                while peek() not in ["\n", "", "\r"]:
+                    getch()
+                continue
 
             if n > indent_stack[-1]:
                 indent_stack.append(n)
@@ -79,12 +88,14 @@ def get_tokens(s: str) -> list[Token]:
                 continue
             continue
 
+        # ignore whitespace
         while peek().isspace():
             getch()
 
+        # handle words
         if peek().isalpha():
             idstr = ""
-            while peek().isalpha():
+            while peek().isalnum() or peek() == "_":
                 idstr += getch()
 
             if idstr in keywords:
@@ -94,6 +105,7 @@ def get_tokens(s: str) -> list[Token]:
             ls.append(Token(TokenType.ID, idstr))
             continue
 
+        # handle numbers
         if peek().isdigit():
             numstr = ""
             while peek().isdigit():
@@ -101,12 +113,25 @@ def get_tokens(s: str) -> list[Token]:
             ls.append(Token(TokenType.NUMBER, int(numstr)))
             continue
 
+        # handle EOF
         if peek() == "":
             while indent_stack.pop() != 0:
                 ls.append(Token(TokenType.DEDENT))
             ls.append(Token(TokenType.EOF))
             break
 
+        # handle 2-character words
+        if peek(2) in ["==", "!=", ">=", "<="]:
+            ls.append(Token(getch(2)))
+            continue
+
+        # handle comments
+        if peek() == "#":
+            while peek() not in ["\n", "", "\r"]:
+                getch()
+            continue
+
+        # return single-character tokens as-is
         ls.append(Token(getch()))
 
     return ls
@@ -114,5 +139,8 @@ def get_tokens(s: str) -> list[Token]:
 
 if __name__ == "__main__":
     inp = sys.stdin.read()
-    t = get_tokens(inp)
-    ic(t)
+    ls = get_tokens(inp)
+
+    from tabulate import tabulate
+    tbl = tabulate([(t.type, t.value) for t in ls], tablefmt="orgtbl", headers=["Name", "Value"])
+    print(tbl)
