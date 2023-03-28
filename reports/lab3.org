@@ -51,7 +51,7 @@ from lexer import *
 def tabulate_tokens(s):
     ls = get_tokens(inp)
     from tabulate import tabulate
-    return tabulate([(t.type, t.value) for t in ls], tablefmt="orgtbl", headers=["Token name", "Token value"])
+    return tabulate([("={}=".format(t.type), "={}=".format(t.value)) for t in ls], tablefmt="orgtbl", headers=["Token name", "Token value"])
 #+end_src
 
 #+RESULTS:
@@ -75,16 +75,16 @@ tabulate_tokens(inp)
 
 #+RESULTS:
 :results:
-| Token name       | Token value |
-|------------------+-------------|
-| TokenType.ID     |         a_1 |
-| =                |             |
-| TokenType.NUMBER |          12 |
-| *                |             |
-| TokenType.NUMBER |           3 |
-| +                |             |
-| TokenType.NUMBER |           2 |
-| TokenType.EOF    |             |
+| Token name         | Token value |
+|--------------------+-------------|
+| =TokenType.ID=     | =a_1=       |
+| ===                | =None=      |
+| =TokenType.NUMBER= | =12=        |
+| =*=                | =None=      |
+| =TokenType.NUMBER= | =3=         |
+| =+=                | =None=      |
+| =TokenType.NUMBER= | =2=         |
+| =TokenType.EOF=    | =None=      |
 :end:
 
 * Implementation

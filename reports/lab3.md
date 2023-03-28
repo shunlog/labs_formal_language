@@ -1,15 +1,15 @@
-- [Implementation of formal languages](#org0306b6b)
-- [Theory](#orgbbfcba4)
-  - [Lexical analysis](#org4d0c301)
-  - [Ambiguous grammar](#orgb02f72b)
-- [Objectives](#org3e494c1)
-- [Results](#org14f7fd7)
-- [Implementation](#orgd917020)
+- [Implementation of formal languages](#org57162d4)
+- [Theory](#org7e5eb98)
+  - [Lexical analysis](#org7e7597f)
+  - [Ambiguous grammar](#org024c165)
+- [Objectives](#org938ffe8)
+- [Results](#org1b17fb4)
+- [Implementation](#orge6667a2)
 
 
 
 
-<a id="org0306b6b"></a>
+<a id="org57162d4"></a>
 
 # Implementation of formal languages
 
@@ -20,12 +20,12 @@ Author
 : Balan Artiom
 
 
-<a id="orgbbfcba4"></a>
+<a id="org7e5eb98"></a>
 
 # Theory
 
 
-<a id="org4d0c301"></a>
+<a id="org7e7597f"></a>
 
 ## Lexical analysis
 
@@ -43,7 +43,7 @@ It&rsquo;s useful to store the location and length of each lexeme.
 The data structure unit used to store lexemes together with information about them is called a token.
 
 
-<a id="orgb02f72b"></a>
+<a id="org024c165"></a>
 
 ## Ambiguous grammar
 
@@ -72,14 +72,14 @@ Usually, whitespace doesn&rsquo;t make it past the lexer, but is still necessary
 For example, `elsex` is an **idendtifier**, but `else x` is the keyword **else** and the **identifier** _x_.
 
 
-<a id="org3e494c1"></a>
+<a id="org938ffe8"></a>
 
 # Objectives
 
 -   [X] Implement a lexer and show how it works.
 
 
-<a id="org14f7fd7"></a>
+<a id="org1b17fb4"></a>
 
 # Results
 
@@ -95,19 +95,19 @@ which stands for &ldquo;identifier&rdquo;, and the token value is the name of th
 
 Similarly, numbers are represented by `NUMBER` tokens, with their value as the token value.
 
-| Token name       | Token value   |
-|------------------|---------------|
-| TokenType.ID     | a<sub>1</sub> |
-| =                |               |
-| TokenType.NUMBER | 12            |
-| \*               |               |
-| TokenType.NUMBER | 3             |
-| +                |               |
-| TokenType.NUMBER | 2             |
-| TokenType.EOF    |               |
+| Token name         | Token value |
+|--------------------|-------------|
+| `TokenType.ID`     | `a_1`       |
+| `=`                | `None`      |
+| `TokenType.NUMBER` | `12`        |
+| `*`                | `None`      |
+| `TokenType.NUMBER` | `3`         |
+| `+`                | `None`      |
+| `TokenType.NUMBER` | `2`         |
+| `TokenType.EOF`    | `None`      |
 
 
-<a id="orgd917020"></a>
+<a id="orge6667a2"></a>
 
 # Implementation
 
