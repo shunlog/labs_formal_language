@@ -1,0 +1,46 @@
+#+title: Lab2
+#+PROPERTY: header-args:python   :session :results output :exports both :eval no-export
+* Implementation of formal languages
+- Course :: Formal Languages & Finite Automata
+- Author :: Balan Artiom
+
+* Theory
+** Lexical analysis
+In English, words are composed of letters and words have meanings,
+but the meaning isn't derived from the letters.
+In fact, we don't even think of the letters when we read sentences,
+we read the words as a whole and only care about their meaning.
+That's kind of an analogy to the fact that parsers don't really care about the characters,
+they care about syntactic units, called lexemes.
+
+A lexeme is a string of characters that has a meaning.
+Lexemes often correspond to terminals in a grammar (e.g. identifier, number, operator).
+
+It's useful to store the location and length of each lexeme.
+The data structure unit used to store lexemes together with information about them is called a token.
+** Ambiguous grammar
+Lexers for real programming languages often can't be constructed from the grammar alone,
+since there are rules not captured in the grammar:
+1) The off-side rule (indentation-sensitive blocks) can't be described by context-free grammars
+2) Grammar rules can be ambiguous
+
+When grammar rules are ambiguous, a string can be matched by multiple rules.
+To counter this, for example ANTLR has disambiguating rules for tokenization ([[https://github.com/antlr/antlr4/blob/49b69bb31aa34654676a864b229a369680122470/doc/wildcard.md#nongreedy-lexer-subrules][docs]]):
++ Greedy and non-greedy regex lexer rules
++ Match the first rule occurring in the grammar
+
+Ambiguous constructs should be used sparingly and in a strictly controlled fashion;
+otherwise, there can be no guarantee as to what language is recognized by a parser [cite:@aho2007compilers].
+
+One quirk that proves disambiguization is complicated is the way ANTLR handles non-greedy rules (see rule 4 [[https://github.com/antlr/antlr4/blob/49b69bb31aa34654676a864b229a369680122470/doc/wildcard.md#nongreedy-lexer-subrules][in this section]]).
+
+A token has a name and an optional value, which can be of any type (including =dict=).
+Token names can correspond to nonterminals in the grammar,
+but can also be groupings of terminals (e.g. "operator").
+
+Usually, whitespace doesn't make it past the lexer, but is still necessary to separate lexemes.
+For example, =elsex= is an *idendtifier*, but =else x= is the keyword *else* and the *identifier* /x/.
+* Objectives
+- [X] Implement a lexer and show how it works.
+* Results
+* Implementation
