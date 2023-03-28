@@ -53,7 +53,7 @@ from lexer import *
 def tabulate_tokens(s):
     ls = get_tokens(inp)
     from tabulate import tabulate
-    return tabulate([("={}=".format(t.type), "={}=".format(t.value)) for t in ls], tablefmt="orgtbl", headers=["Token name", "Token value"])
+    return tabulate([("={}=".format(t.type), "={}=".format(t.value) if t.value else '') for t in ls], tablefmt="orgtbl", headers=["Token name", "Token value"])
 #+end_src
 
 #+RESULTS:
@@ -80,13 +80,13 @@ tabulate_tokens(inp)
 | Token name         | Token value |
 |--------------------+-------------|
 | =TokenType.ID=     | =a_1=       |
-| ===                | =None=      |
+| ===                |             |
 | =TokenType.NUMBER= | =12=        |
-| =*=                | =None=      |
+| =*=                |             |
 | =TokenType.NUMBER= | =3=         |
-| =+=                | =None=      |
+| =+=                |             |
 | =TokenType.NUMBER= | =2=         |
-| =TokenType.EOF=    | =None=      |
+| =TokenType.EOF=    |             |
 :end:
 
 Now let's see how a lexer recognizes indentation:
@@ -96,6 +96,8 @@ def t(arg):
     print(arg)
 #+end_src
 
+#+RESULTS: inp2
+
 #+begin_src python :var inp=(get-val-of-named-src-block "inp2") :exports results :results drawer
 tabulate_tokens(inp)
 #+end_src
@@ -104,19 +106,19 @@ tabulate_tokens(inp)
 :results:
 | Token name         | Token value |
 |--------------------+-------------|
-| =TokenType.DEFN=   | =None=      |
+| =TokenType.DEFN=   |             |
 | =TokenType.ID=     | =t=         |
-| =(=                | =None=      |
+| =(=                |             |
 | =TokenType.ID=     | =arg=       |
-| =)=                | =None=      |
-| =:=                | =None=      |
-| =TokenType.INDENT= | =None=      |
+| =)=                |             |
+| =:=                |             |
+| =TokenType.INDENT= |             |
 | =TokenType.ID=     | =print=     |
-| =(=                | =None=      |
+| =(=                |             |
 | =TokenType.ID=     | =arg=       |
-| =)=                | =None=      |
-| =TokenType.DEDENT= | =None=      |
-| =TokenType.EOF=    | =None=      |
+| =)=                |             |
+| =TokenType.DEDENT= |             |
+| =TokenType.EOF=    |             |
 :end:
 
 Did you catch that?
@@ -149,23 +151,23 @@ tabulate_tokens(inp)
 :results:
 | Token name         | Token value |
 |--------------------+-------------|
-| =TokenType.IF=     | =None=      |
+| =TokenType.IF=     |             |
 | =TokenType.ID=     | =a=         |
-| =:=                | =None=      |
-| =TokenType.INDENT= | =None=      |
-| =TokenType.IF=     | =None=      |
+| =:=                |             |
+| =TokenType.INDENT= |             |
+| =TokenType.IF=     |             |
 | =TokenType.ID=     | =b=         |
-| =:=                | =None=      |
-| =TokenType.INDENT= | =None=      |
+| =:=                |             |
+| =TokenType.INDENT= |             |
 | =TokenType.ID=     | =foo=       |
-| =(=                | =None=      |
-| =)=                | =None=      |
-| =TokenType.DEDENT= | =None=      |
-| =TokenType.DEDENT= | =None=      |
+| =(=                |             |
+| =)=                |             |
+| =TokenType.DEDENT= |             |
+| =TokenType.DEDENT= |             |
 | =TokenType.ID=     | =bar=       |
-| =(=                | =None=      |
-| =)=                | =None=      |
-| =TokenType.EOF=    | =None=      |
+| =(=                |             |
+| =)=                |             |
+| =TokenType.EOF=    |             |
 :end:
 
 Let's visualize this too:
@@ -198,19 +200,19 @@ tabulate_tokens(inp)
 :results:
 | Token name         | Token value |
 |--------------------+-------------|
-| =TokenType.DEFN=   | =None=      |
+| =TokenType.DEFN=   |             |
 | =TokenType.ID=     | =t=         |
-| =(=                | =None=      |
+| =(=                |             |
 | =TokenType.ID=     | =arg=       |
-| =)=                | =None=      |
-| =:=                | =None=      |
-| =TokenType.INDENT= | =None=      |
+| =)=                |             |
+| =:=                |             |
+| =TokenType.INDENT= |             |
 | =TokenType.ID=     | =print=     |
-| =(=                | =None=      |
+| =(=                |             |
 | =TokenType.ID=     | =arg=       |
-| =)=                | =None=      |
-| =TokenType.DEDENT= | =None=      |
-| =TokenType.EOF=    | =None=      |
+| =)=                |             |
+| =TokenType.DEDENT= |             |
+| =TokenType.EOF=    |             |
 :end:
 
 Notice that the first line has a bad indent (first line can't be indented in python),
