@@ -177,8 +177,8 @@ Let's visualize this too:
 2.    if b:
           v INDENT
 3.         foo()
-  ^ 2 x DEDENT
 4. bar()
+  ^ 2 x DEDENT
 #+end_example
 
 Notice how two =DEDENT= tokens were generated before =bar()=,

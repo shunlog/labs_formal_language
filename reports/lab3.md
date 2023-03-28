@@ -1,15 +1,15 @@
-- [Lab 3: A simple lexer](#orgfb343a9)
-- [Theory](#orgabaae03)
-  - [Lexical analysis](#org06f37b5)
-  - [Ambiguous grammar](#org6c1d55c)
-- [Objectives](#org761d49a)
-- [Results](#org1830b12)
-- [Implementation](#org083ddab)
+- [Lab 3: A simple lexer](#orgb9304d6)
+- [Theory](#orgc564886)
+  - [Lexical analysis](#org415a53c)
+  - [Ambiguous grammar](#org3ade7be)
+- [Objectives](#org228b077)
+- [Results](#org2dd4c5f)
+- [Implementation](#org5c44561)
 
 
 
 
-<a id="orgfb343a9"></a>
+<a id="orgb9304d6"></a>
 
 # Lab 3: A simple lexer
 
@@ -20,12 +20,12 @@ Author
 : Balan Artiom
 
 
-<a id="orgabaae03"></a>
+<a id="orgc564886"></a>
 
 # Theory
 
 
-<a id="org06f37b5"></a>
+<a id="org415a53c"></a>
 
 ## Lexical analysis
 
@@ -43,7 +43,7 @@ It&rsquo;s useful to store the location and length of each lexeme.
 The data structure unit used to store lexemes together with information about them is called a token.
 
 
-<a id="org6c1d55c"></a>
+<a id="org3ade7be"></a>
 
 ## Ambiguous grammar
 
@@ -72,14 +72,14 @@ Usually, whitespace doesn&rsquo;t make it past the lexer, but is still necessary
 For example, `elsex` is an **idendtifier**, but `else x` is the keyword **else** and the **identifier** _x_.
 
 
-<a id="org761d49a"></a>
+<a id="org228b077"></a>
 
 # Objectives
 
 -   [X] Implement a lexer and show how it works.
 
 
-<a id="org1830b12"></a>
+<a id="org2dd4c5f"></a>
 
 # Results
 
@@ -182,8 +182,8 @@ Let&rsquo;s visualize this too:
 2.    if b:
           v INDENT
 3.         foo()
-  ^ 2 x DEDENT
 4. bar()
+  ^ 2 x DEDENT
 ```
 
 Notice how two `DEDENT` tokens were generated before `bar()`,
@@ -229,7 +229,7 @@ def foo(a):
 The lexer simply raises an exception for this example.
 
 
-<a id="org083ddab"></a>
+<a id="org5c44561"></a>
 
 # Implementation
 
