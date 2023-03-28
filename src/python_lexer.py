@@ -8,6 +8,8 @@ class TokenType(Enum):
     id = auto()
     number = auto()
     defn = auto()
+    INDENT = auto()
+    DEDENT = auto()
 
 class Token:
     def __init__(self, t, v=None):
@@ -23,6 +25,8 @@ class Token:
 
 class Lexer:
     p = 0
+    indent_stack = [0]
+
     def __init__(self, s):
         self.s = s
 
@@ -40,10 +44,23 @@ class Lexer:
 
     def get_token(self):
         if self.peek() == "\n":
+            self.getch()
             n = 0
             while self.getch() == " ":
                 n += 1
-            assert n % 4 == 0
+            if n > self.indent_stack[-1]:
+                self.indent_stack.append(n)
+                return Token(TokenType.INDENT)
+            if n < self.indent_stack[-1]:
+                tl = []
+                while self.indent_stack[-1] > n:
+                    tl.append(Token(TokenType.DEDENT))
+                    self.indent_stack.pop()
+                if self.indent_stack.pop() == n:
+                    tl.append(Token(TokenType.DEDENT))
+                    return tl
+                else:
+                    raise(Exception)
 
         while self.peek().isspace():
             self.getch()

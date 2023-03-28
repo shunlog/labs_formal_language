@@ -1,6 +1,8 @@
 a = 12
 
 def t():
-    print()
+     print()
+
+ n
 
 b = 999
