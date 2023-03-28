@@ -1,17 +1,17 @@
-- [Implementation of formal languages](#orgadb6b14)
-- [Theory](#org06eaab7)
-  - [Lexical analysis](#org9b86d59)
-  - [Ambiguous grammar](#org90d5963)
-- [Objectives](#org6c5e055)
-- [Results](#orgaa9c42c)
-- [Implementation](#org6725053)
+- [Lab 3: A simple lexer](#orgfb343a9)
+- [Theory](#orgabaae03)
+  - [Lexical analysis](#org06f37b5)
+  - [Ambiguous grammar](#org6c1d55c)
+- [Objectives](#org761d49a)
+- [Results](#org1830b12)
+- [Implementation](#org083ddab)
 
 
 
 
-<a id="orgadb6b14"></a>
+<a id="orgfb343a9"></a>
 
-# Implementation of formal languages
+# Lab 3: A simple lexer
 
 Course
 : Formal Languages &amp; Finite Automata
@@ -20,12 +20,12 @@ Author
 : Balan Artiom
 
 
-<a id="org06eaab7"></a>
+<a id="orgabaae03"></a>
 
 # Theory
 
 
-<a id="org9b86d59"></a>
+<a id="org06f37b5"></a>
 
 ## Lexical analysis
 
@@ -43,7 +43,7 @@ It&rsquo;s useful to store the location and length of each lexeme.
 The data structure unit used to store lexemes together with information about them is called a token.
 
 
-<a id="org90d5963"></a>
+<a id="org6c1d55c"></a>
 
 ## Ambiguous grammar
 
@@ -72,14 +72,14 @@ Usually, whitespace doesn&rsquo;t make it past the lexer, but is still necessary
 For example, `elsex` is an **idendtifier**, but `else x` is the keyword **else** and the **identifier** _x_.
 
 
-<a id="org6c5e055"></a>
+<a id="org761d49a"></a>
 
 # Objectives
 
 -   [X] Implement a lexer and show how it works.
 
 
-<a id="orgaa9c42c"></a>
+<a id="org1830b12"></a>
 
 # Results
 
@@ -229,7 +229,7 @@ def foo(a):
 The lexer simply raises an exception for this example.
 
 
-<a id="org6725053"></a>
+<a id="org083ddab"></a>
 
 # Implementation
 

@@ -1,6 +1,6 @@
 #+title: Lab2
 #+PROPERTY: header-args:python   :session :exports both :eval no-export
-* Implementation of formal languages
+* Lab 3: A simple lexer
 - Course :: Formal Languages & Finite Automata
 - Author :: Balan Artiom
 
