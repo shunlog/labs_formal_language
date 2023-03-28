@@ -1,5 +1,12 @@
 a = 12
+b = a
 
+def t(arg):
+    print(arg)
 
-def t():
-     print()
+if a == c:
+    pass
+elif a == b:
+    pass
+else:
+    pass

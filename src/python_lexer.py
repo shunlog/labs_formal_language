@@ -5,11 +5,23 @@ from icecream import ic
 
 class TokenType(Enum):
     EOF = auto()
-    id = auto()
-    number = auto()
-    defn = auto()
+    ID = auto()
+    NUMBER = auto()
+    DEFN = auto()
+    PASS = auto()
+    IF = auto()
+    ELIF = auto()
+    ELSE = auto()
     INDENT = auto()
     DEDENT = auto()
+
+keywords = {
+    "def": TokenType.DEFN,
+    "pass": TokenType.PASS,
+    "if": TokenType.IF,
+    "elif": TokenType.ELIF,
+    "else": TokenType.ELSE,
+}
 
 class Token:
     def __init__(self, t, v=None):
@@ -17,13 +29,17 @@ class Token:
         self.value = v
 
     def __repr__(self):
-        s = "Token(" + str(self.type)
+        s = "Token[ " + str(self.type)
         if self.value:
-            s += ", " + str(self.value)
-        s += ")"
+            s += " = " + str(self.value)
+        s += " ]"
         return s
 
-def get_tokens(s):
+def get_tokens(s: str) -> list[Token]:
+    '''Tokenize a string of python source code.
+
+    :returns: A list of all the tokens.
+    '''
     p = 0
     indent_stack = [0]
     ls = []
@@ -71,18 +87,18 @@ def get_tokens(s):
             while peek().isalpha():
                 idstr += getch()
 
-            if idstr == "def":
-                ls.append(Token(TokenType.defn))
+            if idstr in keywords:
+                ls.append(Token(keywords[idstr]))
                 continue
 
-            ls.append(Token(TokenType.id, idstr))
+            ls.append(Token(TokenType.ID, idstr))
             continue
 
         if peek().isdigit():
             numstr = ""
             while peek().isdigit():
                 numstr += getch()
-            ls.append(Token(TokenType.number, int(numstr)))
+            ls.append(Token(TokenType.NUMBER, int(numstr)))
             continue
 
         if peek() == "":
