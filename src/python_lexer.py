@@ -8,10 +8,6 @@ class TokenType(Enum):
     id = auto()
     number = auto()
     defn = auto()
-    lparen = auto()
-    rparen = auto()
-    colon = auto()
-    assignment = auto()
 
 class Token:
     def __init__(self, t, v=None):
@@ -25,60 +21,61 @@ class Token:
         s += ")"
         return s
 
-def get_token(s):
-    tl = []
+class Lexer:
     p = 0
-    # current character = s[p]
+    def __init__(self, s):
+        self.s = s
 
-    if s[p] == "\n":
-        p += 1
-        n = 0
-        while s[p] == " ":
-            n += 1
-            p += 1
-        assert n % 4 == 0
+    def getch(self):
+        if self.p + 1 < len(self.s):
+            ch = self.s[self.p]
+            self.p += 1
+            return ch
+        return ""
 
-    while s[p].isspace():
-        p += 1
+    def peek(self, p=p+1):
+        if self.p + 1 < len(self.s):
+            return self.s[self.p]
+        return ""
 
-    if s[p].isalpha():
-        idstr = ""
-        while s[p+1].isalpha():
-            idstr += s[p]
-            p += 1
+    def get_token(self):
+        if self.peek() == "\n":
+            n = 0
+            while self.getch() == " ":
+                n += 1
+            assert n % 4 == 0
 
-        if idstr == "def":
-            return Token(TokenType.defn), p
+        while self.peek().isspace():
+            self.getch()
 
-        return Token(TokenType.id, idstr), p
+        if self.peek().isalpha():
+            idstr = ""
+            while self.peek().isalpha():
+                idstr += self.getch()
 
-    if s[p].isdigit():
-        numstr = ""
-        while s[p].isdigit():
-            numstr += s[p]
-            p += 1
-        return Token(TokenType.number, int(numstr)), p-1
+            if idstr == "def":
+                return Token(TokenType.defn)
 
-    if s[p] == "(":
-        return Token(TokenType.lparen), p
+            return Token(TokenType.id, idstr)
 
-    if s[p] == ")":
-        return Token(TokenType.rparen), p
+        if self.peek().isdigit():
+            numstr = ""
+            while self.peek().isdigit():
+                numstr += self.getch()
+            return Token(TokenType.number, int(numstr))
 
-    if s[p] == ":":
-        return Token(TokenType.colon), p
+        if self.peek() == "":
+            self.getch()
+            return Token(TokenType.EOF)
 
-    if s[p] == "=":
-        return Token(TokenType.assignment), p
-
-    return s[p], p
+        return Token(self.getch())
 
 
 if __name__ == "__main__":
     inp = sys.stdin.read()
-    p = 0
-    while p < len(inp) - 1:
-        t, np = get_token(inp[p:])
-        p += np + 1
-        ic(t, p)
-        # ic(t, p, inp[p-np-1:p])
+    l = Lexer(inp)
+    while True:
+        t = l.get_token()
+        ic(t)
+        if t.type == TokenType.EOF:
+            break
