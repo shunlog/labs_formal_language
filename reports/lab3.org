@@ -1,5 +1,5 @@
 #+title: Lab2
-#+PROPERTY: header-args:python   :session :results output :exports both :eval no-export
+#+PROPERTY: header-args:python   :session :exports both :eval no-export
 * Implementation of formal languages
 - Course :: Formal Languages & Finite Automata
 - Author :: Balan Artiom
@@ -43,4 +43,48 @@ For example, =elsex= is an *idendtifier*, but =else x= is the keyword *else* and
 * Objectives
 - [X] Implement a lexer and show how it works.
 * Results
+#+begin_src python :exports none
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '..', 'src'))
+from lexer import *
+
+def tabulate_tokens(s):
+    ls = get_tokens(inp)
+    from tabulate import tabulate
+    return tabulate([(t.type, t.value) for t in ls], tablefmt="orgtbl", headers=["Token name", "Token value"])
+#+end_src
+
+#+RESULTS:
+
+Let's parse a simple variable assignment:
+#+name: input
+#+begin_src python
+a_1 = 12 * 3 + 2
+#+end_src
+
+#+RESULTS: input
+
+Each token is represented by two things: a name and an optional value.
+In this example, notice that the token for the variable =a= is of type =ID=,
+which stands for "identifier", and the token value is the name of the variable.
+
+Similarly, numbers are represented by =NUMBER= tokens, with their value as the token value.
+#+begin_src python :var inp=(get-val-of-named-src-block "input") :exports results :results drawer
+tabulate_tokens(inp)
+#+end_src
+
+#+RESULTS:
+:results:
+| Token name       | Token value |
+|------------------+-------------|
+| TokenType.ID     |         a_1 |
+| =                |             |
+| TokenType.NUMBER |          12 |
+| *                |             |
+| TokenType.NUMBER |           3 |
+| +                |             |
+| TokenType.NUMBER |           2 |
+| TokenType.EOF    |             |
+:end:
+
 * Implementation
