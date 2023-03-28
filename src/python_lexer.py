@@ -23,76 +23,83 @@ class Token:
         s += ")"
         return s
 
-class Lexer:
+def get_tokens(s):
     p = 0
     indent_stack = [0]
+    ls = []
 
-    def __init__(self, s):
-        self.s = s
-
-    def getch(self):
-        if self.p + 1 < len(self.s):
-            ch = self.s[self.p]
-            self.p += 1
+    def getch():
+        nonlocal p
+        nonlocal s
+        if p + 1 < len(s):
+            ch = s[p]
+            p += 1
             return ch
         return ""
 
-    def peek(self, p=p+1):
-        if self.p + 1 < len(self.s):
-            return self.s[self.p]
+    def peek():
+        nonlocal p
+        nonlocal s
+        if p + 1 < len(s):
+            return s[p]
         return ""
 
-    def get_token(self):
-        if self.peek() == "\n":
-            self.getch()
+    while True:
+        if peek() == "\n":
+            getch()
             n = 0
-            while self.getch() == " ":
+            while peek() == " ":
+                getch()
                 n += 1
-            if n > self.indent_stack[-1]:
-                self.indent_stack.append(n)
-                return Token(TokenType.INDENT)
-            if n < self.indent_stack[-1]:
-                tl = []
-                while self.indent_stack[-1] > n:
-                    tl.append(Token(TokenType.DEDENT))
-                    self.indent_stack.pop()
-                if self.indent_stack.pop() == n:
-                    tl.append(Token(TokenType.DEDENT))
-                    return tl
-                else:
+
+            if n > indent_stack[-1]:
+                indent_stack.append(n)
+                ls.append(Token(TokenType.INDENT))
+                continue
+
+            if n < indent_stack[-1]:
+                while indent_stack[-1] > n:
+                    ls.append(Token(TokenType.DEDENT))
+                    indent_stack.pop()
+                if indent_stack[-1] != n:
                     raise(Exception)
+                continue
+            continue
 
-        while self.peek().isspace():
-            self.getch()
+        while peek().isspace():
+            getch()
 
-        if self.peek().isalpha():
+        if peek().isalpha():
             idstr = ""
-            while self.peek().isalpha():
-                idstr += self.getch()
+            while peek().isalpha():
+                idstr += getch()
 
             if idstr == "def":
-                return Token(TokenType.defn)
+                ls.append(Token(TokenType.defn))
+                continue
 
-            return Token(TokenType.id, idstr)
+            ls.append(Token(TokenType.id, idstr))
+            continue
 
-        if self.peek().isdigit():
+        if peek().isdigit():
             numstr = ""
-            while self.peek().isdigit():
-                numstr += self.getch()
-            return Token(TokenType.number, int(numstr))
+            while peek().isdigit():
+                numstr += getch()
+            ls.append(Token(TokenType.number, int(numstr)))
+            continue
 
-        if self.peek() == "":
-            self.getch()
-            return Token(TokenType.EOF)
+        if peek() == "":
+            while indent_stack.pop() != 0:
+                ls.append(Token(TokenType.DEDENT))
+            ls.append(Token(TokenType.EOF))
+            break
 
-        return Token(self.getch())
+        ls.append(Token(getch()))
+
+    return ls
 
 
 if __name__ == "__main__":
     inp = sys.stdin.read()
-    l = Lexer(inp)
-    while True:
-        t = l.get_token()
-        ic(t)
-        if t.type == TokenType.EOF:
-            break
+    t = get_tokens(inp)
+    ic(t)
