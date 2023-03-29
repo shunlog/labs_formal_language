@@ -68,12 +68,11 @@ def get_tokens(s: str) -> list[Token]:
         # return next character without advancing
         nonlocal p
         nonlocal s
-        if p + n < len(s):
-            return s[p:p+n]
+        if p + 1 < len(s):
+            return s[p:min(p+n, len(s))]
         return ""
 
     def prefix_in_ls(l, w):
-        ic(l, w)
         return any(li.find(w) == 0 for li in l)
 
     while True:
@@ -139,7 +138,7 @@ def get_tokens(s: str) -> list[Token]:
         # handle delimiters
         if prefix_in_ls(delimiters, peek()):
             i = 1
-            while prefix_in_ls(delimiters, peek(i+1)):
+            while prefix_in_ls(delimiters, peek(i+1)) and peek(i) != peek(i+1):
                 i += 1
             # some delimiters start like operators
             if peek(i) in delimiters and \
@@ -150,7 +149,7 @@ def get_tokens(s: str) -> list[Token]:
         # handle operators
         if prefix_in_ls(operators, peek()):
             i = 1
-            while prefix_in_ls(operators, peek(i+1)):
+            while prefix_in_ls(operators, peek(i+1)) and i < len(s):
                 i += 1
             if peek(i) in operators:
                 ls.append(Token(TokenType.OPERATOR, getch(i)))
@@ -167,11 +166,13 @@ def get_tokens(s: str) -> list[Token]:
 
     return ls
 
-
-if __name__ == "__main__":
+def main():
     inp = sys.stdin.read()
     ls = get_tokens(inp)
 
     from tabulate import tabulate
     tbl = tabulate([(t.type, t.value) for t in ls], tablefmt="orgtbl", headers=["Name", "Value"])
     print(tbl)
+
+if __name__ == "__main__":
+    main()

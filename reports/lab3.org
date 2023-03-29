@@ -1,5 +1,5 @@
 #+title: Lab2
-#+PROPERTY: header-args:python   :session :exports both :eval no-export
+#+PROPERTY: header-args:python   :session :exports both :eval no-export :async
 * Lab 3: A simple lexer
 - Course :: Formal Languages & Finite Automata
 - Author :: Balan Artiom
@@ -60,11 +60,12 @@ def tabulate_tokens(s):
 
 Let's parse a simple variable assignment:
 #+name: input
-#+begin_src python
-a_1 = 12 * 3 + 2
+#+begin_src python  :eval no
+a_1 += 12 * 3 + 2
 #+end_src
 
 #+RESULTS: input
+: /tmp/babel-P0bk7B/python-M2mdv0
 
 Each token is represented by two things: a name and an optional value.
 In this example, notice that the token for the variable =a= is of type =ID=,
@@ -77,21 +78,21 @@ tabulate_tokens(inp)
 
 #+RESULTS:
 :results:
-| Token name         | Token value |
-|--------------------+-------------|
-| =TokenType.ID=     | =a_1=       |
-| ===                |             |
-| =TokenType.NUMBER= | =12=        |
-| =*=                |             |
-| =TokenType.NUMBER= | =3=         |
-| =+=                |             |
-| =TokenType.NUMBER= | =2=         |
-| =TokenType.EOF=    |             |
+| Token name            | Token value |
+|-----------------------+-------------|
+| =TokenType.ID=        | =a_1=       |
+| =TokenType.DELIMITER= | =+==        |
+| =TokenType.NUMBER=    | =12=        |
+| =TokenType.OPERATOR=  | =*=         |
+| =TokenType.NUMBER=    | =3=         |
+| =TokenType.OPERATOR=  | =+=         |
+| =TokenType.NUMBER=    | =2=         |
+| =TokenType.EOF=       |             |
 :end:
 
 Now let's see how a lexer recognizes indentation:
 #+name: inp2
-#+begin_src python
+#+begin_src python :eval no
 def t(arg):
     print(arg)
 #+end_src
@@ -104,21 +105,21 @@ tabulate_tokens(inp)
 
 #+RESULTS:
 :results:
-| Token name          | Token value |
-|---------------------+-------------|
-| =TokenType.KEYWORD= | =def=       |
-| =TokenType.ID=      | =t=         |
-| =(=                 |             |
-| =TokenType.ID=      | =arg=       |
-| =)=                 |             |
-| =:=                 |             |
-| =TokenType.INDENT=  |             |
-| =TokenType.ID=      | =print=     |
-| =(=                 |             |
-| =TokenType.ID=      | =arg=       |
-| =)=                 |             |
-| =TokenType.DEDENT=  |             |
-| =TokenType.EOF=     |             |
+| Token name            | Token value |
+|-----------------------+-------------|
+| =TokenType.KEYWORD=   | =def=       |
+| =TokenType.ID=        | =t=         |
+| =TokenType.DELIMITER= | =(=         |
+| =TokenType.ID=        | =arg=       |
+| =TokenType.DELIMITER= | =)=         |
+| =TokenType.DELIMITER= | =:=         |
+| =TokenType.INDENT=    |             |
+| =TokenType.ID=        | =print=     |
+| =TokenType.DELIMITER= | =(=         |
+| =TokenType.ID=        | =arg=       |
+| =TokenType.DELIMITER= | =)=         |
+| =TokenType.DEDENT=    |             |
+| =TokenType.EOF=       |             |
 :end:
 
 Did you catch that?
@@ -149,25 +150,25 @@ tabulate_tokens(inp)
 
 #+RESULTS:
 :results:
-| Token name          | Token value |
-|---------------------+-------------|
-| =TokenType.KEYWORD= | =if=        |
-| =TokenType.ID=      | =a=         |
-| =:=                 |             |
-| =TokenType.INDENT=  |             |
-| =TokenType.KEYWORD= | =if=        |
-| =TokenType.ID=      | =b=         |
-| =:=                 |             |
-| =TokenType.INDENT=  |             |
-| =TokenType.ID=      | =foo=       |
-| =(=                 |             |
-| =)=                 |             |
-| =TokenType.DEDENT=  |             |
-| =TokenType.DEDENT=  |             |
-| =TokenType.ID=      | =bar=       |
-| =(=                 |             |
-| =)=                 |             |
-| =TokenType.EOF=     |             |
+| Token name            | Token value |
+|-----------------------+-------------|
+| =TokenType.KEYWORD=   | =if=        |
+| =TokenType.ID=        | =a=         |
+| =TokenType.DELIMITER= | =:=         |
+| =TokenType.INDENT=    |             |
+| =TokenType.KEYWORD=   | =if=        |
+| =TokenType.ID=        | =b=         |
+| =TokenType.DELIMITER= | =:=         |
+| =TokenType.INDENT=    |             |
+| =TokenType.ID=        | =foo=       |
+| =TokenType.DELIMITER= | =(=         |
+| =TokenType.DELIMITER= | =)=         |
+| =TokenType.DEDENT=    |             |
+| =TokenType.DEDENT=    |             |
+| =TokenType.ID=        | =bar=       |
+| =TokenType.DELIMITER= | =(=         |
+| =TokenType.DELIMITER= | =)=         |
+| =TokenType.EOF=       |             |
 :end:
 
 Let's visualize this too:
@@ -198,21 +199,21 @@ tabulate_tokens(inp)
 
 #+RESULTS:
 :results:
-| Token name          | Token value |
-|---------------------+-------------|
-| =TokenType.KEYWORD= | =def=       |
-| =TokenType.ID=      | =t=         |
-| =(=                 |             |
-| =TokenType.ID=      | =arg=       |
-| =)=                 |             |
-| =:=                 |             |
-| =TokenType.INDENT=  |             |
-| =TokenType.ID=      | =print=     |
-| =(=                 |             |
-| =TokenType.ID=      | =arg=       |
-| =)=                 |             |
-| =TokenType.DEDENT=  |             |
-| =TokenType.EOF=     |             |
+| Token name            | Token value |
+|-----------------------+-------------|
+| =TokenType.KEYWORD=   | =def=       |
+| =TokenType.ID=        | =t=         |
+| =TokenType.DELIMITER= | =(=         |
+| =TokenType.ID=        | =arg=       |
+| =TokenType.DELIMITER= | =)=         |
+| =TokenType.DELIMITER= | =:=         |
+| =TokenType.INDENT=    |             |
+| =TokenType.ID=        | =print=     |
+| =TokenType.DELIMITER= | =(=         |
+| =TokenType.ID=        | =arg=       |
+| =TokenType.DELIMITER= | =)=         |
+| =TokenType.DEDENT=    |             |
+| =TokenType.EOF=       |             |
 :end:
 
 Notice that the first line has a bad indent (first line can't be indented in python),
@@ -229,6 +230,32 @@ def foo(a):
 #+end_src
 
 The lexer simply raises an exception for this example.
+
+Notice how some delimiters start like operators, and viceversa:
+#+name: inp6
+#+begin_src python :eval no
+a += b == c
+#+end_src
+
+#+begin_src python :var inp=(get-val-of-named-src-block "inp6") :exports results :results drawer
+tabulate_tokens(inp)
+#+end_src
+
+#+RESULTS:
+:results:
+| Token name            | Token value |
+|-----------------------+-------------|
+| =TokenType.ID=        | =a=         |
+| =TokenType.DELIMITER= | =+==        |
+| =TokenType.ID=        | =b=         |
+| =TokenType.OPERATOR=  | ====        |
+| =TokenType.ID=        | =c=         |
+| =TokenType.EOF=       |             |
+:end:
+
+In this case, the operator ==== starts like the delimiter ===, and the delimiter =+== starts like the operator =+=.
+I'm not sure what's the proper way to deal with this, so my code is a bit hacky.
+
 * Implementation
 Indentation handling is implemented as described in the [[https://docs.python.org/3/reference/lexical_analysis.html#indentation][python docs]].
 

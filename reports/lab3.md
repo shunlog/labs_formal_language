@@ -1,15 +1,15 @@
-- [Lab 3: A simple lexer](#orgc508179)
-- [Theory](#orgc07b948)
-  - [Lexical analysis](#orga9df6d7)
-  - [Ambiguous grammar](#org83165e3)
-- [Objectives](#orgc8f54bf)
-- [Results](#org8b9d0bb)
-- [Implementation](#org3a890a6)
+- [Lab 3: A simple lexer](#org5cfc323)
+- [Theory](#org74327b2)
+  - [Lexical analysis](#org732ae06)
+  - [Ambiguous grammar](#org9117efa)
+- [Objectives](#org5545cea)
+- [Results](#org923194d)
+- [Implementation](#orgc2bc5f8)
 
 
 
 
-<a id="orgc508179"></a>
+<a id="org5cfc323"></a>
 
 # Lab 3: A simple lexer
 
@@ -20,12 +20,12 @@ Author
 : Balan Artiom
 
 
-<a id="orgc07b948"></a>
+<a id="org74327b2"></a>
 
 # Theory
 
 
-<a id="orga9df6d7"></a>
+<a id="org732ae06"></a>
 
 ## Lexical analysis
 
@@ -34,7 +34,7 @@ but the meaning isn&rsquo;t derived from the letters.
 In fact, we don&rsquo;t even think of the letters when we read sentences,
 we read the words as a whole and only care about their meaning.
 That&rsquo;s kind of an analogy to the fact that parsers don&rsquo;t really care about the characters,
-they care about groups of characters that have meaning, called lexemes.
+they care about syntactic units, called lexemes.
 
 A lexeme is a string of characters that has a meaning.
 Lexemes often correspond to terminals in a grammar (e.g. identifier, number, operator).
@@ -43,7 +43,7 @@ It&rsquo;s useful to store the location and length of each lexeme.
 The data structure unit used to store lexemes together with information about them is called a token.
 
 
-<a id="org83165e3"></a>
+<a id="org9117efa"></a>
 
 ## Ambiguous grammar
 
@@ -72,14 +72,14 @@ Usually, whitespace doesn&rsquo;t make it past the lexer, but is still necessary
 For example, `elsex` is an **idendtifier**, but `else x` is the keyword **else** and the **identifier** _x_.
 
 
-<a id="orgc8f54bf"></a>
+<a id="org5545cea"></a>
 
 # Objectives
 
 -   [X] Implement a lexer and show how it works.
 
 
-<a id="org8b9d0bb"></a>
+<a id="org923194d"></a>
 
 # Results
 
@@ -88,7 +88,11 @@ I wrote a lexer for python-like syntax, hence, all the example strings are valid
 Let&rsquo;s parse a simple variable assignment:
 
 ```python
-a_1 = 12 * 3 + 2
+a_1 += 12 * 3 + 2
+```
+
+```text
+/tmp/babel-P0bk7B/python-M2mdv0
 ```
 
 Each token is represented by two things: a name and an optional value.
@@ -97,16 +101,16 @@ which stands for &ldquo;identifier&rdquo;, and the token value is the name of th
 
 Similarly, numbers are represented by `NUMBER` tokens, with their value as the token value.
 
-| Token name         | Token value |
-|--------------------|-------------|
-| `TokenType.ID`     | `a_1`       |
-| `=`                |             |
-| `TokenType.NUMBER` | `12`        |
-| `*`                |             |
-| `TokenType.NUMBER` | `3`         |
-| `+`                |             |
-| `TokenType.NUMBER` | `2`         |
-| `TokenType.EOF`    |             |
+| Token name            | Token value |
+|-----------------------|-------------|
+| `TokenType.ID`        | `a_1`       |
+| `TokenType.DELIMITER` | `+=`        |
+| `TokenType.NUMBER`    | `12`        |
+| `TokenType.OPERATOR`  | `*`         |
+| `TokenType.NUMBER`    | `3`         |
+| `TokenType.OPERATOR`  | `+`         |
+| `TokenType.NUMBER`    | `2`         |
+| `TokenType.EOF`       |             |
 
 Now let&rsquo;s see how a lexer recognizes indentation:
 
@@ -115,21 +119,21 @@ def t(arg):
     print(arg)
 ```
 
-| Token name          | Token value |
-|---------------------|-------------|
-| `TokenType.KEYWORD` | `def`       |
-| `TokenType.ID`      | `t`         |
-| `(`                 |             |
-| `TokenType.ID`      | `arg`       |
-| `)`                 |             |
-| `:`                 |             |
-| `TokenType.INDENT`  |             |
-| `TokenType.ID`      | `print`     |
-| `(`                 |             |
-| `TokenType.ID`      | `arg`       |
-| `)`                 |             |
-| `TokenType.DEDENT`  |             |
-| `TokenType.EOF`     |             |
+| Token name            | Token value |
+|-----------------------|-------------|
+| `TokenType.KEYWORD`   | `def`       |
+| `TokenType.ID`        | `t`         |
+| `TokenType.DELIMITER` | `(`         |
+| `TokenType.ID`        | `arg`       |
+| `TokenType.DELIMITER` | `)`         |
+| `TokenType.DELIMITER` | `:`         |
+| `TokenType.INDENT`    |             |
+| `TokenType.ID`        | `print`     |
+| `TokenType.DELIMITER` | `(`         |
+| `TokenType.ID`        | `arg`       |
+| `TokenType.DELIMITER` | `)`         |
+| `TokenType.DEDENT`    |             |
+| `TokenType.EOF`       |             |
 
 Did you catch that?
 The lexer generated two additional &ldquo;invisible&rdquo; tokens
@@ -154,25 +158,25 @@ if a:
 bar()
 ```
 
-| Token name          | Token value |
-|---------------------|-------------|
-| `TokenType.KEYWORD` | `if`        |
-| `TokenType.ID`      | `a`         |
-| `:`                 |             |
-| `TokenType.INDENT`  |             |
-| `TokenType.KEYWORD` | `if`        |
-| `TokenType.ID`      | `b`         |
-| `:`                 |             |
-| `TokenType.INDENT`  |             |
-| `TokenType.ID`      | `foo`       |
-| `(`                 |             |
-| `)`                 |             |
-| `TokenType.DEDENT`  |             |
-| `TokenType.DEDENT`  |             |
-| `TokenType.ID`      | `bar`       |
-| `(`                 |             |
-| `)`                 |             |
-| `TokenType.EOF`     |             |
+| Token name            | Token value |
+|-----------------------|-------------|
+| `TokenType.KEYWORD`   | `if`        |
+| `TokenType.ID`        | `a`         |
+| `TokenType.DELIMITER` | `:`         |
+| `TokenType.INDENT`    |             |
+| `TokenType.KEYWORD`   | `if`        |
+| `TokenType.ID`        | `b`         |
+| `TokenType.DELIMITER` | `:`         |
+| `TokenType.INDENT`    |             |
+| `TokenType.ID`        | `foo`       |
+| `TokenType.DELIMITER` | `(`         |
+| `TokenType.DELIMITER` | `)`         |
+| `TokenType.DEDENT`    |             |
+| `TokenType.DEDENT`    |             |
+| `TokenType.ID`        | `bar`       |
+| `TokenType.DELIMITER` | `(`         |
+| `TokenType.DELIMITER` | `)`         |
+| `TokenType.EOF`       |             |
 
 Let&rsquo;s visualize this too:
 
@@ -197,21 +201,21 @@ def t(arg):
     print(arg)  # this comment is inline
 ```
 
-| Token name          | Token value |
-|---------------------|-------------|
-| `TokenType.KEYWORD` | `def`       |
-| `TokenType.ID`      | `t`         |
-| `(`                 |             |
-| `TokenType.ID`      | `arg`       |
-| `)`                 |             |
-| `:`                 |             |
-| `TokenType.INDENT`  |             |
-| `TokenType.ID`      | `print`     |
-| `(`                 |             |
-| `TokenType.ID`      | `arg`       |
-| `)`                 |             |
-| `TokenType.DEDENT`  |             |
-| `TokenType.EOF`     |             |
+| Token name            | Token value |
+|-----------------------|-------------|
+| `TokenType.KEYWORD`   | `def`       |
+| `TokenType.ID`        | `t`         |
+| `TokenType.DELIMITER` | `(`         |
+| `TokenType.ID`        | `arg`       |
+| `TokenType.DELIMITER` | `)`         |
+| `TokenType.DELIMITER` | `:`         |
+| `TokenType.INDENT`    |             |
+| `TokenType.ID`        | `print`     |
+| `TokenType.DELIMITER` | `(`         |
+| `TokenType.ID`        | `arg`       |
+| `TokenType.DELIMITER` | `)`         |
+| `TokenType.DEDENT`    |             |
+| `TokenType.EOF`       |             |
 
 Notice that the first line has a bad indent (first line can&rsquo;t be indented in python),
 but since it&rsquo;s a comment, we can ignore this issue (one more edge-case to consider).
@@ -228,8 +232,26 @@ def foo(a):
 
 The lexer simply raises an exception for this example.
 
+Notice how some delimiters start like operators, and viceversa:
 
-<a id="org3a890a6"></a>
+```python
+a += b == c
+```
+
+| Token name            | Token value |
+|-----------------------|-------------|
+| `TokenType.ID`        | `a`         |
+| `TokenType.DELIMITER` | `+=`        |
+| `TokenType.ID`        | `b`         |
+| `TokenType.OPERATOR`  | `==`        |
+| `TokenType.ID`        | `c`         |
+| `TokenType.EOF`       |             |
+
+In this case, the operator `==` starts like the delimiter `=`, and the delimiter `+=` starts like the operator `+`.
+I&rsquo;m not sure what&rsquo;s the proper way to deal with this, so my code is a bit hacky.
+
+
+<a id="orgc2bc5f8"></a>
 
 # Implementation
 
