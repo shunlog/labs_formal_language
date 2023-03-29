@@ -34,7 +34,7 @@ but the meaning isn&rsquo;t derived from the letters.
 In fact, we don&rsquo;t even think of the letters when we read sentences,
 we read the words as a whole and only care about their meaning.
 That&rsquo;s kind of an analogy to the fact that parsers don&rsquo;t really care about the characters,
-they care about syntactic units, called lexemes.
+they care about groups of characters that have meaning, called lexemes.
 
 A lexeme is a string of characters that has a meaning.
 Lexemes often correspond to terminals in a grammar (e.g. identifier, number, operator).
