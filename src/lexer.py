@@ -10,7 +10,8 @@ class TokenType(Enum):
     INDENT = auto()
     DEDENT = auto()
     KEYWORD = auto()
-    SEPARATOR = auto()
+    DELIMITER = auto()
+    OPERATOR = auto()
 
 keywords = {
     "False",      "await",      "else",       "import",     "pass",
@@ -20,6 +21,19 @@ keywords = {
     "as",         "def",        "from",       "nonlocal",   "while",
     "assert",     "del",        "global",     "not",        "with",
     "async",      "elif",       "if",         "or",         "yield"
+}
+
+delimiters = {
+    "(",       ")",       "[",       "]",       "{",       "}",
+    ",",       ":",       ".",       ";",       "@",       "=",       "->",
+    "+=",      "-=",      "*=",      "/=",      "//=",     "%=",      "@=",
+    "&=",      "|=",      "^=",      ">>=",     "<<=",     "**="
+}
+
+operators = {
+    "+",       "-",       "*",       "**",      "/",       "//",      "%",      "@",
+    "<<",      ">>",      "&",       "|",       "^",       "~",       ":=",
+    "<",       ">",       "<=",      ">=",      "==",      "!="
 }
 
 class Token:
@@ -58,7 +72,17 @@ def get_tokens(s: str) -> list[Token]:
             return s[p:p+n]
         return ""
 
+    def prefix_in_ls(l, w):
+        ic(l, w)
+        return any(li.find(w) == 0 for li in l)
+
     while True:
+        # handle EOF
+        if peek() == "":
+            while indent_stack.pop() != 0:
+                ls.append(Token(TokenType.DEDENT))
+            ls.append(Token(TokenType.EOF))
+            break
 
         # handle indent
         if peek() == "\n":
@@ -112,17 +136,25 @@ def get_tokens(s: str) -> list[Token]:
             ls.append(Token(TokenType.NUMBER, int(numstr)))
             continue
 
-        # handle EOF
-        if peek() == "":
-            while indent_stack.pop() != 0:
-                ls.append(Token(TokenType.DEDENT))
-            ls.append(Token(TokenType.EOF))
-            break
+        # handle delimiters
+        if prefix_in_ls(delimiters, peek()):
+            i = 1
+            while prefix_in_ls(delimiters, peek(i+1)):
+                i += 1
+            # some delimiters start like operators
+            if peek(i) in delimiters and \
+               not prefix_in_ls(operators, peek(i+1)):
+                ls.append(Token(TokenType.DELIMITER, getch(i)))
+                continue
 
-        # handle 2-character words
-        if peek(2) in ["==", "!=", ">=", "<="]:
-            ls.append(Token(getch(2)))
-            continue
+        # handle operators
+        if prefix_in_ls(operators, peek()):
+            i = 1
+            while prefix_in_ls(operators, peek(i+1)):
+                i += 1
+            if peek(i) in operators:
+                ls.append(Token(TokenType.OPERATOR, getch(i)))
+                continue
 
         # handle comments
         if peek() == "#":

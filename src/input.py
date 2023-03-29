@@ -1,5 +1,5 @@
 # identifiers, numbers, single character operators
-a_1 = 12 * 3 + 2
+a_1 += 12 * 3 + 2
 
 # keyword "def"
 def t(arg):
