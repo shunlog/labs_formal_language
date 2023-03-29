@@ -7,20 +7,19 @@ class TokenType(Enum):
     EOF = auto()
     ID = auto()
     NUMBER = auto()
-    DEFN = auto()
-    PASS = auto()
-    IF = auto()
-    ELIF = auto()
-    ELSE = auto()
     INDENT = auto()
     DEDENT = auto()
+    KEYWORD = auto()
+    SEPARATOR = auto()
 
 keywords = {
-    "def": TokenType.DEFN,
-    "pass": TokenType.PASS,
-    "if": TokenType.IF,
-    "elif": TokenType.ELIF,
-    "else": TokenType.ELSE,
+    "False",      "await",      "else",       "import",     "pass",
+    "None",       "break",      "except",     "in",         "raise",
+    "True",       "class",      "finally",    "is",         "return",
+    "and",        "continue",   "for",        "lambda",     "try",
+    "as",         "def",        "from",       "nonlocal",   "while",
+    "assert",     "del",        "global",     "not",        "with",
+    "async",      "elif",       "if",         "or",         "yield"
 }
 
 class Token:
@@ -99,7 +98,7 @@ def get_tokens(s: str) -> list[Token]:
                 idstr += getch()
 
             if idstr in keywords:
-                ls.append(Token(keywords[idstr]))
+                ls.append(Token(TokenType.KEYWORD, idstr))
                 continue
 
             ls.append(Token(TokenType.ID, idstr))

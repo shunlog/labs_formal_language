@@ -1,15 +1,15 @@
-- [Lab 3: A simple lexer](#orgb9304d6)
-- [Theory](#orgc564886)
-  - [Lexical analysis](#org415a53c)
-  - [Ambiguous grammar](#org3ade7be)
-- [Objectives](#org228b077)
-- [Results](#org2dd4c5f)
-- [Implementation](#org5c44561)
+- [Lab 3: A simple lexer](#orgc508179)
+- [Theory](#orgc07b948)
+  - [Lexical analysis](#orga9df6d7)
+  - [Ambiguous grammar](#org83165e3)
+- [Objectives](#orgc8f54bf)
+- [Results](#org8b9d0bb)
+- [Implementation](#org3a890a6)
 
 
 
 
-<a id="orgb9304d6"></a>
+<a id="orgc508179"></a>
 
 # Lab 3: A simple lexer
 
@@ -20,12 +20,12 @@ Author
 : Balan Artiom
 
 
-<a id="orgc564886"></a>
+<a id="orgc07b948"></a>
 
 # Theory
 
 
-<a id="org415a53c"></a>
+<a id="orga9df6d7"></a>
 
 ## Lexical analysis
 
@@ -43,7 +43,7 @@ It&rsquo;s useful to store the location and length of each lexeme.
 The data structure unit used to store lexemes together with information about them is called a token.
 
 
-<a id="org3ade7be"></a>
+<a id="org83165e3"></a>
 
 ## Ambiguous grammar
 
@@ -72,14 +72,14 @@ Usually, whitespace doesn&rsquo;t make it past the lexer, but is still necessary
 For example, `elsex` is an **idendtifier**, but `else x` is the keyword **else** and the **identifier** _x_.
 
 
-<a id="org228b077"></a>
+<a id="orgc8f54bf"></a>
 
 # Objectives
 
 -   [X] Implement a lexer and show how it works.
 
 
-<a id="org2dd4c5f"></a>
+<a id="org8b9d0bb"></a>
 
 # Results
 
@@ -115,21 +115,21 @@ def t(arg):
     print(arg)
 ```
 
-| Token name         | Token value |
-|--------------------|-------------|
-| `TokenType.DEFN`   |             |
-| `TokenType.ID`     | `t`         |
-| `(`                |             |
-| `TokenType.ID`     | `arg`       |
-| `)`                |             |
-| `:`                |             |
-| `TokenType.INDENT` |             |
-| `TokenType.ID`     | `print`     |
-| `(`                |             |
-| `TokenType.ID`     | `arg`       |
-| `)`                |             |
-| `TokenType.DEDENT` |             |
-| `TokenType.EOF`    |             |
+| Token name          | Token value |
+|---------------------|-------------|
+| `TokenType.KEYWORD` | `def`       |
+| `TokenType.ID`      | `t`         |
+| `(`                 |             |
+| `TokenType.ID`      | `arg`       |
+| `)`                 |             |
+| `:`                 |             |
+| `TokenType.INDENT`  |             |
+| `TokenType.ID`      | `print`     |
+| `(`                 |             |
+| `TokenType.ID`      | `arg`       |
+| `)`                 |             |
+| `TokenType.DEDENT`  |             |
+| `TokenType.EOF`     |             |
 
 Did you catch that?
 The lexer generated two additional &ldquo;invisible&rdquo; tokens
@@ -154,25 +154,25 @@ if a:
 bar()
 ```
 
-| Token name         | Token value |
-|--------------------|-------------|
-| `TokenType.IF`     |             |
-| `TokenType.ID`     | `a`         |
-| `:`                |             |
-| `TokenType.INDENT` |             |
-| `TokenType.IF`     |             |
-| `TokenType.ID`     | `b`         |
-| `:`                |             |
-| `TokenType.INDENT` |             |
-| `TokenType.ID`     | `foo`       |
-| `(`                |             |
-| `)`                |             |
-| `TokenType.DEDENT` |             |
-| `TokenType.DEDENT` |             |
-| `TokenType.ID`     | `bar`       |
-| `(`                |             |
-| `)`                |             |
-| `TokenType.EOF`    |             |
+| Token name          | Token value |
+|---------------------|-------------|
+| `TokenType.KEYWORD` | `if`        |
+| `TokenType.ID`      | `a`         |
+| `:`                 |             |
+| `TokenType.INDENT`  |             |
+| `TokenType.KEYWORD` | `if`        |
+| `TokenType.ID`      | `b`         |
+| `:`                 |             |
+| `TokenType.INDENT`  |             |
+| `TokenType.ID`      | `foo`       |
+| `(`                 |             |
+| `)`                 |             |
+| `TokenType.DEDENT`  |             |
+| `TokenType.DEDENT`  |             |
+| `TokenType.ID`      | `bar`       |
+| `(`                 |             |
+| `)`                 |             |
+| `TokenType.EOF`     |             |
 
 Let&rsquo;s visualize this too:
 
@@ -197,21 +197,21 @@ def t(arg):
     print(arg)  # this comment is inline
 ```
 
-| Token name         | Token value |
-|--------------------|-------------|
-| `TokenType.DEFN`   |             |
-| `TokenType.ID`     | `t`         |
-| `(`                |             |
-| `TokenType.ID`     | `arg`       |
-| `)`                |             |
-| `:`                |             |
-| `TokenType.INDENT` |             |
-| `TokenType.ID`     | `print`     |
-| `(`                |             |
-| `TokenType.ID`     | `arg`       |
-| `)`                |             |
-| `TokenType.DEDENT` |             |
-| `TokenType.EOF`    |             |
+| Token name          | Token value |
+|---------------------|-------------|
+| `TokenType.KEYWORD` | `def`       |
+| `TokenType.ID`      | `t`         |
+| `(`                 |             |
+| `TokenType.ID`      | `arg`       |
+| `)`                 |             |
+| `:`                 |             |
+| `TokenType.INDENT`  |             |
+| `TokenType.ID`      | `print`     |
+| `(`                 |             |
+| `TokenType.ID`      | `arg`       |
+| `)`                 |             |
+| `TokenType.DEDENT`  |             |
+| `TokenType.EOF`     |             |
 
 Notice that the first line has a bad indent (first line can&rsquo;t be indented in python),
 but since it&rsquo;s a comment, we can ignore this issue (one more edge-case to consider).
@@ -229,7 +229,7 @@ def foo(a):
 The lexer simply raises an exception for this example.
 
 
-<a id="org5c44561"></a>
+<a id="org3a890a6"></a>
 
 # Implementation
 

@@ -104,21 +104,21 @@ tabulate_tokens(inp)
 
 #+RESULTS:
 :results:
-| Token name         | Token value |
-|--------------------+-------------|
-| =TokenType.DEFN=   |             |
-| =TokenType.ID=     | =t=         |
-| =(=                |             |
-| =TokenType.ID=     | =arg=       |
-| =)=                |             |
-| =:=                |             |
-| =TokenType.INDENT= |             |
-| =TokenType.ID=     | =print=     |
-| =(=                |             |
-| =TokenType.ID=     | =arg=       |
-| =)=                |             |
-| =TokenType.DEDENT= |             |
-| =TokenType.EOF=    |             |
+| Token name          | Token value |
+|---------------------+-------------|
+| =TokenType.KEYWORD= | =def=       |
+| =TokenType.ID=      | =t=         |
+| =(=                 |             |
+| =TokenType.ID=      | =arg=       |
+| =)=                 |             |
+| =:=                 |             |
+| =TokenType.INDENT=  |             |
+| =TokenType.ID=      | =print=     |
+| =(=                 |             |
+| =TokenType.ID=      | =arg=       |
+| =)=                 |             |
+| =TokenType.DEDENT=  |             |
+| =TokenType.EOF=     |             |
 :end:
 
 Did you catch that?
@@ -149,25 +149,25 @@ tabulate_tokens(inp)
 
 #+RESULTS:
 :results:
-| Token name         | Token value |
-|--------------------+-------------|
-| =TokenType.IF=     |             |
-| =TokenType.ID=     | =a=         |
-| =:=                |             |
-| =TokenType.INDENT= |             |
-| =TokenType.IF=     |             |
-| =TokenType.ID=     | =b=         |
-| =:=                |             |
-| =TokenType.INDENT= |             |
-| =TokenType.ID=     | =foo=       |
-| =(=                |             |
-| =)=                |             |
-| =TokenType.DEDENT= |             |
-| =TokenType.DEDENT= |             |
-| =TokenType.ID=     | =bar=       |
-| =(=                |             |
-| =)=                |             |
-| =TokenType.EOF=    |             |
+| Token name          | Token value |
+|---------------------+-------------|
+| =TokenType.KEYWORD= | =if=        |
+| =TokenType.ID=      | =a=         |
+| =:=                 |             |
+| =TokenType.INDENT=  |             |
+| =TokenType.KEYWORD= | =if=        |
+| =TokenType.ID=      | =b=         |
+| =:=                 |             |
+| =TokenType.INDENT=  |             |
+| =TokenType.ID=      | =foo=       |
+| =(=                 |             |
+| =)=                 |             |
+| =TokenType.DEDENT=  |             |
+| =TokenType.DEDENT=  |             |
+| =TokenType.ID=      | =bar=       |
+| =(=                 |             |
+| =)=                 |             |
+| =TokenType.EOF=     |             |
 :end:
 
 Let's visualize this too:
@@ -198,21 +198,21 @@ tabulate_tokens(inp)
 
 #+RESULTS:
 :results:
-| Token name         | Token value |
-|--------------------+-------------|
-| =TokenType.DEFN=   |             |
-| =TokenType.ID=     | =t=         |
-| =(=                |             |
-| =TokenType.ID=     | =arg=       |
-| =)=                |             |
-| =:=                |             |
-| =TokenType.INDENT= |             |
-| =TokenType.ID=     | =print=     |
-| =(=                |             |
-| =TokenType.ID=     | =arg=       |
-| =)=                |             |
-| =TokenType.DEDENT= |             |
-| =TokenType.EOF=    |             |
+| Token name          | Token value |
+|---------------------+-------------|
+| =TokenType.KEYWORD= | =def=       |
+| =TokenType.ID=      | =t=         |
+| =(=                 |             |
+| =TokenType.ID=      | =arg=       |
+| =)=                 |             |
+| =:=                 |             |
+| =TokenType.INDENT=  |             |
+| =TokenType.ID=      | =print=     |
+| =(=                 |             |
+| =TokenType.ID=      | =arg=       |
+| =)=                 |             |
+| =TokenType.DEDENT=  |             |
+| =TokenType.EOF=     |             |
 :end:
 
 Notice that the first line has a bad indent (first line can't be indented in python),
