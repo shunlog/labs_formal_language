@@ -1,15 +1,17 @@
-- [Lab 3: A simple lexer](#org5cfc323)
-- [Theory](#org74327b2)
-  - [Lexical analysis](#org732ae06)
-  - [Ambiguous grammar](#org9117efa)
-- [Objectives](#org5545cea)
-- [Results](#org923194d)
-- [Implementation](#orgc2bc5f8)
+- [Lab 3: A simple lexer](#orga661f8c)
+- [Theory](#orgfe3d31a)
+  - [Plus-equal or plus and equal?](#orgfe130c6)
+  - [Keyword or identifier?](#orge472023)
+  - [Comments](#orgd33c47e)
+  - [Solution: tokens](#orga350a0d)
+- [Objectives](#org9d7236f)
+- [Results](#org69874f5)
+- [Implementation](#orgdb7efc7)
 
 
 
 
-<a id="org5cfc323"></a>
+<a id="orga661f8c"></a>
 
 # Lab 3: A simple lexer
 
@@ -20,66 +22,167 @@ Author
 : Balan Artiom
 
 
-<a id="org74327b2"></a>
+<a id="orgfe3d31a"></a>
 
 # Theory
 
+****Tokens**** within parsers correspond to ****terminal symbols**** within formal grammars.
 
-<a id="org732ae06"></a>
+A grammar defines how a list of _terminal symbols_ is derived from the starting non-terminal symbol.
+Terminal symbols are like building blocks, which can be parsed into a tree to reason about their meaning.
+Problem is, we want to write our programs as text, and not as a stream of abstract symbols.
+We want text editors, not Sctratch-like GUIs.
 
-## Lexical analysis
-
-In English, words are composed of letters and words have meanings,
-but the meaning isn&rsquo;t derived from the letters.
-In fact, we don&rsquo;t even think of the letters when we read sentences,
-we read the words as a whole and only care about their meaning.
-That&rsquo;s kind of an analogy to the fact that parsers don&rsquo;t really care about the characters,
-they care about syntactic units, called lexemes.
-
-A lexeme is a string of characters that has a meaning.
-Lexemes often correspond to terminals in a grammar (e.g. identifier, number, operator).
-
-It&rsquo;s useful to store the location and length of each lexeme.
-The data structure unit used to store lexemes together with information about them is called a token.
+Why can&rsquo;t we just represent terminals as strings, you ask?
+Because for complex programming languages,
+splitting a stream of text (e.g. a source code file) into the terminals that we meant is not trivial.
 
 
-<a id="org9117efa"></a>
+<a id="orgfe130c6"></a>
 
-## Ambiguous grammar
+## Plus-equal or plus and equal?
 
-Lexers for real programming languages often can&rsquo;t be constructed from the grammar alone,
-since there are rules not captured in the grammar:
+For example, say we have this grammar, where strings surrounded by quotes are terminal symbols.
 
-1.  The off-side rule (indentation-sensitive blocks) can&rsquo;t be described by context-free grammars
-2.  Grammar rules can be ambiguous
+```text
+increment -> ID '+=' NUM
+add -> ID '=' NUM '+' NUM
+ID -> [a..z]+
+NUM -> [0..9]+
+```
 
-When grammar rules are ambiguous, a string can be matched by multiple rules.
-To counter this, for example ANTLR has disambiguating rules for tokenization ([docs](https://github.com/antlr/antlr4/blob/49b69bb31aa34654676a864b229a369680122470/doc/wildcard.md#nongreedy-lexer-subrules)):
+Then, we write a short program according to this grammar:
 
--   Greedy and non-greedy regex lexer rules
--   Match the first rule occurring in the grammar
+```text
+a=2+2
+a+=1
+```
 
-Ambiguous constructs should be used sparingly and in a strictly controlled fashion;
-otherwise, there can be no guarantee as to what language is recognized by a parser (Aho, Alfred V and Sethi, Ravi and Ullman, Jeffrey D, 2007).
+How do you split this program into its corresponding terminals?
+The first line is pretty easy:
 
-One quirk that proves disambiguization is complicated is the way ANTLR handles non-greedy rules (see rule 4 [in this section](https://github.com/antlr/antlr4/blob/49b69bb31aa34654676a864b229a369680122470/doc/wildcard.md#nongreedy-lexer-subrules)).
+```text
+'a' '=' '2' '+' '2'
+```
 
-A token has a name and an optional value, which can be of any type (including `dict`).
-Token names can correspond to nonterminals in the grammar,
-but can also be groupings of terminals (e.g. &ldquo;operator&rdquo;).
+But the second line could be split in different ways:
 
-Usually, whitespace doesn&rsquo;t make it past the lexer, but is still necessary to separate lexemes.
-For example, `elsex` is an **idendtifier**, but `else x` is the keyword **else** and the **identifier** _x_.
+```text
+'a' '+' '=' '1'
+```
+
+Or
+
+```text
+'a' '+=' '1'
+```
+
+Obviously, we meant the second meaning,
+but the rules of splitting a string into its corresponding terminals are not represented in the grammar,
+
+This problem could be generalized as &ldquo;should I pick the longer string or the shorter one?&rdquo;.
 
 
-<a id="org5545cea"></a>
+<a id="orge472023"></a>
+
+## Keyword or identifier?
+
+Another problem that arises when we want to translate a text into terminals
+is that sometimes a string can be interpreted as different terminals.
+The most common instance of this is when keywords could be interpreted as identifiers.
+For example, `break` could be either a `KEYWORD` or an `IDENTIFIER`,
+since this is how an `IDENTIFIER` is usually defined:
+
+```text
+IDENTIFIER -> letter (letter|number|underscore)*
+```
+
+
+<a id="orgd33c47e"></a>
+
+## Comments
+
+Yet another problem is ignoring comments inside source code.
+
+Since comments can appear anywhere in your program (e.g. in C),
+you would have to mention them everywhere in your grammar.
+
+For example:
+
+```text
+increment -> COMMENT* ID COMMENT* '+=' COMMENT* NUM COMMENT*
+add -> COMMENT* ID COMMENT* '=' COMMENT* NUM COMMENT* '+' COMMENT* NUM COMMENT*
+ID -> [a..z]+
+NUM -> [0..9]+
+COMMENT -> '/*' [^*] '*/'
+```
+
+Hopefully you get the point, this is not at all practical.
+
+
+<a id="orga350a0d"></a>
+
+## Solution: tokens
+
+It&rsquo;s clear by now that representing a terminal as a string is not viable.
+The solution is to represent terminal symbols with something more abstract than strings of characters,
+something unambiguous, and this something is _tokens_,
+
+Now that we represent terminals as tokens,
+we need a separate program that would translate a stream of text into these tokens.
+This program is called a &ldquo;lexer&rdquo;, or &ldquo;tokenizer&rdquo;, or &ldquo;scanner&rdquo;, or whatever.
+
+A tokenizer is naturally very ugly:
+it has to handle a lot of exceptions and edge-cases:
+
+-   intertwined comments
+-   keyword vs. identifier
+-   translate the longer sub-string or the shorter?
+-   indentation-based blocks (off-side rule)
+
+By delegating this task to the tokenizer,
+the parser doesn&rsquo;t have to worry about these ugly hacks,
+all it sees is a list of tokens
+which can be elegantly parsed according to the grammar rules alone.
+
+Tokens are also convenient because they can hold useful information about each lexeme.
+A token is usually represented as a pair of a type (usually `enum` value) and a value,
+which could be of any type, even a data structure holding multiple values:
+
+-   token value
+-   location in the text stream
+
+Let&rsquo;s see how a tokenizer would solve the previous example.
+Instead of representing terminals as strings,
+we represent them as token names:
+
+```text
+increment -> ID PLUSEQ NUM
+add -> ID EQ NUM PLUS NUM
+```
+
+Then, a tokenizer for this language would have the role of translating that program into the following tokens:
+
+```text
+ID(a) EQ NUM(2) PLUS NUM(2)
+ID(a) PLUSEQ NUM(1)
+```
+
+I used the notation `TOKENNAME(value)` to represent a token and its value.
+
+As for the second problem, a tokenizer usually solves this by prioritizing keywords over identifiers.
+
+Ignoring comments in a tokenizer is also pretty straight-forward.
+
+
+<a id="org9d7236f"></a>
 
 # Objectives
 
 -   [X] Implement a lexer and show how it works.
 
 
-<a id="org923194d"></a>
+<a id="org69874f5"></a>
 
 # Results
 
@@ -251,7 +354,7 @@ In this case, the operator `==` starts like the delimiter `=`, and the delimiter
 I&rsquo;m not sure what&rsquo;s the proper way to deal with this, so my code is a bit hacky.
 
 
-<a id="orgc2bc5f8"></a>
+<a id="orgdb7efc7"></a>
 
 # Implementation
 

@@ -5,41 +5,122 @@
 - Author :: Balan Artiom
 
 * Theory
-** Lexical analysis
-In English, words are composed of letters and words have meanings,
-but the meaning isn't derived from the letters.
-In fact, we don't even think of the letters when we read sentences,
-we read the words as a whole and only care about their meaning.
-That's kind of an analogy to the fact that parsers don't really care about the characters,
-they care about syntactic units, called lexemes.
+**Tokens** within parsers correspond to **terminal symbols** within formal grammars.
 
-A lexeme is a string of characters that has a meaning.
-Lexemes often correspond to terminals in a grammar (e.g. identifier, number, operator).
+A grammar defines how a list of /terminal symbols/ is derived from the starting non-terminal symbol.
+Terminal symbols are like building blocks, which can be parsed into a tree to reason about their meaning.
+Problem is, we want to write our programs as text, and not as a stream of abstract symbols.
+We want text editors, not Sctratch-like GUIs.
 
-It's useful to store the location and length of each lexeme.
-The data structure unit used to store lexemes together with information about them is called a token.
-** Ambiguous grammar
-Lexers for real programming languages often can't be constructed from the grammar alone,
-since there are rules not captured in the grammar:
-1) The off-side rule (indentation-sensitive blocks) can't be described by context-free grammars
-2) Grammar rules can be ambiguous
+Why can't we just represent terminals as strings, you ask?
+Because for complex programming languages,
+splitting a stream of text (e.g. a source code file) into the terminals that we meant is not trivial.
 
-When grammar rules are ambiguous, a string can be matched by multiple rules.
-To counter this, for example ANTLR has disambiguating rules for tokenization ([[https://github.com/antlr/antlr4/blob/49b69bb31aa34654676a864b229a369680122470/doc/wildcard.md#nongreedy-lexer-subrules][docs]]):
-+ Greedy and non-greedy regex lexer rules
-+ Match the first rule occurring in the grammar
+** Plus-equal or plus and equal?
+For example, say we have this grammar, where strings surrounded by quotes are terminal symbols.
+#+begin_example
+increment -> ID '+=' NUM
+add -> ID '=' NUM '+' NUM
+ID -> [a..z]+
+NUM -> [0..9]+
+#+end_example
 
-Ambiguous constructs should be used sparingly and in a strictly controlled fashion;
-otherwise, there can be no guarantee as to what language is recognized by a parser [cite:@aho2007compilers].
+Then, we write a short program according to this grammar:
+#+begin_example
+a=2+2
+a+=1
+#+end_example
 
-One quirk that proves disambiguization is complicated is the way ANTLR handles non-greedy rules (see rule 4 [[https://github.com/antlr/antlr4/blob/49b69bb31aa34654676a864b229a369680122470/doc/wildcard.md#nongreedy-lexer-subrules][in this section]]).
+How do you split this program into its corresponding terminals?
+The first line is pretty easy:
+#+begin_example
+'a' '=' '2' '+' '2'
+#+end_example
 
-A token has a name and an optional value, which can be of any type (including =dict=).
-Token names can correspond to nonterminals in the grammar,
-but can also be groupings of terminals (e.g. "operator").
+But the second line could be split in different ways:
+#+begin_example
+'a' '+' '=' '1'
+#+end_example
+Or
+#+begin_example
+'a' '+=' '1'
+#+end_example
 
-Usually, whitespace doesn't make it past the lexer, but is still necessary to separate lexemes.
-For example, =elsex= is an *idendtifier*, but =else x= is the keyword *else* and the *identifier* /x/.
+Obviously, we meant the second meaning,
+but the rules of splitting a string into its corresponding terminals are not represented in the grammar,
+
+This problem could be generalized as "should I pick the longer string or the shorter one?".
+** Keyword or identifier?
+Another problem that arises when we want to translate a text into terminals
+is that sometimes a string can be interpreted as different terminals.
+The most common instance of this is when keywords could be interpreted as identifiers.
+For example, =break= could be either a =KEYWORD= or an =IDENTIFIER=,
+since this is how an =IDENTIFIER= is usually defined:
+#+begin_example
+IDENTIFIER -> letter (letter|number|underscore)*
+#+end_example
+** Comments
+Yet another problem is ignoring comments inside source code.
+
+Since comments can appear anywhere in your program (e.g. in C),
+you would have to mention them everywhere in your grammar.
+
+For example:
+#+begin_example
+increment -> COMMENT* ID COMMENT* '+=' COMMENT* NUM COMMENT*
+add -> COMMENT* ID COMMENT* '=' COMMENT* NUM COMMENT* '+' COMMENT* NUM COMMENT*
+ID -> [a..z]+
+NUM -> [0..9]+
+COMMENT -> '/*' [^*] '*/'
+#+end_example
+
+Hopefully you get the point, this is not at all practical.
+** Solution: tokens
+It's clear by now that representing a terminal as a string is not viable.
+The solution is to represent terminal symbols with something more abstract than strings of characters,
+something unambiguous, and this something is /tokens/,
+
+Now that we represent terminals as tokens,
+we need a separate program that would translate a stream of text into these tokens.
+This program is called a "lexer", or "tokenizer", or "scanner", or whatever.
+
+A tokenizer is naturally very ugly:
+it has to handle a lot of exceptions and edge-cases:
+- intertwined comments
+- keyword vs. identifier
+- translate the longer sub-string or the shorter?
+- indentation-based blocks (off-side rule)
+
+By delegating this task to the tokenizer,
+the parser doesn't have to worry about these ugly hacks,
+all it sees is a list of tokens
+which can be elegantly parsed according to the grammar rules alone.
+
+Tokens are also convenient because they can hold useful information about each lexeme.
+A token is usually represented as a pair of a type (usually =enum= value) and a value,
+which could be of any type, even a data structure holding multiple values:
+- token value
+- location in the text stream
+
+Let's see how a tokenizer would solve the previous example.
+Instead of representing terminals as strings,
+we represent them as token names:
+#+begin_example
+increment -> ID PLUSEQ NUM
+add -> ID EQ NUM PLUS NUM
+#+end_example
+
+Then, a tokenizer for this language would have the role of translating that program into the following tokens:
+#+begin_example
+ID(a) EQ NUM(2) PLUS NUM(2)
+ID(a) PLUSEQ NUM(1)
+#+end_example
+
+I used the notation =TOKENNAME(value)= to represent a token and its value.
+
+As for the second problem, a tokenizer usually solves this by prioritizing keywords over identifiers.
+
+Ignoring comments in a tokenizer is also pretty straight-forward.
 * Objectives
 - [X] Implement a lexer and show how it works.
 * Results
