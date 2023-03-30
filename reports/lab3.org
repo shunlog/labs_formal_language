@@ -80,47 +80,47 @@ It's clear by now that representing a terminal as a string is not viable.
 The solution is to represent terminal symbols with something more abstract than strings of characters,
 something unambiguous, and this something is /tokens/,
 
-Now that we represent terminals as tokens,
-we need a separate program that would translate a stream of text into these tokens.
-This program is called a "lexer", or "tokenizer", or "scanner", or whatever.
-
-A tokenizer is naturally very ugly:
-it has to handle a lot of exceptions and edge-cases:
-- intertwined comments
-- keyword vs. identifier
-- translate the longer sub-string or the shorter?
-- indentation-based blocks (off-side rule)
-
-By delegating this task to the tokenizer,
-the parser doesn't have to worry about these ugly hacks,
-all it sees is a list of tokens
-which can be elegantly parsed according to the grammar rules alone.
-
-Tokens are also convenient because they can hold useful information about each lexeme.
-A token is usually represented as a pair of a type (usually =enum= value) and a value,
+A token is usually represented by a name/type (usually an =enum= item) and a value,
 which could be of any type, even a data structure holding multiple values:
 - token value
 - location in the text stream
 
-Let's see how a tokenizer would solve the previous example.
-Instead of representing terminals as strings,
-we represent them as token names:
-#+begin_example
-increment -> ID PLUSEQ NUM
-add -> ID EQ NUM PLUS NUM
-#+end_example
-
-Then, a tokenizer for this language would have the role of translating that program into the following tokens:
+Here is the list of tokens that the previous piece of code is supposed to encode:
 #+begin_example
 ID(a) EQ NUM(2) PLUS NUM(2)
 ID(a) PLUSEQ NUM(1)
 #+end_example
 
-I used the notation =TOKENNAME(value)= to represent a token and its value.
+I used the notation =TOKENNAME(value)= to represent a token.
 
-As for the second problem, a tokenizer usually solves this by prioritizing keywords over identifiers.
+Now that we represent terminals as tokens,
+we need a separate program that would translate a stream of text into these tokens.
+This program is called a "lexer", or "tokenizer", or "scanner", or whatever.
 
-Ignoring comments in a tokenizer is also pretty straight-forward.
+A tokenizer is naturally very ugly, since it has to handle a lot of exceptions and edge-cases:
+- intertwined comments
+- prioritize strings with multiple derivations (keyword vs. identifier)
+- decide whether to translate the longer sub-string or the shorter
+- indentation-based blocks (off-side rule)
+
+By delegating this task to the tokenizer, the parser doesn't have to worry about these ugly hacks;
+all it sees is a list of tokens which can be elegantly parsed according to the grammar rules alone.
+
+It is helpful to name every single token type with an all-caps name, like here:
+#+begin_example
+increment -> ID PLUSEQ NUM
+add -> ID EQ NUM PLUS NUM
+#+end_example
+
+However, it's not necessary.
+Some tokens don't need a value, like the token =PLUS=,
+so we might represent them using a simple string (like in this [[https://www.lysator.liu.se/c/ANSI-C-grammar-y.html][Yacc grammar for C]]).
+
+Here's how a tokenizer solves the three problems described previously:
+1. Using regex notation, specify whether to do a greedy or non-greedy match
+2. prioritize keywords over identifiers by checking them for a match first
+3. Ignoring comments in a tokenizer is pretty straight-forward
+4. Bonus: indentation-based blocks can be tokenized as described in the [[https://docs.python.org/3/reference/lexical_analysis.html#indentation][python docs]].
 * Objectives
 - [X] Implement a lexer and show how it works.
 * Results

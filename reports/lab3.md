@@ -1,17 +1,17 @@
-- [Lab 3: A simple lexer](#orga661f8c)
-- [Theory](#orgfe3d31a)
-  - [Plus-equal or plus and equal?](#orgfe130c6)
-  - [Keyword or identifier?](#orge472023)
-  - [Comments](#orgd33c47e)
-  - [Solution: tokens](#orga350a0d)
-- [Objectives](#org9d7236f)
-- [Results](#org69874f5)
-- [Implementation](#orgdb7efc7)
+- [Lab 3: A simple lexer](#org833806e)
+- [Theory](#org02f4e5b)
+  - [Plus-equal or plus and equal?](#org78f41b1)
+  - [Keyword or identifier?](#org4b54af5)
+  - [Comments](#org64f3b43)
+  - [Solution: tokens](#orgdf69ee6)
+- [Objectives](#org952e937)
+- [Results](#orgdc58724)
+- [Implementation](#org8d811a3)
 
 
 
 
-<a id="orga661f8c"></a>
+<a id="org833806e"></a>
 
 # Lab 3: A simple lexer
 
@@ -22,7 +22,7 @@ Author
 : Balan Artiom
 
 
-<a id="orgfe3d31a"></a>
+<a id="org02f4e5b"></a>
 
 # Theory
 
@@ -38,7 +38,7 @@ Because for complex programming languages,
 splitting a stream of text (e.g. a source code file) into the terminals that we meant is not trivial.
 
 
-<a id="orgfe130c6"></a>
+<a id="org78f41b1"></a>
 
 ## Plus-equal or plus and equal?
 
@@ -83,7 +83,7 @@ but the rules of splitting a string into its corresponding terminals are not rep
 This problem could be generalized as &ldquo;should I pick the longer string or the shorter one?&rdquo;.
 
 
-<a id="orge472023"></a>
+<a id="org4b54af5"></a>
 
 ## Keyword or identifier?
 
@@ -98,7 +98,7 @@ IDENTIFIER -> letter (letter|number|underscore)*
 ```
 
 
-<a id="orgd33c47e"></a>
+<a id="org64f3b43"></a>
 
 ## Comments
 
@@ -120,7 +120,7 @@ COMMENT -> '/*' [^*] '*/'
 Hopefully you get the point, this is not at all practical.
 
 
-<a id="orga350a0d"></a>
+<a id="orgdf69ee6"></a>
 
 ## Solution: tokens
 
@@ -128,61 +128,62 @@ It&rsquo;s clear by now that representing a terminal as a string is not viable.
 The solution is to represent terminal symbols with something more abstract than strings of characters,
 something unambiguous, and this something is _tokens_,
 
-Now that we represent terminals as tokens,
-we need a separate program that would translate a stream of text into these tokens.
-This program is called a &ldquo;lexer&rdquo;, or &ldquo;tokenizer&rdquo;, or &ldquo;scanner&rdquo;, or whatever.
-
-A tokenizer is naturally very ugly:
-it has to handle a lot of exceptions and edge-cases:
-
--   intertwined comments
--   keyword vs. identifier
--   translate the longer sub-string or the shorter?
--   indentation-based blocks (off-side rule)
-
-By delegating this task to the tokenizer,
-the parser doesn&rsquo;t have to worry about these ugly hacks,
-all it sees is a list of tokens
-which can be elegantly parsed according to the grammar rules alone.
-
-Tokens are also convenient because they can hold useful information about each lexeme.
-A token is usually represented as a pair of a type (usually `enum` value) and a value,
+A token is usually represented by a name/type (usually an `enum` item) and a value,
 which could be of any type, even a data structure holding multiple values:
 
 -   token value
 -   location in the text stream
 
-Let&rsquo;s see how a tokenizer would solve the previous example.
-Instead of representing terminals as strings,
-we represent them as token names:
-
-```text
-increment -> ID PLUSEQ NUM
-add -> ID EQ NUM PLUS NUM
-```
-
-Then, a tokenizer for this language would have the role of translating that program into the following tokens:
+Here is the list of tokens that the previous piece of code is supposed to encode:
 
 ```text
 ID(a) EQ NUM(2) PLUS NUM(2)
 ID(a) PLUSEQ NUM(1)
 ```
 
-I used the notation `TOKENNAME(value)` to represent a token and its value.
+I used the notation `TOKENNAME(value)` to represent a token.
 
-As for the second problem, a tokenizer usually solves this by prioritizing keywords over identifiers.
+Now that we represent terminals as tokens,
+we need a separate program that would translate a stream of text into these tokens.
+This program is called a &ldquo;lexer&rdquo;, or &ldquo;tokenizer&rdquo;, or &ldquo;scanner&rdquo;, or whatever.
 
-Ignoring comments in a tokenizer is also pretty straight-forward.
+A tokenizer is naturally very ugly, since it has to handle a lot of exceptions and edge-cases:
+
+-   intertwined comments
+-   prioritize strings with multiple derivations (keyword vs. identifier)
+-   decide whether to translate the longer sub-string or the shorter
+-   indentation-based blocks (off-side rule)
+
+By delegating this task to the tokenizer, the parser doesn&rsquo;t have to worry about these ugly hacks;
+all it sees is a list of tokens which can be elegantly parsed according to the grammar rules alone.
+
+It is helpful to name every single token type with an all-caps name, like here:
+
+```text
+increment -> ID PLUSEQ NUM
+add -> ID EQ NUM PLUS NUM
+```
+
+However, it&rsquo;s not necessary.
+Some tokens don&rsquo;t need a value, like the token `PLUS`,
+so we might represent them using a simple string (like in this [Yacc grammar for C](https://www.lysator.liu.se/c/ANSI-C-grammar-y.html)).
+
+Here&rsquo;s how a tokenizer solves the three problems described previously:
+
+1.  Using regex notation, specify whether to do a greedy or non-greedy match
+2.  prioritize keywords over identifiers by checking them for a match first
+3.  Ignoring comments in a tokenizer is pretty straight-forward
+4.  Bonus: indentation-based blocks can be tokenized as described in the [python docs](https://docs.python.org/3/reference/lexical_analysis.html#indentation).
 
 
-<a id="org9d7236f"></a>
+<a id="org952e937"></a>
 
 # Objectives
 
 -   [X] Implement a lexer and show how it works.
 
 
-<a id="org69874f5"></a>
+<a id="orgdc58724"></a>
 
 # Results
 
@@ -354,7 +355,7 @@ In this case, the operator `==` starts like the delimiter `=`, and the delimiter
 I&rsquo;m not sure what&rsquo;s the proper way to deal with this, so my code is a bit hacky.
 
 
-<a id="orgdb7efc7"></a>
+<a id="org8d811a3"></a>
 
 # Implementation
 
