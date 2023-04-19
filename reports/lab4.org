@@ -31,7 +31,7 @@ g1 = Grammar(VN = {'S', 'A', 'B', 'C', 'E'},
 
 #+RESULTS:
 :results:
-$$\\begin{align}S &→ A \\\\ A &→ d | a A d A B | d S \\\\ B &→ A C | a C | a S \\\\ C &→ ε \\\\ E &→ A S\\end{align}$$
+$$\\begin{alignat*}{1}V_N &= \\{S,B,C,A,E\\} \\\\ V_T &= \\{a,d\\} \\\\ S &= \\{S\\} \\\\ P &= \\{ \\\\&S → A, \\\\ &A → d | a A d A B | d S, \\\\ &B → a S | A C | a C, \\\\ &C → ε, \\\\ &E → A S\\} \\\\ \\end{alignat*}$$
 :end:
 
 And here's its Chomsky normal form:
@@ -43,7 +43,7 @@ g1_normal = g1.to_normal_form()
 
 #+RESULTS:
 :results:
-$$\\begin{align}S &→ d0 S | a0 A0 | d \\\\ A &→ d0 S | a0 A0 | d \\\\ B &→ a | d0 S | a0 A0 | a0 S | d \\\\ E &→ A S \\\\ S0 &→ d0 S | a0 A0 | d \\\\ d0 &→ d \\\\ a0 &→ a \\\\ A0 &→ A A1 \\\\ A1 &→ d0 A2 \\\\ A2 &→ A B\\end{align}$$
+$$\\begin{alignat*}{1}V_N &= \\{A2,a0,S0,A1,E,d0,S,B,A0,C,A\\} \\\\ V_T &= \\{a,d\\} \\\\ S &= \\{S0\\} \\\\ P &= \\{ \\\\&S → d | d0 S | a0 A0, \\\\ &A → d | d0 S | a0 A0, \\\\ &B → d0 S | d | a0 S | a0 A0 | a, \\\\ &E → A S, \\\\ &S0 → d | d0 S | a0 A0, \\\\ &a0 → a, \\\\ &d0 → d, \\\\ &A0 → A A1, \\\\ &A1 → d0 A2, \\\\ &A2 → A B\\} \\\\ \\end{alignat*}$$
 :end:
 
 #+begin_src python :results verbatim
@@ -51,7 +51,7 @@ g1
 #+end_src
 
 #+RESULTS:
-: {S -> A, A -> d, A -> a A d A B, A -> d S, B -> A C, B -> a C, B -> a S, C -> , E -> A S}
+: {S -> A, A -> d, A -> a A d A B, A -> d S, B -> a S, B -> A C, B -> a C, C -> , E -> A S}
 
 #+begin_src python :results verbatim
 from copy import deepcopy
@@ -66,6 +66,6 @@ g2
 #+end_src
 
 #+RESULTS:
-: {S -> d0 S, S -> a0 A0, S -> d, A -> d0 S, A -> a0 A0, A -> d, B -> a, B -> d0 S, B -> a0 A0, B -> a0 S, B -> d, E -> A S, S0 -> d0 S, S0 -> a0 A0, S0 -> d, d0 -> d, a0 -> a, A0 -> A A1, A1 -> d0 A2, A2 -> A B}
+: {S -> d, S -> d0 S, S -> a0 A0, A -> d, A -> d0 S, A -> a0 A0, B -> d0 S, B -> d, B -> a0 S, B -> a0 A0, B -> a, E -> A S, S0 -> d, S0 -> d0 S, S0 -> a0 A0, a0 -> a, d0 -> d, A0 -> A A1, A1 -> d0 A2, A2 -> A B}
 
 * Implementation
