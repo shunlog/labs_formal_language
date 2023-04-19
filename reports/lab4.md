@@ -1,63 +1,60 @@
-- [Lab 4: Chomsky normal form](#org9af32ec)
-- [Theory](#org6bf9e9c)
-- [Objectives](#org83cc369)
-- [Results](#org71fc9fb)
-- [Implementation](#orgb2788d2)
+
+# Table of Contents
+
+1.  [Lab 4: Chomsky normal form](#org3670dea)
+2.  [Theory](#orge3546e5)
+3.  [Objectives](#orge595e4e)
+4.  [Results](#orgc4a29be)
+5.  [Implementation](#org3647dc7)
 
 
 
-
-<a id="org9af32ec"></a>
+<a id="org3670dea"></a>
 
 # Lab 4: Chomsky normal form
 
-Course
-: Formal Languages &amp; Finite Automata
-
-Author
-: Balan Artiom
+-   **Course:** Formal Languages & Finite Automata
+-   **Author:** Balan Artiom
 
 
-<a id="org6bf9e9c"></a>
+<a id="orge3546e5"></a>
 
 # Theory
 
 
-<a id="org83cc369"></a>
+<a id="orge595e4e"></a>
 
 # Objectives
 
 -   [X] Implement a method to convert a CFG to its normal form
 
 
-<a id="org71fc9fb"></a>
+<a id="orgc4a29be"></a>
 
 # Results
 
-```python
-g1 = Grammar(VN = {'S', 'A', 'B', 'C', 'E'},
-        VT = {'d', 'a'},
-        S = 'S',
-        P = {
-            ('S',): {('A',)},
-            ('A',): {('d',), ('d', 'S'), ('a', 'A', 'd', 'A', 'B')},
-            ('B',): {('a', 'C'), ('a', 'S'), ('A', 'C')},
-            ('C',): {()},
-            ('E',): {('A', 'S')}})
+    g1 = Grammar(VN = {'S', 'A', 'B', 'C', 'E'},
+            VT = {'d', 'a'},
+            S = 'S',
+            P = {
+                ('S',): {('A',)},
+                ('A',): {('d',), ('d', 'S'), ('a', 'A', 'd', 'A', 'B')},
+                ('B',): {('a', 'C'), ('a', 'S'), ('A', 'C')},
+                ('C',): {()},
+                ('E',): {('A', 'S')}})
+    
+    "$$\n" + g1.to_latex() + '\n$$'
 
-"$$\n" + g1.to_latex() + '\n$$'
-```
-
-\\[
+$$
 S → A
 A → d S | d | a A d A B
 B → A C | a S | a C
 C → ε
 E → A S
-\\]
+$$
 
 
-<a id="orgb2788d2"></a>
+<a id="org3647dc7"></a>
 
 # Implementation
 

@@ -1,34 +1,33 @@
-- [Lab 3: A simple lexer](#org833806e)
-- [Theory](#org02f4e5b)
-  - [Plus-equal or plus and equal?](#org78f41b1)
-  - [Keyword or identifier?](#org4b54af5)
-  - [Comments](#org64f3b43)
-  - [Solution: tokens](#orgdf69ee6)
-- [Objectives](#org952e937)
-- [Results](#orgdc58724)
-- [Implementation](#org8d811a3)
+
+# Table of Contents
+
+1.  [Lab 3: A simple lexer](#org03b5e5d)
+2.  [Theory](#orgc1fa401)
+    1.  [Plus-equal or plus and equal?](#org4b643b0)
+    2.  [Keyword or identifier?](#orgadf97cf)
+    3.  [Comments](#orge1ce2fc)
+    4.  [Solution: tokens](#orge0bc77b)
+3.  [Objectives](#orge01b090)
+4.  [Results](#org1c1a527)
+5.  [Implementation](#org3e6e04a)
 
 
 
-
-<a id="org833806e"></a>
+<a id="org03b5e5d"></a>
 
 # Lab 3: A simple lexer
 
-Course
-: Formal Languages &amp; Finite Automata
-
-Author
-: Balan Artiom
+-   **Course:** Formal Languages & Finite Automata
+-   **Author:** Balan Artiom
 
 
-<a id="org02f4e5b"></a>
+<a id="orgc1fa401"></a>
 
 # Theory
 
 ****Tokens**** within parsers correspond to ****terminal symbols**** within formal grammars.
 
-A grammar defines how a list of _terminal symbols_ is derived from the starting non-terminal symbol.
+A grammar defines how a list of *terminal symbols* is derived from the starting non-terminal symbol.
 Terminal symbols are like building blocks, which can be parsed into a tree to reason about their meaning.
 Problem is, we want to write our programs as text, and not as a stream of abstract symbols.
 We want text editors, not Sctratch-like GUIs.
@@ -38,44 +37,34 @@ Because for complex programming languages,
 splitting a stream of text (e.g. a source code file) into the terminals that we meant is not trivial.
 
 
-<a id="org78f41b1"></a>
+<a id="org4b643b0"></a>
 
 ## Plus-equal or plus and equal?
 
 For example, say we have this grammar, where strings surrounded by quotes are terminal symbols.
 
-```text
-increment -> ID '+=' NUM
-add -> ID '=' NUM '+' NUM
-ID -> [a..z]+
-NUM -> [0..9]+
-```
+    increment -> ID '+=' NUM
+    add -> ID '=' NUM '+' NUM
+    ID -> [a..z]+
+    NUM -> [0..9]+
 
 Then, we write a short program according to this grammar:
 
-```text
-a=2+2
-a+=1
-```
+    a=2+2
+    a+=1
 
 How do you split this program into its corresponding terminals?
 The first line is pretty easy:
 
-```text
-'a' '=' '2' '+' '2'
-```
+    'a' '=' '2' '+' '2'
 
 But the second line could be split in different ways:
 
-```text
-'a' '+' '=' '1'
-```
+    'a' '+' '=' '1'
 
 Or
 
-```text
-'a' '+=' '1'
-```
+    'a' '+=' '1'
 
 Obviously, we meant the second meaning,
 but the rules of splitting a string into its corresponding terminals are not represented in the grammar,
@@ -83,7 +72,7 @@ but the rules of splitting a string into its corresponding terminals are not rep
 This problem could be generalized as &ldquo;should I pick the longer string or the shorter one?&rdquo;.
 
 
-<a id="org4b54af5"></a>
+<a id="orgadf97cf"></a>
 
 ## Keyword or identifier?
 
@@ -93,12 +82,10 @@ The most common instance of this is when keywords could be interpreted as identi
 For example, `break` could be either a `KEYWORD` or an `IDENTIFIER`,
 since this is how an `IDENTIFIER` is usually defined:
 
-```text
-IDENTIFIER -> letter (letter|number|underscore)*
-```
+    IDENTIFIER -> letter (letter|number|underscore)*
 
 
-<a id="org64f3b43"></a>
+<a id="orge1ce2fc"></a>
 
 ## Comments
 
@@ -109,24 +96,22 @@ you would have to mention them everywhere in your grammar.
 
 For example:
 
-```text
-increment -> COMMENT* ID COMMENT* '+=' COMMENT* NUM COMMENT*
-add -> COMMENT* ID COMMENT* '=' COMMENT* NUM COMMENT* '+' COMMENT* NUM COMMENT*
-ID -> [a..z]+
-NUM -> [0..9]+
-COMMENT -> '/*' [^*] '*/'
-```
+    increment -> COMMENT* ID COMMENT* '+=' COMMENT* NUM COMMENT*
+    add -> COMMENT* ID COMMENT* '=' COMMENT* NUM COMMENT* '+' COMMENT* NUM COMMENT*
+    ID -> [a..z]+
+    NUM -> [0..9]+
+    COMMENT -> '/*' [^*] '*/'
 
 Hopefully you get the point, this is not at all practical.
 
 
-<a id="orgdf69ee6"></a>
+<a id="orge0bc77b"></a>
 
 ## Solution: tokens
 
 It&rsquo;s clear by now that representing a terminal as a string is not viable.
 The solution is to represent terminal symbols with something more abstract than strings of characters,
-something unambiguous, and this something is _tokens_,
+something unambiguous, and this something is *tokens*,
 
 A token is usually represented by a name/type (usually an `enum` item) and a value,
 which could be of any type, even a data structure holding multiple values:
@@ -136,10 +121,8 @@ which could be of any type, even a data structure holding multiple values:
 
 Here is the list of tokens that the previous piece of code is supposed to encode:
 
-```text
-ID(a) EQ NUM(2) PLUS NUM(2)
-ID(a) PLUSEQ NUM(1)
-```
+    ID(a) EQ NUM(2) PLUS NUM(2)
+    ID(a) PLUSEQ NUM(1)
 
 I used the notation `TOKENNAME(value)` to represent a token.
 
@@ -159,10 +142,8 @@ all it sees is a list of tokens which can be elegantly parsed according to the g
 
 It is helpful to name every single token type with an all-caps name, like here:
 
-```text
-increment -> ID PLUSEQ NUM
-add -> ID EQ NUM PLUS NUM
-```
+    increment -> ID PLUSEQ NUM
+    add -> ID EQ NUM PLUS NUM
 
 However, it&rsquo;s not necessary.
 Some tokens don&rsquo;t need a value, like the token `PLUS`,
@@ -176,14 +157,14 @@ Here&rsquo;s how a tokenizer solves the three problems described previously:
 4.  Bonus: indentation-based blocks can be tokenized as described in the [python docs](https://docs.python.org/3/reference/lexical_analysis.html#indentation).
 
 
-<a id="org952e937"></a>
+<a id="orge01b090"></a>
 
 # Objectives
 
 -   [X] Implement a lexer and show how it works.
 
 
-<a id="orgdc58724"></a>
+<a id="org1c1a527"></a>
 
 # Results
 
@@ -191,13 +172,9 @@ I wrote a lexer for python-like syntax, hence, all the example strings are valid
 
 Let&rsquo;s parse a simple variable assignment:
 
-```python
-a_1 += 12 * 3 + 2
-```
+    a_1 += 12 * 3 + 2
 
-```text
-/tmp/babel-P0bk7B/python-M2mdv0
-```
+    /tmp/babel-P0bk7B/python-M2mdv0
 
 Each token is represented by two things: a name and an optional value.
 In this example, notice that the token for the variable `a` is of type `ID`,
@@ -205,39 +182,170 @@ which stands for &ldquo;identifier&rdquo;, and the token value is the name of th
 
 Similarly, numbers are represented by `NUMBER` tokens, with their value as the token value.
 
-| Token name            | Token value |
-|-----------------------|-------------|
-| `TokenType.ID`        | `a_1`       |
-| `TokenType.DELIMITER` | `+=`        |
-| `TokenType.NUMBER`    | `12`        |
-| `TokenType.OPERATOR`  | `*`         |
-| `TokenType.NUMBER`    | `3`         |
-| `TokenType.OPERATOR`  | `+`         |
-| `TokenType.NUMBER`    | `2`         |
-| `TokenType.EOF`       |             |
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Token name</th>
+<th scope="col" class="org-left">Token value</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="org-left"><code>TokenType.ID</code></td>
+<td class="org-left"><code>a_1</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>+=</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.NUMBER</code></td>
+<td class="org-left"><code>12</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.OPERATOR</code></td>
+<td class="org-left"><code>*</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.NUMBER</code></td>
+<td class="org-left"><code>3</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.OPERATOR</code></td>
+<td class="org-left"><code>+</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.NUMBER</code></td>
+<td class="org-left"><code>2</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.EOF</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
 
 Now let&rsquo;s see how a lexer recognizes indentation:
 
-```python
-def t(arg):
-    print(arg)
-```
+    def t(arg):
+        print(arg)
 
-| Token name            | Token value |
-|-----------------------|-------------|
-| `TokenType.KEYWORD`   | `def`       |
-| `TokenType.ID`        | `t`         |
-| `TokenType.DELIMITER` | `(`         |
-| `TokenType.ID`        | `arg`       |
-| `TokenType.DELIMITER` | `)`         |
-| `TokenType.DELIMITER` | `:`         |
-| `TokenType.INDENT`    |             |
-| `TokenType.ID`        | `print`     |
-| `TokenType.DELIMITER` | `(`         |
-| `TokenType.ID`        | `arg`       |
-| `TokenType.DELIMITER` | `)`         |
-| `TokenType.DEDENT`    |             |
-| `TokenType.EOF`       |             |
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Token name</th>
+<th scope="col" class="org-left">Token value</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="org-left"><code>TokenType.KEYWORD</code></td>
+<td class="org-left"><code>def</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.ID</code></td>
+<td class="org-left"><code>t</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>(</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.ID</code></td>
+<td class="org-left"><code>arg</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>)</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>:</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.INDENT</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.ID</code></td>
+<td class="org-left"><code>print</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>(</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.ID</code></td>
+<td class="org-left"><code>arg</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>)</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DEDENT</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.EOF</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
 
 Did you catch that?
 The lexer generated two additional &ldquo;invisible&rdquo; tokens
@@ -245,81 +353,251 @@ to let the parser know about the indented block: `INDENT` and `DEDENT`.
 
 You could visualize the token placement like this:
 
-```text
-1. def t(arg):
-     v INDENT
-2.    print(arg)
-3.
-  ^ DEDENT
-```
+    1. def t(arg):
+         v INDENT
+    2.    print(arg)
+    3.
+      ^ DEDENT
 
 Let&rsquo;s see a more complicated example:
 
-```python
-if a:
-    if b:
-        foo()
-bar()
-```
+    if a:
+        if b:
+            foo()
+    bar()
 
-| Token name            | Token value |
-|-----------------------|-------------|
-| `TokenType.KEYWORD`   | `if`        |
-| `TokenType.ID`        | `a`         |
-| `TokenType.DELIMITER` | `:`         |
-| `TokenType.INDENT`    |             |
-| `TokenType.KEYWORD`   | `if`        |
-| `TokenType.ID`        | `b`         |
-| `TokenType.DELIMITER` | `:`         |
-| `TokenType.INDENT`    |             |
-| `TokenType.ID`        | `foo`       |
-| `TokenType.DELIMITER` | `(`         |
-| `TokenType.DELIMITER` | `)`         |
-| `TokenType.DEDENT`    |             |
-| `TokenType.DEDENT`    |             |
-| `TokenType.ID`        | `bar`       |
-| `TokenType.DELIMITER` | `(`         |
-| `TokenType.DELIMITER` | `)`         |
-| `TokenType.EOF`       |             |
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Token name</th>
+<th scope="col" class="org-left">Token value</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="org-left"><code>TokenType.KEYWORD</code></td>
+<td class="org-left"><code>if</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.ID</code></td>
+<td class="org-left"><code>a</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>:</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.INDENT</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.KEYWORD</code></td>
+<td class="org-left"><code>if</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.ID</code></td>
+<td class="org-left"><code>b</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>:</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.INDENT</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.ID</code></td>
+<td class="org-left"><code>foo</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>(</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>)</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DEDENT</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DEDENT</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.ID</code></td>
+<td class="org-left"><code>bar</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>(</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>)</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.EOF</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
 
 Let&rsquo;s visualize this too:
 
-```text
-1. if a:
-     v INDENT
-2.    if b:
-          v INDENT
-3.         foo()
-4. bar()
-  ^ 2 x DEDENT
-```
+    1. if a:
+         v INDENT
+    2.    if b:
+              v INDENT
+    3.         foo()
+    4. bar()
+      ^ 2 x DEDENT
 
 Notice how two `DEDENT` tokens were generated before `bar()`,
 because we &ldquo;closed&rdquo; two indented blocks.
 
 The lexer recognizes comments too and ignores them:
 
-```python
- # this line has a bad indent
-def t(arg):
-    print(arg)  # this comment is inline
-```
+     # this line has a bad indent
+    def t(arg):
+        print(arg)  # this comment is inline
 
-| Token name            | Token value |
-|-----------------------|-------------|
-| `TokenType.KEYWORD`   | `def`       |
-| `TokenType.ID`        | `t`         |
-| `TokenType.DELIMITER` | `(`         |
-| `TokenType.ID`        | `arg`       |
-| `TokenType.DELIMITER` | `)`         |
-| `TokenType.DELIMITER` | `:`         |
-| `TokenType.INDENT`    |             |
-| `TokenType.ID`        | `print`     |
-| `TokenType.DELIMITER` | `(`         |
-| `TokenType.ID`        | `arg`       |
-| `TokenType.DELIMITER` | `)`         |
-| `TokenType.DEDENT`    |             |
-| `TokenType.EOF`       |             |
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Token name</th>
+<th scope="col" class="org-left">Token value</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="org-left"><code>TokenType.KEYWORD</code></td>
+<td class="org-left"><code>def</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.ID</code></td>
+<td class="org-left"><code>t</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>(</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.ID</code></td>
+<td class="org-left"><code>arg</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>)</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>:</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.INDENT</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.ID</code></td>
+<td class="org-left"><code>print</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>(</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.ID</code></td>
+<td class="org-left"><code>arg</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>)</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DEDENT</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.EOF</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
 
 Notice that the first line has a bad indent (first line can&rsquo;t be indented in python),
 but since it&rsquo;s a comment, we can ignore this issue (one more edge-case to consider).
@@ -327,35 +605,75 @@ but since it&rsquo;s a comment, we can ignore this issue (one more edge-case to 
 There&rsquo;s one type of indentation error that can be recognized by the lexer (and 3 others that can only be recognized by the parser),
 and that&rsquo;s the &ldquo;inconsistent dedent&rdquo;:
 
-```python
-def foo(a):
-    if a == 1:
-        return 1
-   return 0
-```
+    def foo(a):
+        if a == 1:
+            return 1
+       return 0
 
 The lexer simply raises an exception for this example.
 
 Notice how some delimiters start like operators, and viceversa:
 
-```python
-a += b == c
-```
+    a += b == c
 
-| Token name            | Token value |
-|-----------------------|-------------|
-| `TokenType.ID`        | `a`         |
-| `TokenType.DELIMITER` | `+=`        |
-| `TokenType.ID`        | `b`         |
-| `TokenType.OPERATOR`  | `==`        |
-| `TokenType.ID`        | `c`         |
-| `TokenType.EOF`       |             |
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Token name</th>
+<th scope="col" class="org-left">Token value</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="org-left"><code>TokenType.ID</code></td>
+<td class="org-left"><code>a</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.DELIMITER</code></td>
+<td class="org-left"><code>+=</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.ID</code></td>
+<td class="org-left"><code>b</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.OPERATOR</code></td>
+<td class="org-left"><code>==</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.ID</code></td>
+<td class="org-left"><code>c</code></td>
+</tr>
+
+
+<tr>
+<td class="org-left"><code>TokenType.EOF</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
 
 In this case, the operator `==` starts like the delimiter `=`, and the delimiter `+=` starts like the operator `+`.
 I&rsquo;m not sure what&rsquo;s the proper way to deal with this, so my code is a bit hacky.
 
 
-<a id="org8d811a3"></a>
+<a id="org3e6e04a"></a>
 
 # Implementation
 
