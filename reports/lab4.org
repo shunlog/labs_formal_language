@@ -25,18 +25,14 @@ g1 = Grammar(VN = {'S', 'A', 'B', 'C', 'E'},
             ('C',): {()},
             ('E',): {('A', 'S')}})
 
-"$$\n" + g1.to_latex() + '\n$$'
+"$$\\begin{multline}\n" + g1.to_latex() + '\n\\end{multline}$$'
 #+end_src
 
 #+RESULTS:
 :results:
-$$
-S → A\\
-A → d | a A d A B | d S\\
-B → a S | a C | A C\\
-C → ε\\
-E → A S
-$$
+$$\begin{multline}
+S → A \\\\ A → d | d S | a A d A B \\\\ B → A C | a S | a C \\\\ C → ε \\\\ E → A S
+\end{multline}$$
 :end:
 
 * Implementation
