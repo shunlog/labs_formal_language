@@ -1,15 +1,15 @@
 
 # Table of Contents
 
-1.  [Lab 4: Chomsky normal form](#org976db02)
-2.  [Theory](#org2887f77)
-3.  [Objectives](#org2611bba)
-4.  [Results](#orgc912f02)
-5.  [Implementation](#orgdca783b)
+1.  [Lab 4: Chomsky normal form](#orgee10f09)
+2.  [Theory](#org1b036f3)
+3.  [Objectives](#org7c4eee4)
+4.  [Results](#org1875e41)
+5.  [Implementation](#org812aecb)
 
 
 
-<a id="org976db02"></a>
+<a id="orgee10f09"></a>
 
 # Lab 4: Chomsky normal form
 
@@ -17,19 +17,19 @@
 -   **Author:** Balan Artiom
 
 
-<a id="org2887f77"></a>
+<a id="org1b036f3"></a>
 
 # Theory
 
 
-<a id="org2611bba"></a>
+<a id="org7c4eee4"></a>
 
 # Objectives
 
 -   [X] Implement a method to convert a CFG to its normal form
 
 
-<a id="orgc912f02"></a>
+<a id="org1875e41"></a>
 
 # Results
 
@@ -43,14 +43,12 @@
                 ('C',): {()},
                 ('E',): {('A', 'S')}})
     
-    "$$\\begin{multline}\n" + g1.to_latex() + '\n\\end{multline}$$'
+    "$$" + g1.to_latex() + '$$'
 
-$$\begin{multline}
-S → A \\\\ A → d | d S | a A d A B \\\\ B → A C | a S | a C \\\\ C → ε \\\\ E → A S
-\end{multline}$$
+$$\\begin{align}S &→ A \\\\ A &→ d S | d | a A d A B \\\\ B &→ a C | A C | a S \\\\ C &→ ε \\\\ E &→ A S\\end{align}$$
 
 
-<a id="orgdca783b"></a>
+<a id="org812aecb"></a>
 
 # Implementation
 
