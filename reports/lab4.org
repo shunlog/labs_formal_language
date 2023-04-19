@@ -31,10 +31,10 @@ g1 = Grammar(VN = {'S', 'A', 'B', 'C', 'E'},
 #+RESULTS:
 :results:
 $$
-S → A
-A → d S | d | a A d A B
-B → A C | a S | a C
-C → ε
+S → A\\
+A → d | a A d A B | d S\\
+B → a S | a C | A C\\
+C → ε\\
 E → A S
 $$
 :end:
