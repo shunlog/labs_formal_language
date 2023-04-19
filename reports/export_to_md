@@ -12,4 +12,4 @@
 
 
 (find-file (car (last command-line-args)))
-(org-blackfriday-export-to-markdown)
+(org-md-export-to-markdown)
