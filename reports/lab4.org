@@ -1,0 +1,42 @@
+#+title: Lab2
+#+PROPERTY: header-args:python   :session :exports both :eval no-export :async
+* Lab 4: Chomsky normal form
+- Course :: Formal Languages & Finite Automata
+- Author :: Balan Artiom
+
+* Theory
+* Objectives
+- [X] Implement a method to convert a CFG to its normal form
+* Results
+#+begin_src python :exports none
+from angryowl.grammar import *
+#+end_src
+
+#+RESULTS:
+
+#+begin_src python :results drawer
+g1 = Grammar(VN = {'S', 'A', 'B', 'C', 'E'},
+        VT = {'d', 'a'},
+        S = 'S',
+        P = {
+            ('S',): {('A',)},
+            ('A',): {('d',), ('d', 'S'), ('a', 'A', 'd', 'A', 'B')},
+            ('B',): {('a', 'C'), ('a', 'S'), ('A', 'C')},
+            ('C',): {()},
+            ('E',): {('A', 'S')}})
+
+"$$\n" + g1.to_latex() + '\n$$'
+#+end_src
+
+#+RESULTS:
+:results:
+$$
+S → A
+A → d S | d | a A d A B
+B → A C | a S | a C
+C → ε
+E → A S
+$$
+:end:
+
+* Implementation
