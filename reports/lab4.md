@@ -1,15 +1,20 @@
 
 # Table of Contents
 
-1.  [Lab 4: Chomsky normal form](#org5863182)
-2.  [Theory](#orgf0e7cbc)
-3.  [Objectives](#orgbb00ed7)
-4.  [Results](#orgef29433)
-5.  [Implementation](#org0bdbd64)
+1.  [Lab 4: Chomsky normal form](#orgdc8dcaa)
+2.  [Theory](#org23528c2)
+3.  [Objectives](#org53ecbf6)
+4.  [Results](#org9c6a88a)
+5.  [Implementation](#orga4bbfd4)
+    1.  [TERM](#orgdd1a500)
+    2.  [BIN](#orgd884a85)
+    3.  [DEL](#org3c66437)
+    4.  [UNIT](#org865a5f4)
+    5.  [Documentation](#org65533ac)
 
 
 
-<a id="org5863182"></a>
+<a id="orgdc8dcaa"></a>
 
 # Lab 4: Chomsky normal form
 
@@ -17,7 +22,7 @@
 -   **Author:** Balan Artiom
 
 
-<a id="orgf0e7cbc"></a>
+<a id="org23528c2"></a>
 
 # Theory
 
@@ -33,7 +38,7 @@ This CNF thing was pretty difficult, painfully boring,
 and its only use seems to be in some specific parsing algorithm (called CYK, if that matters).
 
 
-<a id="orgbb00ed7"></a>
+<a id="org53ecbf6"></a>
 
 # Objectives
 
@@ -41,7 +46,7 @@ and its only use seems to be in some specific parsing algorithm (called CYK, if 
 -   [X] Write unit tests
 
 
-<a id="orgef29433"></a>
+<a id="org9c6a88a"></a>
 
 # Results
 
@@ -104,7 +109,7 @@ Here&rsquo;s a capture of my terminal after running all the tests:
     TOTAL                        383     22    94%
 
 
-<a id="org0bdbd64"></a>
+<a id="orga4bbfd4"></a>
 
 # Implementation
 
@@ -150,6 +155,201 @@ And here&rsquo;s the tests for it:
     def test_procedure_START(self, g_in, g_out):
         g_in._START()
         assert g_in == g_out
+
+
+<a id="orgdd1a500"></a>
+
+## TERM
+
+> To eliminate each rule
+> 
+> A → X1 &#x2026; a &#x2026; Xn
+> 
+> with a terminal symbol a being not the only symbol on the right-hand side, introduce, for every such terminal, a new nonterminal symbol Na, and a new rule
+> 
+> Na → a.
+> 
+> Change every rule
+> 
+> A → X1 &#x2026; a &#x2026; Xn
+> 
+> to
+> 
+> A → X1 &#x2026; Na &#x2026; Xn.
+> 
+> If several terminal symbols occur on the right-hand side, simultaneously replace each of them by its associated nonterminal symbol.
+
+    def _TERM(self):
+        # find all non-solitary terminals
+        terminals = set()
+        for left, right in self.production_rules():
+            if len(right) <= 1:
+                continue
+            for s in right:
+                if s in self.VT:
+                    terminals.add(s)
+    
+        # create new non-terminals for every such terminal
+        mapping = dict()
+        for s in terminals:
+            ns = self._new_nonterminal(s)
+            self.VN.add(ns)
+            self.P[(ns,)] = {(s,)}
+            mapping[s] = ns
+    
+        # replace all terminals with non-terminals
+        P2 = self.P.copy()
+        for left, right in self.production_rules():
+            if len(right) <= 1:
+                continue
+            r2 = ()
+            for s in right:
+                if s in self.VT:
+                    s = mapping[s]
+                r2 += s,
+            P2[left].remove(right)
+            P2[left].add(r2)
+    
+        self.P = P2
+
+
+<a id="orgd884a85"></a>
+
+## BIN
+
+> Replace each rule
+> 
+> A → X1 X2 &#x2026; Xn
+> 
+> with more than 2 nonterminals X1,&#x2026;,Xn by rules
+> 
+> A → X1 A1,
+> A1 → X2 A2,
+> &#x2026; ,
+> An-2 → Xn-1 Xn,
+> 
+> where Ai are new nonterminal symbols. Again, this does not change the grammar&rsquo;s produced language.
+
+    def _BIN(self):
+        P2 = self.P.copy()
+        for left, right in self.production_rules():
+            # elliminate rules with more than 2 terminals on the right
+            if len(right) <= 2:
+                continue
+    
+            assert all(s in self.VN for s in right)
+    
+            # split the current rule
+            prev_sym = left[0]
+            P2[left].remove(right)
+            for s in right[:-2]:
+                ns = self._new_nonterminal(left[0])
+                self.VN.add(ns)
+                P2[(prev_sym,)].add((s, ns))
+                P2[(ns,)] = set()
+                prev_sym = ns
+            P2[(prev_sym,)] = {(right[-2], right[-1])}
+    
+        self.P = P2
+
+
+<a id="org3c66437"></a>
+
+## DEL
+
+> An ε-rule is a rule of the form
+> 
+> A → ε,
+> 
+> where A is not S0, the grammar&rsquo;s start symbol.
+> 
+> To eliminate all rules of this form, first determine the set of all nonterminals that derive ε. Hopcroft and Ullman (1979) call such nonterminals nullable, and compute them as follows:
+> 
+> If a rule A → ε exists, then A is nullable.
+> If a rule A → X1 &#x2026; Xn exists, and every single Xi is nullable, then A is nullable, too.
+> 
+> Obtain an intermediate grammar by replacing each rule
+> 
+> A → X1 &#x2026; Xn
+> 
+> by all versions with some nullable Xi omitted. By deleting in this grammar each ε-rule, unless its left-hand side is the start symbol, the transformed grammar is obtained.
+
+    def _DEL(self):
+        def combinations(sl):
+            '''Given a tuple of symbols "sl",
+            returns an equivalent set of rules with inlined nullables and removed nulls'''
+            if len(sl) == 0:
+                return {()}
+            s = sl[0]
+            rest = sl[1:]
+            cs = combinations(rest)
+            if self._is_null(s):
+                return cs
+    
+            aug = {(s,) + t for t in cs}
+    
+            if s in self.VT or not self._is_nullable(s):
+                return aug
+            if self._is_nullable(s):
+                return cs | aug
+    
+            assert False
+    
+        P2 = defaultdict(set)
+        for left, right in self.production_rules():
+            if len(right) == 0:
+                if left[0] == self.S:
+                    P2[left].add(right)
+                continue
+            cs = combinations(right)
+            for rule in cs:
+                if len(rule) == 0:
+                    continue
+                P2[left].add(rule)
+        self.P = dict(P2)
+
+
+<a id="org865a5f4"></a>
+
+## UNIT
+
+> A unit rule is a rule of the form
+> 
+> A → B,
+> 
+> where A, B are nonterminal symbols. To remove it, for each rule
+> 
+> B → X1 &#x2026; Xn,
+> 
+> where X1 &#x2026; Xn is a string of nonterminals and terminals, add rule
+> 
+> A → X1 &#x2026; Xn
+> 
+> unless this is a unit rule which has already been (or is being) removed.
+
+    def _UNIT(self):
+        def replace():
+            replaced = False
+            P2 = defaultdict(set)
+    
+            for left, right in self.production_rules():
+                if len(right) == 1 and right[0] in self.VN:
+                    replaced = True
+                    P2[left] |= self.P[right]
+                    continue
+                P2[left].add(right)
+    
+            self.P = dict(P2)
+            return replaced
+    
+        while True:
+            if not replace():
+                break
+
+
+<a id="org65533ac"></a>
+
+## Documentation
 
 You can find the full source code in [this repository](https://github.com/shunlog/angryowl).
 The new code starts at [this line](https://github.com/shunlog/angryowl/blob/master/src/angryowl/grammar.py#L206) and goes until the end of the file.
