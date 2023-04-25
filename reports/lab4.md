@@ -1,15 +1,15 @@
 
 # Table of Contents
 
-1.  [Lab 4: Chomsky normal form](#org58d467c)
-2.  [Theory](#org7cdbd82)
-3.  [Objectives](#orgadb4dc8)
-4.  [Results](#org620f02a)
-5.  [Implementation](#org93ba58d)
+1.  [Lab 4: Chomsky normal form](#org5863182)
+2.  [Theory](#orgf0e7cbc)
+3.  [Objectives](#orgbb00ed7)
+4.  [Results](#orgef29433)
+5.  [Implementation](#org0bdbd64)
 
 
 
-<a id="org58d467c"></a>
+<a id="org5863182"></a>
 
 # Lab 4: Chomsky normal form
 
@@ -17,7 +17,7 @@
 -   **Author:** Balan Artiom
 
 
-<a id="org7cdbd82"></a>
+<a id="orgf0e7cbc"></a>
 
 # Theory
 
@@ -33,7 +33,7 @@ This CNF thing was pretty difficult, painfully boring,
 and its only use seems to be in some specific parsing algorithm (called CYK, if that matters).
 
 
-<a id="orgadb4dc8"></a>
+<a id="orgbb00ed7"></a>
 
 # Objectives
 
@@ -41,7 +41,7 @@ and its only use seems to be in some specific parsing algorithm (called CYK, if 
 -   [X] Write unit tests
 
 
-<a id="org620f02a"></a>
+<a id="orgef29433"></a>
 
 # Results
 
@@ -104,7 +104,7 @@ Here&rsquo;s a capture of my terminal after running all the tests:
     TOTAL                        383     22    94%
 
 
-<a id="org93ba58d"></a>
+<a id="org0bdbd64"></a>
 
 # Implementation
 
@@ -113,28 +113,169 @@ It actually was really useful.
 Not only did it help me make sure I understand what I have to do before I jumped right in writing my spaghetti code,
 it also allowed fragment the work into tinier functions that I could test separately.
 
-I also used `git` much more extensively this time.
-Made a branch for the feature I wanted to add (`normal_form`),
-committed my changes very frequently,
-and in the end squashed them all into a single large commit when the dust settled.
+The algorithm for converting a CFG to its Chomsky Normal Form is described on Wikipedia.
+Basically, the algorithm can be split into 5 steps:
 
-As for the algorithm,
-I used the Wikipedia page as a reference
-and simply implemented all the 5 procedures one by one,
-testing each one.
-&ldquo;Simply&rdquo; is lightly said,
-this was one of the most difficult tasks I&rsquo;ve ever done.
-I&rsquo;m still not happy with the code,
-I&rsquo;m sure the tests are missing some edge-cases.
-Ideally one would write all this stuff related to formal languages using formal methods,
-not procedural code in a dynamic-typed language.
+1.  `START`: Eliminate the start symbol from right-hand sides
+2.  `TERM`: Eliminate rules with nonsolitary terminals
+3.  `BIN`: Eliminate right-hand sides with more than 2 nonterminals
+4.  `DEL`: Eliminate ε-rules
+5.  `UNIT`: Eliminate unit rules
 
+For each such step, I wrote tests and then implemented it as a protected class method.
+
+For example, here&rsquo;s the `START` procedure.
+All it does is add a new rule $S_0 → S$ and set $S_0$ as the start symbol.
+
+    def _START(self):
+        s = self._new_nonterminal(self.S)
+        self.P[(s,)] = {(self.S,)}
+        self.S = s
+        self.VN |= {s}
+
+And here&rsquo;s the tests for it:
+
+    @pytest.mark.parametrize("g_in, g_out", [
+        (
+            Grammar(VN = {'S', 'S0'},
+                    VT = {},
+                    S = 'S',
+                    P = {}),
+            Grammar(VN = {'S', 'S0', 'S1'},
+                    VT = {},
+                    S = 'S1',
+                    P = {('S1',): {('S',)}}),
+        )
+    ])
+    def test_procedure_START(self, g_in, g_out):
+        g_in._START()
+        assert g_in == g_out
+
+You can find the full source code in [this repository](https://github.com/shunlog/angryowl).
 The new code starts at [this line](https://github.com/shunlog/angryowl/blob/master/src/angryowl/grammar.py#L206) and goes until the end of the file.
 The tests [start here](https://github.com/shunlog/angryowl/blob/master/tests/test_all.py#L143).
-I&rsquo;m sure there&rsquo;s a better way to structure the tests,
-but I&rsquo;ll learn how to do that properly some other time.
 
-Obviously this method handles any CF grammar,
-and I have the unit tests (94% coverage btw),
-so I should get both bonus points.
+The auto-generated documentation for the library resides [here](https://angryowl.readthedocs.io/en/latest/).
+The relevant part is the description of the method [Grammar.to<sub>normal</sub><sub>form</sub>()](https://angryowl.readthedocs.io/en/latest/api.html#angryowl.grammar.Grammar.to_normal_form).
+
+Here&rsquo;s the relevant parts of the documentation, for the record:
+
+
+<section id="grammar">
+<h2>Grammar<a class="headerlink" href="#grammar" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="angryowl.grammar.Grammar">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">angryowl.grammar.</span></span><span class="sig-name descname"><span class="pre">Grammar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">VN</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">VT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.grammar.Grammar" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference external" href="https://en.wikipedia.org/wiki/Formal_grammar#Formal_definition">formal grammar</a> is defined by 4 components:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>VN</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><em>Hashable</em><em>]</em>) – set of nonterminals</p></li>
+<li><p><strong>VT</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><em>Hashable</em><em>]</em>) – set of terminals</p></li>
+<li><p><strong>P</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>[</em><em>SymbolsStr</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.11)"><em>set</em></a><em>[</em><em>SymbolsStr</em><em>]</em><em>]</em>) – list of productions</p></li>
+<li><p><strong>S</strong> (<em>Hashable</em>) – starting state</p></li>
+</ul>
+</dd>
+</dl>
+<p>The list of productions is represented by a dictionary,
+each rule being a mapping of a string of symbols onto another string of symbols.</p>
+<p>For example, the following formal grammar:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">-&gt;</span> <span class="n">aA</span>
+<span class="n">A</span> <span class="o">-&gt;</span> <span class="n">aB</span>
+<span class="n">A</span> <span class="o">-&gt;</span> <span class="n">ε</span>
+<span class="n">B</span> <span class="o">-&gt;</span> <span class="n">b</span>
+</pre></div>
+</div>
+<p>Is represented in this way:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Grammar</span><span class="p">(</span><span class="n">VN</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">},</span>
+        <span class="n">VT</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">},</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,):</span> <span class="p">{(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">),</span> <span class="p">()},</span>
+            <span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,):</span> <span class="p">{(</span><span class="s2">&quot;b&quot;</span><span class="p">,)}</span>
+        <span class="p">},</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="s2">&quot;A&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="angryowl.grammar.Grammar.SymbolsStr">
+<span class="sig-name descname"><span class="pre">SymbolsStr</span></span><a class="headerlink" href="#angryowl.grammar.Grammar.SymbolsStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Hashable" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Hashable</span></code></a>]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="angryowl.grammar.Grammar.production_rules">
+<span class="sig-name descname"><span class="pre">production_rules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.grammar.Grammar.production_rules" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generator[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)">tuple</a>[SymbolsStr, SymbolsStr], None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="angryowl.grammar.Grammar.type">
+<span class="sig-name descname"><span class="pre">type</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.grammar.Grammar.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the type of the grammar object according to the
+<a class="reference external" href="https://en.wikipedia.org/wiki/Chomsky_hierarchy">Chomsky hierarchy</a>.</p>
+<p>If we determine the type of each production rule in the grammar,
+then the type of the grammar will be the least restrictive type among them
+(i.e. the minimum number).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#angryowl.grammar.GrammarType" title="angryowl.grammar.GrammarType"><em>GrammarType</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="angryowl.grammar.Grammar.to_normal_form">
+<span class="sig-name descname"><span class="pre">to_normal_form</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.grammar.Grammar.to_normal_form" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a context-free grammar to its <a class="reference external" href="https://en.wikipedia.org/wiki/Chomsky_normal_form">Chomsky normal form</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#angryowl.grammar.Grammar" title="angryowl.grammar.Grammar"><em>Grammar</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="angryowl.grammar.Grammar.is_in_normal_form">
+<span class="sig-name descname"><span class="pre">is_in_normal_form</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.grammar.Grammar.is_in_normal_form" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if grammar is in <a class="reference external" href="https://en.wikipedia.org/wiki/Chomsky_normal_form">Chomsky normal form</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="angryowl.grammar.GrammarType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">angryowl.grammar.</span></span><span class="sig-name descname"><span class="pre">GrammarType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#angryowl.grammar.GrammarType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grammar classes according to the <a class="reference external" href="https://en.wikipedia.org/wiki/Chomsky_hierarchy">Chomsky hierarchy</a>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="angryowl.grammar.GrammarType.UNRESTRICTED">
+<span class="sig-name descname"><span class="pre">UNRESTRICTED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#angryowl.grammar.GrammarType.UNRESTRICTED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="angryowl.grammar.GrammarType.CONTEXT_SENSITIVE">
+<span class="sig-name descname"><span class="pre">CONTEXT_SENSITIVE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#angryowl.grammar.GrammarType.CONTEXT_SENSITIVE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="angryowl.grammar.GrammarType.CONTEXT_FREE">
+<span class="sig-name descname"><span class="pre">CONTEXT_FREE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#angryowl.grammar.GrammarType.CONTEXT_FREE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="angryowl.grammar.GrammarType.REGULAR">
+<span class="sig-name descname"><span class="pre">REGULAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#angryowl.grammar.GrammarType.REGULAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 
