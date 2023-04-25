@@ -1,35 +1,36 @@
-
-# Table of Contents
-
-1.  [Lab 4: Chomsky normal form](#orgdc8dcaa)
-2.  [Theory](#org23528c2)
-3.  [Objectives](#org53ecbf6)
-4.  [Results](#org9c6a88a)
-5.  [Implementation](#orga4bbfd4)
-    1.  [TERM](#orgdd1a500)
-    2.  [BIN](#orgd884a85)
-    3.  [DEL](#org3c66437)
-    4.  [UNIT](#org865a5f4)
-    5.  [Documentation](#org65533ac)
+- [Lab 4: Chomsky normal form](#org6087e07)
+- [Theory](#orgc0c3d87)
+- [Objectives](#orgcd866a4)
+- [Results](#org3b971f7)
+- [Implementation](#orgbb599f9)
+  - [TERM](#org11aa1a5)
+  - [BIN](#orgde5ce0d)
+  - [DEL](#org22f5c58)
+  - [UNIT](#org05b751d)
+  - [Documentation](#org9c0152b)
 
 
 
-<a id="orgdc8dcaa"></a>
+
+<a id="org6087e07"></a>
 
 # Lab 4: Chomsky normal form
 
--   **Course:** Formal Languages & Finite Automata
--   **Author:** Balan Artiom
+Course
+: Formal Languages &amp; Finite Automata
+
+Author
+: Balan Artiom
 
 
-<a id="org23528c2"></a>
+<a id="orgc0c3d87"></a>
 
 # Theory
 
 The [wikipedia page](https://en.wikipedia.org/wiki/Chomsky_normal_form#DEL:_Eliminate_%CE%B5-rules) pretty much sums it up.
 I can add one thing perhaps,
 which is that the `DEL` procedure doesn&rsquo;t seem to handle non-terminals which only have ε-rules.
-For that, I checked for such non-terminals, which I called *null* (as opposed to *nullable*),
+For that, I checked for such non-terminals, which I called _null_ (as opposed to _nullable_),
 and completely removed them from every rule.
 
 I really wonder what was the motivation of making this the objective of the laboratory work.
@@ -38,7 +39,7 @@ This CNF thing was pretty difficult, painfully boring,
 and its only use seems to be in some specific parsing algorithm (called CYK, if that matters).
 
 
-<a id="org53ecbf6"></a>
+<a id="orgcd866a4"></a>
 
 # Objectives
 
@@ -46,34 +47,40 @@ and its only use seems to be in some specific parsing algorithm (called CYK, if 
 -   [X] Write unit tests
 
 
-<a id="org9c6a88a"></a>
+<a id="org3b971f7"></a>
 
 # Results
 
 Here&rsquo;s the grammar from variant #3,
 
-    g1 = Grammar(VN = {'S', 'A', 'B', 'C', 'E'},
-            VT = {'d', 'a'},
-            S = 'S',
-            P = {
-                ('S',): {('A',)},
-                ('A',): {('d',), ('d', 'S'), ('a', 'A', 'd', 'A', 'B')},
-                ('B',): {('a', 'C'), ('a', 'S'), ('A', 'C')},
-                ('C',): {()},
-                ('E',): {('A', 'S')}})
-    
-    # mathjax needs doubled backslashes
-    "$$" + g1.to_latex().replace('\\', '\\\\') + '$$'
+```python
+g1 = Grammar(VN = {'S', 'A', 'B', 'C', 'E'},
+        VT = {'d', 'a'},
+        S = 'S',
+        P = {
+            ('S',): {('A',)},
+            ('A',): {('d',), ('d', 'S'), ('a', 'A', 'd', 'A', 'B')},
+            ('B',): {('a', 'C'), ('a', 'S'), ('A', 'C')},
+            ('C',): {()},
+            ('E',): {('A', 'S')}})
 
-$$\\begin{alignat*}{1}V_N &= \\{E,S,A,B,C\\} \\\\ V_T &= \\{a,d\\} \\\\ S &= \\{S\\} \\\\ P &= \\{ \\\\&S → A, \\\\ &A → d | d S | a A d A B, \\\\ &B → a S | A C | a C, \\\\ &C → ε, \\\\ &E → A S\\} \\\\ \\end{alignat*}$$
+# mathjax needs doubled backslashes
+"$$" + g1.to_latex().replace('\\', '\\\\') + '$$'
+```
+
+\\[\\\begin{alignat\*}{1}V\_N &= \\\{E,S,A,B,C\\\} \\\\\\ V\_T &= \\\{a,d\\\} \\\\\\ S &= \\\{S\\\} \\\\\\ P &= \\\{ \\\\\\&S → A, \\\\\\ &A → d | d S | a A d A B, \\\\\\ &B → a S | A C | a C, \\\\\\ &C → ε, \\\\\\ &E → A S\\\} \\\\\\ \\\end{alignat\*}\\]
+
+![img](./1.png)
 
 And here&rsquo;s its Chomsky normal form, achieved using the method I implemented:
 
-    g1_normal = g1.to_normal_form()
-    
-    "$$" + g1_normal.to_latex().replace('\\', '\\\\') + '$$'
+```python
+g1_normal = g1.to_normal_form()
 
-$$\\begin{alignat*}{1}V_N &= \\{E,a0,A0,d0,A2,S,A,B,S0,C,A1\\} \\\\ V_T &= \\{a,d\\} \\\\ S &= \\{S0\\} \\\\ P &= \\{ \\\\&S → d | a0 A0 | d0 S, \\\\ &A → d | a0 A0 | d0 S, \\\\ &B → a0 S | a0 A0 | d0 S | a | d, \\\\ &E → A S, \\\\ &S0 → d | a0 A0 | d0 S, \\\\ &a0 → a, \\\\ &d0 → d, \\\\ &A0 → A A1, \\\\ &A1 → d0 A2, \\\\ &A2 → A B\\} \\\\ \\end{alignat*}$$
+"$$" + g1_normal.to_latex().replace('\\', '\\\\') + '$$'
+```
+
+![img](./test.png)
 
 That&rsquo;s pretty much it.
 
@@ -86,30 +93,32 @@ which I didn&rsquo;t, and only discovered this when testing the code manually.
 
 Here&rsquo;s a capture of my terminal after running all the tests:
 
-    ╰─$ coverage run -m pytest
-    ========================================================= test session starts ==========================================================
-    platform linux -- Python 3.10.10, pytest-7.2.0, pluggy-1.0.0
-    rootdir: /home/shunlog/my_projects/angryowl
-    plugins: anyio-3.6.2
-    collected 55 items
-    
-    tests/test_all.py .......................................................                                                        [100%]
-    
-    ========================================================== 55 passed in 0.55s ==========================================================
-    
-    ╰─$ coverage report
-    Name                       Stmts   Miss  Cover
-    ----------------------------------------------
-    src/angryowl/__init__.py       0      0   100%
-    src/angryowl/automata.py      74      2    97%
-    src/angryowl/grammar.py      226     20    91%
-    tests/__init__.py              0      0   100%
-    tests/test_all.py             83      0   100%
-    ----------------------------------------------
-    TOTAL                        383     22    94%
+```text
+╰─$ coverage run -m pytest
+========================================================= test session starts ==========================================================
+platform linux -- Python 3.10.10, pytest-7.2.0, pluggy-1.0.0
+rootdir: /home/shunlog/my_projects/angryowl
+plugins: anyio-3.6.2
+collected 55 items
+
+tests/test_all.py .......................................................                                                        [100%]
+
+========================================================== 55 passed in 0.55s ==========================================================
+
+╰─$ coverage report
+Name                       Stmts   Miss  Cover
+----------------------------------------------
+src/angryowl/__init__.py       0      0   100%
+src/angryowl/automata.py      74      2    97%
+src/angryowl/grammar.py      226     20    91%
+tests/__init__.py              0      0   100%
+tests/test_all.py             83      0   100%
+----------------------------------------------
+TOTAL                        383     22    94%
+```
 
 
-<a id="orga4bbfd4"></a>
+<a id="orgbb599f9"></a>
 
 # Implementation
 
@@ -130,34 +139,39 @@ Basically, the algorithm can be split into 5 steps:
 For each such step, I wrote tests and then implemented it as a protected class method.
 
 For example, here&rsquo;s the `START` procedure.
-All it does is add a new rule $S_0 → S$ and set $S_0$ as the start symbol.
+All it does is add a new rule \\(S\_0 → S\\) and set \\(S\_0\\) as the start symbol.
 
-    def _START(self):
-        s = self._new_nonterminal(self.S)
-        self.P[(s,)] = {(self.S,)}
-        self.S = s
-        self.VN |= {s}
+```python
+def _START(self):
+    s = self._new_nonterminal(self.S)
+    self.P[(s,)] = {(self.S,)}
+    self.S = s
+    self.VN |= {s}
+
+```
 
 And here&rsquo;s the tests for it:
 
-    @pytest.mark.parametrize("g_in, g_out", [
-        (
-            Grammar(VN = {'S', 'S0'},
-                    VT = {},
-                    S = 'S',
-                    P = {}),
-            Grammar(VN = {'S', 'S0', 'S1'},
-                    VT = {},
-                    S = 'S1',
-                    P = {('S1',): {('S',)}}),
-        )
-    ])
-    def test_procedure_START(self, g_in, g_out):
-        g_in._START()
-        assert g_in == g_out
+```python
+@pytest.mark.parametrize("g_in, g_out", [
+    (
+        Grammar(VN = {'S', 'S0'},
+                VT = {},
+                S = 'S',
+                P = {}),
+        Grammar(VN = {'S', 'S0', 'S1'},
+                VT = {},
+                S = 'S1',
+                P = {('S1',): {('S',)}}),
+    )
+])
+def test_procedure_START(self, g_in, g_out):
+    g_in._START()
+    assert g_in == g_out
+```
 
 
-<a id="orgdd1a500"></a>
+<a id="org11aa1a5"></a>
 
 ## TERM
 
@@ -179,41 +193,43 @@ And here&rsquo;s the tests for it:
 > 
 > If several terminal symbols occur on the right-hand side, simultaneously replace each of them by its associated nonterminal symbol.
 
-    def _TERM(self):
-        # find all non-solitary terminals
-        terminals = set()
-        for left, right in self.production_rules():
-            if len(right) <= 1:
-                continue
-            for s in right:
-                if s in self.VT:
-                    terminals.add(s)
-    
-        # create new non-terminals for every such terminal
-        mapping = dict()
-        for s in terminals:
-            ns = self._new_nonterminal(s)
-            self.VN.add(ns)
-            self.P[(ns,)] = {(s,)}
-            mapping[s] = ns
-    
-        # replace all terminals with non-terminals
-        P2 = self.P.copy()
-        for left, right in self.production_rules():
-            if len(right) <= 1:
-                continue
-            r2 = ()
-            for s in right:
-                if s in self.VT:
-                    s = mapping[s]
-                r2 += s,
-            P2[left].remove(right)
-            P2[left].add(r2)
-    
-        self.P = P2
+```python
+def _TERM(self):
+    # find all non-solitary terminals
+    terminals = set()
+    for left, right in self.production_rules():
+        if len(right) <= 1:
+            continue
+        for s in right:
+            if s in self.VT:
+                terminals.add(s)
+
+    # create new non-terminals for every such terminal
+    mapping = dict()
+    for s in terminals:
+        ns = self._new_nonterminal(s)
+        self.VN.add(ns)
+        self.P[(ns,)] = {(s,)}
+        mapping[s] = ns
+
+    # replace all terminals with non-terminals
+    P2 = self.P.copy()
+    for left, right in self.production_rules():
+        if len(right) <= 1:
+            continue
+        r2 = ()
+        for s in right:
+            if s in self.VT:
+                s = mapping[s]
+            r2 += s,
+        P2[left].remove(right)
+        P2[left].add(r2)
+
+    self.P = P2
+```
 
 
-<a id="orgd884a85"></a>
+<a id="orgde5ce0d"></a>
 
 ## BIN
 
@@ -230,30 +246,32 @@ And here&rsquo;s the tests for it:
 > 
 > where Ai are new nonterminal symbols. Again, this does not change the grammar&rsquo;s produced language.
 
-    def _BIN(self):
-        P2 = self.P.copy()
-        for left, right in self.production_rules():
-            # elliminate rules with more than 2 terminals on the right
-            if len(right) <= 2:
-                continue
-    
-            assert all(s in self.VN for s in right)
-    
-            # split the current rule
-            prev_sym = left[0]
-            P2[left].remove(right)
-            for s in right[:-2]:
-                ns = self._new_nonterminal(left[0])
-                self.VN.add(ns)
-                P2[(prev_sym,)].add((s, ns))
-                P2[(ns,)] = set()
-                prev_sym = ns
-            P2[(prev_sym,)] = {(right[-2], right[-1])}
-    
-        self.P = P2
+```python
+def _BIN(self):
+    P2 = self.P.copy()
+    for left, right in self.production_rules():
+        # elliminate rules with more than 2 terminals on the right
+        if len(right) <= 2:
+            continue
+
+        assert all(s in self.VN for s in right)
+
+        # split the current rule
+        prev_sym = left[0]
+        P2[left].remove(right)
+        for s in right[:-2]:
+            ns = self._new_nonterminal(left[0])
+            self.VN.add(ns)
+            P2[(prev_sym,)].add((s, ns))
+            P2[(ns,)] = set()
+            prev_sym = ns
+        P2[(prev_sym,)] = {(right[-2], right[-1])}
+
+    self.P = P2
+```
 
 
-<a id="org3c66437"></a>
+<a id="org22f5c58"></a>
 
 ## DEL
 
@@ -274,42 +292,44 @@ And here&rsquo;s the tests for it:
 > 
 > by all versions with some nullable Xi omitted. By deleting in this grammar each ε-rule, unless its left-hand side is the start symbol, the transformed grammar is obtained.
 
-    def _DEL(self):
-        def combinations(sl):
-            '''Given a tuple of symbols "sl",
-            returns an equivalent set of rules with inlined nullables and removed nulls'''
-            if len(sl) == 0:
-                return {()}
-            s = sl[0]
-            rest = sl[1:]
-            cs = combinations(rest)
-            if self._is_null(s):
-                return cs
-    
-            aug = {(s,) + t for t in cs}
-    
-            if s in self.VT or not self._is_nullable(s):
-                return aug
-            if self._is_nullable(s):
-                return cs | aug
-    
-            assert False
-    
-        P2 = defaultdict(set)
-        for left, right in self.production_rules():
-            if len(right) == 0:
-                if left[0] == self.S:
-                    P2[left].add(right)
+```python
+def _DEL(self):
+    def combinations(sl):
+        '''Given a tuple of symbols "sl",
+        returns an equivalent set of rules with inlined nullables and removed nulls'''
+        if len(sl) == 0:
+            return {()}
+        s = sl[0]
+        rest = sl[1:]
+        cs = combinations(rest)
+        if self._is_null(s):
+            return cs
+
+        aug = {(s,) + t for t in cs}
+
+        if s in self.VT or not self._is_nullable(s):
+            return aug
+        if self._is_nullable(s):
+            return cs | aug
+
+        assert False
+
+    P2 = defaultdict(set)
+    for left, right in self.production_rules():
+        if len(right) == 0:
+            if left[0] == self.S:
+                P2[left].add(right)
+            continue
+        cs = combinations(right)
+        for rule in cs:
+            if len(rule) == 0:
                 continue
-            cs = combinations(right)
-            for rule in cs:
-                if len(rule) == 0:
-                    continue
-                P2[left].add(rule)
-        self.P = dict(P2)
+            P2[left].add(rule)
+    self.P = dict(P2)
+```
 
 
-<a id="org865a5f4"></a>
+<a id="org05b751d"></a>
 
 ## UNIT
 
@@ -327,27 +347,29 @@ And here&rsquo;s the tests for it:
 > 
 > unless this is a unit rule which has already been (or is being) removed.
 
-    def _UNIT(self):
-        def replace():
-            replaced = False
-            P2 = defaultdict(set)
-    
-            for left, right in self.production_rules():
-                if len(right) == 1 and right[0] in self.VN:
-                    replaced = True
-                    P2[left] |= self.P[right]
-                    continue
-                P2[left].add(right)
-    
-            self.P = dict(P2)
-            return replaced
-    
-        while True:
-            if not replace():
-                break
+```python
+def _UNIT(self):
+    def replace():
+        replaced = False
+        P2 = defaultdict(set)
+
+        for left, right in self.production_rules():
+            if len(right) == 1 and right[0] in self.VN:
+                replaced = True
+                P2[left] |= self.P[right]
+                continue
+            P2[left].add(right)
+
+        self.P = dict(P2)
+        return replaced
+
+    while True:
+        if not replace():
+            break
+```
 
 
-<a id="org65533ac"></a>
+<a id="org9c0152b"></a>
 
 ## Documentation
 
