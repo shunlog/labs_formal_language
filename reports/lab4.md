@@ -1,18 +1,18 @@
-- [Lab 4: Chomsky normal form](#org6087e07)
-- [Theory](#orgc0c3d87)
-- [Objectives](#orgcd866a4)
-- [Results](#org3b971f7)
-- [Implementation](#orgbb599f9)
-  - [TERM](#org11aa1a5)
-  - [BIN](#orgde5ce0d)
-  - [DEL](#org22f5c58)
-  - [UNIT](#org05b751d)
-  - [Documentation](#org9c0152b)
+- [Lab 4: Chomsky normal form](#orgf948dea)
+- [Theory](#org1fc9e86)
+- [Objectives](#org85c1fb8)
+- [Results](#org5f2df1e)
+- [Implementation](#org1eb5aef)
+  - [TERM](#org842244c)
+  - [BIN](#org1bfdd6d)
+  - [DEL](#orga6058f0)
+  - [UNIT](#orgffb1f6f)
+  - [Documentation](#org451a07e)
 
 
 
 
-<a id="org6087e07"></a>
+<a id="orgf948dea"></a>
 
 # Lab 4: Chomsky normal form
 
@@ -23,7 +23,7 @@ Author
 : Balan Artiom
 
 
-<a id="orgc0c3d87"></a>
+<a id="org1fc9e86"></a>
 
 # Theory
 
@@ -39,7 +39,7 @@ This CNF thing was pretty difficult, painfully boring,
 and its only use seems to be in some specific parsing algorithm (called CYK, if that matters).
 
 
-<a id="orgcd866a4"></a>
+<a id="org85c1fb8"></a>
 
 # Objectives
 
@@ -47,7 +47,7 @@ and its only use seems to be in some specific parsing algorithm (called CYK, if 
 -   [X] Write unit tests
 
 
-<a id="org3b971f7"></a>
+<a id="org5f2df1e"></a>
 
 # Results
 
@@ -64,23 +64,20 @@ g1 = Grammar(VN = {'S', 'A', 'B', 'C', 'E'},
             ('C',): {()},
             ('E',): {('A', 'S')}})
 
-# mathjax needs doubled backslashes
-"$$" + g1.to_latex().replace('\\', '\\\\') + '$$'
+"$$" + g1.to_latex() + '$$'
 ```
 
-\\[\\\begin{alignat\*}{1}V\_N &= \\\{E,S,A,B,C\\\} \\\\\\ V\_T &= \\\{a,d\\\} \\\\\\ S &= \\\{S\\\} \\\\\\ P &= \\\{ \\\\\\&S → A, \\\\\\ &A → d | d S | a A d A B, \\\\\\ &B → a S | A C | a C, \\\\\\ &C → ε, \\\\\\ &E → A S\\\} \\\\\\ \\\end{alignat\*}\\]
-
-![img](./1.png)
+![img](./img/1.png)
 
 And here&rsquo;s its Chomsky normal form, achieved using the method I implemented:
 
 ```python
 g1_normal = g1.to_normal_form()
 
-"$$" + g1_normal.to_latex().replace('\\', '\\\\') + '$$'
+"$$" + g1_normal.to_latex() + "$$"
 ```
 
-![img](./test.png)
+![img](./img/2.png)
 
 That&rsquo;s pretty much it.
 
@@ -118,7 +115,7 @@ TOTAL                        383     22    94%
 ```
 
 
-<a id="orgbb599f9"></a>
+<a id="org1eb5aef"></a>
 
 # Implementation
 
@@ -170,8 +167,12 @@ def test_procedure_START(self, g_in, g_out):
     assert g_in == g_out
 ```
 
+```text
+/tmp/babel-30DfFD/python-L2QJt7
+```
 
-<a id="org11aa1a5"></a>
+
+<a id="org842244c"></a>
 
 ## TERM
 
@@ -229,7 +230,7 @@ def _TERM(self):
 ```
 
 
-<a id="orgde5ce0d"></a>
+<a id="org1bfdd6d"></a>
 
 ## BIN
 
@@ -271,7 +272,7 @@ def _BIN(self):
 ```
 
 
-<a id="org22f5c58"></a>
+<a id="orga6058f0"></a>
 
 ## DEL
 
@@ -329,7 +330,7 @@ def _DEL(self):
 ```
 
 
-<a id="org05b751d"></a>
+<a id="orgffb1f6f"></a>
 
 ## UNIT
 
@@ -369,7 +370,7 @@ def _UNIT(self):
 ```
 
 
-<a id="org9c0152b"></a>
+<a id="org451a07e"></a>
 
 ## Documentation
 

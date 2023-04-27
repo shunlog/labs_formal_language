@@ -1,5 +1,6 @@
-#+title: Lab2
-#+PROPERTY: header-args:python   :session :exports both :eval no-export :async
+#+title: Lab4
+#+PROPERTY: header-args:python   :session *lab4* :exports both :eval no-export :async
+#+PROPERTY: header-args:latex   :noweb yes
 * Lab 4: Chomsky normal form
 - Course :: Formal Languages & Finite Automata
 - Author :: Balan Artiom
@@ -26,7 +27,8 @@ from angryowl.grammar import *
 #+RESULTS:
 
 Here's the grammar from variant #3,
-#+begin_src python :results drawer
+#+name: fig1
+#+begin_src python :exports code :async no
 g1 = Grammar(VN = {'S', 'A', 'B', 'C', 'E'},
         VT = {'d', 'a'},
         S = 'S',
@@ -37,39 +39,34 @@ g1 = Grammar(VN = {'S', 'A', 'B', 'C', 'E'},
             ('C',): {()},
             ('E',): {('A', 'S')}})
 
-# mathjax needs doubled backslashes
-"$$" + g1.to_latex().replace('\\', '\\\\') + '$$'
+"$$" + g1.to_latex() + '$$'
 #+end_src
 
-#+RESULTS:
-:results:
-$$\\begin{alignat*}{1}V_N &= \\{E,S,A,B,C\\} \\\\ V_T &= \\{a,d\\} \\\\ S &= \\{S\\} \\\\ P &= \\{ \\\\&S → A, \\\\ &A → d | d S | a A d A B, \\\\ &B → a S | A C | a C, \\\\ &C → ε, \\\\ &E → A S\\} \\\\ \\end{alignat*}$$
-:end:
+#+RESULTS: fig1
+: $$\begin{alignat*}{1}V_N &= \{A,S,B,E,C\} \\ V_T &= \{d,a\} \\ S &= \{S\} \\ P &= \{ \\&S → A, \\ &A → a A d A B | d S | d, \\ &B → a S | A C | a C, \\ &C → ε, \\ &E → A S\} \\ \end{alignat*}$$
 
-#+begin_src latex :exports none :file 1.png
-$$\begin{alignat*}{1}V_N &= \{E,S,A,B,C\} \\ V_T &= \{a,d\} \\ S &= \{S\} \\ P &= \{ \\&S → A, \\ &A → d | d S | a A d A B, \\ &B → a S | A C | a C, \\ &C → ε, \\ &E → A S\} \\ \end{alignat*}$$
+#+begin_src latex :exports none :file "./img/1.png" :results none
+<<fig1()>>
 #+end_src
 
-[[./1.png]]
+[[./img/1.png]]
 
 And here's its Chomsky normal form, achieved using the method I implemented:
-#+begin_src python :results drawer :exports code
+#+name: fig2
+#+begin_src python :exports code :async no
 g1_normal = g1.to_normal_form()
 
-"$$" + g1_normal.to_latex().replace('\\', '\\\\') + '$$'
+"$$" + g1_normal.to_latex() + "$$"
 #+end_src
 
-#+RESULTS:
-:results:
-/tmp/babel-k1zaoT/python-ZnF3mm
-:end:
+#+RESULTS: fig2
+: $$\begin{alignat*}{1}V_N &= \{A,d0,a0,A2,A1,B,E,S0,C,S,A0\} \\ V_T &= \{d,a\} \\ S &= \{S0\} \\ P &= \{ \\&S → d | a0 A0 | d0 S, \\ &A → d | a0 A0 | d0 S, \\ &B → a | a0 S | d0 S | a0 A0 | d, \\ &E → A S, \\ &S0 → d | a0 A0 | d0 S, \\ &d0 → d, \\ &a0 → a, \\ &A0 → A A1, \\ &A1 → d0 A2, \\ &A2 → A B\} \\ \end{alignat*}$$
 
-#+begin_src latex :exports none :file test.png
-$$\begin{alignat*}{1}V_N &= \{E,a0,A0,d0,A2,S,A,B,S0,C,A1\} \\ V_T &= \{a,d\} \\ S &= \{S0\} \\ P &= \{ \\&S → d | a0 A0 | d0 S, \\ &A → d | a0 A0 | d0 S, \\ &B → a0 S | a0 A0 | d0 S | a | d, \\ &E → A S, \\ &S0 → d | a0 A0 | d0 S, \\ &a0 → a, \\ &d0 → d, \\ &A0 → A A1, \\ &A1 → d0 A2, \\ &A2 → A B\} \\ \end{alignat*}$$
+#+begin_src latex :exports none :file "./img/2.png" :results none
+<<fig2()>>
 #+end_src
 
-[[./test.png]]
-
+[[./img/2.png]]
 
 That's pretty much it.
 
@@ -131,6 +128,8 @@ def _START(self):
 
 #+end_src
 
+#+RESULTS:
+
 And here's the tests for it:
 #+begin_src python
 @pytest.mark.parametrize("g_in, g_out", [
@@ -149,6 +148,9 @@ def test_procedure_START(self, g_in, g_out):
     g_in._START()
     assert g_in == g_out
 #+end_src
+
+#+RESULTS:
+: /tmp/babel-30DfFD/python-L2QJt7
 
 ** TERM
 #+begin_quote
@@ -206,6 +208,8 @@ def _TERM(self):
     self.P = P2
 #+end_src
 
+#+RESULTS:
+
 ** BIN
 #+begin_quote
 Replace each rule
@@ -245,6 +249,8 @@ def _BIN(self):
 
     self.P = P2
 #+end_src
+
+#+RESULTS:
 
 ** DEL
 #+begin_quote
@@ -301,6 +307,8 @@ def _DEL(self):
     self.P = dict(P2)
 #+end_src
 
+#+RESULTS:
+
 ** UNIT
 #+begin_quote
 A unit rule is a rule of the form
@@ -338,6 +346,8 @@ def _UNIT(self):
         if not replace():
             break
 #+end_src
+
+#+RESULTS:
 
 ** Documentation
 You can find the full source code in [[https://github.com/shunlog/angryowl][this repository]].
