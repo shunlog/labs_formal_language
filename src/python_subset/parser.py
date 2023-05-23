@@ -4,6 +4,16 @@ from typing import Union
 from lexer import *
 from icecream import ic
 
+# Grammar:
+# expression = term {("+"|"-") term} .
+
+# term = factor {("*"|"/") factor} .
+
+# factor =
+#     ident
+#     | number
+#     | "(" expression ")" .
+
 @dataclass
 class Variable:
     name: str
@@ -28,19 +38,40 @@ class Expression:
 
 
 class Parser:
+    # self.tok holds the current token
+    # self.token holds the list of tokens,
+
+    def next_tok(self):
+        '''Returns the next token without consuming it.'''
+        return self.tokens[0]
+
+
+    def consume_tok(self):
+        '''Consumes the next token and returns it.'''
+        return self.tokens.pop(0)
+
+
+    def tokens_left(self):
+        '''Returns true if there are tokens left to consume.'''
+        return len(self.tokens) != 0
+
+
     def accept(self, toktype, values=()):
-        # if first token is toktype, consume it and return it
-        # otherwise don't consume it and return False
-        if self.tokens and self.tokens[0].type == toktype \
-            and (not values or self.tokens[0].value in values):
-            self.tok = self.tokens.pop(0)
+        '''
+        If next token is toktype, consumes it and returns it,
+        otherwise don't consume it and return False.
+        '''
+        if self.tokens_left() and self.next_tok().type == toktype \
+            and (not values or self.next_tok().value in values):
+            self.tok = self.consume_tok()
             return True
         return False
 
 
     def expect(self, toktype, values=()):
-        # if next token is not toktype, raise error,
-        # otherwise return the token
+        '''
+        If next token is not toktype, raise error, otherwise return the token.
+        '''
         if not self.accept(toktype, values):
             raise ValueError
         return
