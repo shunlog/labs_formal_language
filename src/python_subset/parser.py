@@ -49,6 +49,12 @@ class Condition:
 class Block:
     statements: list[Union[Expression, AssignmentStatement]]
 
+@dataclass
+class ConditionalStatement:
+    condition: Condition
+    then_block: Block
+    else_block: Block
+
 
 class Parser:
     # self.tok holds the previously consumed token
@@ -144,24 +150,39 @@ class Parser:
         return Condition(expr1, op, expr2)
 
 
-    def if_statement(self):
-        return
+    def conditional_statement(self):
+        # the 'if' has already been consumed
+        cond = self.condition()
+        self.expect(TokenType.DELIMITER, ':')
+        thenblck = self.block()
+
+        elseblck = None
+        if self.accept(TokenType.KEYWORD, 'else'):
+            self.expect(TokenType.DELIMITER, ':')
+            elseblck = self.block()
+
+        return ConditionalStatement(cond, thenblck, elseblck)
 
 
     def statement(self):
         if self.tokens_left() > 2 and self.tokens[1].type == TokenType.DELIMITER and self.tokens[1].value == '=':
             return self.assignment_statement()
         if self.accept(TokenType.KEYWORD, 'if'):
-            return self.if_statement()
+            return self.conditional_statement()
         else:
             return self.expression()
 
 
     def block(self):
         stats = []
-        while not self.accept(TokenType.EOF):
-            stat = self.statement()
-            stats.append(stat)
+        if self.accept(TokenType.INDENT):
+            while not self.accept(TokenType.DEDENT):
+                stat = self.statement()
+                stats.append(stat)
+        else:
+            while not self.accept(TokenType.EOF):
+                stat = self.statement()
+                stats.append(stat)
         return Block(stats)
 
 
