@@ -5,14 +5,12 @@ from lexer import *
 from icecream import ic
 
 # Grammar:
-# expression = term {("+"|"-") term} .
-
-# term = factor {("*"|"/") factor} .
-
-# factor =
-#     ident
-#     | number
-#     | "(" expression ")" .
+# block = statement+
+# statement = assignment_statement
+#           | expression
+# expression = term (("+"|"-") term)*
+# term = factor (("*"|"/") factor)*
+# factor = ID | Number | "(" expression ")"
 
 @dataclass
 class Variable:
@@ -40,6 +38,10 @@ class Expression:
 class AssignmentStatement:
     var: Variable
     expr: Expression
+
+@dataclass
+class Block:
+    statements: list[Union[Expression, AssignmentStatement]]
 
 
 class Parser:
@@ -134,7 +136,14 @@ class Parser:
         else:
             return self.expression()
 
+    def block(self):
+        stats = []
+        while not self.accept(TokenType.EOF):
+            stat = self.statement()
+            stats.append(stat)
+        return Block(stats)
+
 
     def parse(self, tokens):
         self.tokens = tokens
-        return self.statement()
+        return self.block()
