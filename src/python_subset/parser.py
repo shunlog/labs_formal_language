@@ -40,6 +40,12 @@ class AssignmentStatement:
     expr: Expression
 
 @dataclass
+class Condition:
+    expr1: Expression
+    op: str
+    expr2: Expression
+
+@dataclass
 class Block:
     statements: list[Union[Expression, AssignmentStatement]]
 
@@ -130,11 +136,26 @@ class Parser:
         return AssignmentStatement(var, expr)
 
 
+    def condition(self):
+        expr1 = self.expression()
+        self.expect(TokenType.OPERATOR, ('==', '!=', '<', '<=', '>', '>='))
+        op = self.tok.value
+        expr2 = self.expression()
+        return Condition(expr1, op, expr2)
+
+
+    def if_statement(self):
+        return
+
+
     def statement(self):
         if self.tokens_left() > 2 and self.tokens[1].type == TokenType.DELIMITER and self.tokens[1].value == '=':
             return self.assignment_statement()
+        if self.accept(TokenType.KEYWORD, 'if'):
+            return self.if_statement()
         else:
             return self.expression()
+
 
     def block(self):
         stats = []

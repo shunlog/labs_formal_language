@@ -111,6 +111,28 @@ from lexer import *
         )])
     ),
 ])
-def test_expr(tokens, AST):
+def test_parse(tokens, AST):
     p = Parser()
     assert p.parse(tokens) == AST
+
+
+@pytest.mark.parametrize("tokens, AST",[
+    (
+        [
+            Token(TokenType.ID, 'a'),
+            Token(TokenType.OPERATOR, '=='),
+            Token(TokenType.NUMBER, '1'),
+        ],
+        Condition(
+            expr1 = Expression([Term(None, [Factor(None, Variable('a'))])]),
+            op = '==',
+            expr2 = Expression([Term(None, [Factor(None, Number('1'))])])
+        )
+    )
+
+    ])
+def test_condition(tokens, AST):
+    p = Parser()
+    # how do you test private methods without accessing private fields?
+    p.tokens = tokens
+    assert p.condition() == AST
