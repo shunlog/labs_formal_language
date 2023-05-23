@@ -35,8 +35,67 @@ from lexer import *
                  )]
              )]
         )
-    )
+    ),
 
+
+    # '10 * ab'
+    (
+        [
+            Token(TokenType.NUMBER, '10'),
+            Token(TokenType.OPERATOR, '*'),
+            Token(TokenType.ID, 'ab')
+        ],
+
+        Expression(
+            [Term(None,
+                  [
+                      Factor(None, Number('10')),
+                      Factor('*', Variable('ab'))
+                  ]
+                  )]
+        )
+    ),
+
+    # 'a1 + 10 - a2'
+    (
+        [
+            Token(TokenType.ID, 'a1'),
+            Token(TokenType.OPERATOR, '+'),
+            Token(TokenType.NUMBER, '10'),
+            Token(TokenType.OPERATOR, '-'),
+            Token(TokenType.ID, 'a2')
+        ],
+
+        Expression(
+            [
+                Term(None, [Factor(None, Variable('a1'))]),
+                Term('+', [Factor(None, Number('10'))]),
+                Term('-', [Factor(None, Variable('a2'))]),
+            ]
+        )
+    ),
+
+    # '(a + b) * c'
+    (
+        [
+            Token(TokenType.DELIMITER, '('),
+            Token(TokenType.ID, 'a'),
+            Token(TokenType.OPERATOR, '+'),
+            Token(TokenType.ID, 'b'),
+            Token(TokenType.DELIMITER, ')'),
+            Token(TokenType.OPERATOR, '*'),
+            Token(TokenType.ID, 'c')
+        ],
+
+        Expression([
+            Term(None, [
+                Factor(None, Expression([
+                    Term(None, [Factor(None, Variable('a'))]),
+                    Term('+', [Factor(None, Variable('b'))])
+                ])),
+                Factor('*', Variable('c')),
+            ])])
+    ),
 ])
 def test_expr(tokens, AST):
     p = Parser()

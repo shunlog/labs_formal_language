@@ -46,12 +46,17 @@ class Parser:
         return
 
 
-
     def factor(self):
         if self.accept(TokenType.ID):
             return Variable(self.tok.value)
+
         elif self.accept(TokenType.NUMBER):
             return Number(self.tok.value)
+
+        elif self.accept(TokenType.DELIMITER, ('(')):
+            expr = self.expression()
+            self.expect(TokenType.DELIMITER, (')'))
+            return expr
 
 
     def term(self):
