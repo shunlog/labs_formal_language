@@ -191,3 +191,46 @@ def test_conditional_statement(tokens, AST):
     p = Parser()
     p.tokens = tokens
     assert p.conditional_statement() == AST
+
+
+@pytest.mark.parametrize("tokens, AST",[
+    (
+        # while a != 100:
+        #     a = a + 1
+        [
+            # keyword 'while' is consumed already
+            Token(TokenType.ID, 'a'),
+            Token(TokenType.OPERATOR, '!='),
+            Token(TokenType.NUMBER, '100'),
+            Token(TokenType.DELIMITER, ':'),
+            Token(TokenType.INDENT),
+            Token(TokenType.ID, 'a'),
+            Token(TokenType.DELIMITER, '='),
+            Token(TokenType.ID, 'a'),
+            Token(TokenType.OPERATOR, '+'),
+            Token(TokenType.NUMBER, '1'),
+            Token(TokenType.DEDENT),
+        ],
+        WhileStatement(
+            condition = Condition(
+                expr1 = Expression([Term(None, [Factor(None, Variable('a'))])]),
+                op = '!=',
+                expr2 = Expression([Term(None, [Factor(None, Number('100'))])]),
+            ),
+            block = Block([
+                AssignmentStatement(
+                    Variable('a'),
+                    Expression([
+                        Term(None, [Factor(None, Variable('a'))]),
+                        Term('+', [Factor(None, Number('1'))]),
+                    ])
+                )
+            ])
+        )
+    )
+
+    ])
+def test_while_statement(tokens, AST):
+    p = Parser()
+    p.tokens = tokens
+    assert p.while_statement() == AST

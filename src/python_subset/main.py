@@ -11,3 +11,7 @@ if __name__ == "__main__":
     p = Parser()
     ast = p.parse(tokens)
     ic(ast)
+
+
+    from pprint import pprint
+    pprint(ast, compact=True)

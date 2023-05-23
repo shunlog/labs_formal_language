@@ -55,6 +55,11 @@ class ConditionalStatement:
     then_block: Block
     else_block: Block
 
+@dataclass
+class WhileStatement:
+    condition: Condition
+    block: Block
+
 
 class Parser:
     # self.tok holds the previously consumed token
@@ -164,11 +169,21 @@ class Parser:
         return ConditionalStatement(cond, thenblck, elseblck)
 
 
+    def while_statement(self):
+        # the 'while' has been consumed
+        cond = self.condition()
+        self.expect(TokenType.DELIMITER, ':')
+        blck = self.block()
+        return WhileStatement(cond, blck)
+
+
     def statement(self):
         if self.tokens_left() > 2 and self.tokens[1].type == TokenType.DELIMITER and self.tokens[1].value == '=':
             return self.assignment_statement()
         if self.accept(TokenType.KEYWORD, 'if'):
             return self.conditional_statement()
+        if self.accept(TokenType.KEYWORD, 'while'):
+            return self.while_statement()
         else:
             return self.expression()
 
