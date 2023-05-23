@@ -96,6 +96,20 @@ from lexer import *
                 Factor('*', Variable('c')),
             ])])
     ),
+
+
+    # 'a = 1'
+    (
+        [
+            Token(TokenType.ID, 'a'),
+            Token(TokenType.DELIMITER, '='),
+            Token(TokenType.NUMBER, '1')
+        ],
+        AssignmentStatement(
+            Variable('a'),
+            Expression([Term(None, [Factor(None, Number('1'))])])
+        )
+    ),
 ])
 def test_expr(tokens, AST):
     p = Parser()

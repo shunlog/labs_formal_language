@@ -36,9 +36,14 @@ class Term:
 class Expression:
     terms: list[Term]
 
+@dataclass
+class AssignmentStatement:
+    var: Variable
+    expr: Expression
+
 
 class Parser:
-    # self.tok holds the current token
+    # self.tok holds the previously consumed token
     # self.token holds the list of tokens,
 
     def next_tok(self):
@@ -52,8 +57,8 @@ class Parser:
 
 
     def tokens_left(self):
-        '''Returns true if there are tokens left to consume.'''
-        return len(self.tokens) != 0
+        '''Returns the number of tokens left to consume.'''
+        return len(self.tokens)
 
 
     def accept(self, toktype, values=()):
@@ -114,6 +119,22 @@ class Parser:
         return Expression(terms)
 
 
+    def assignment_statement(self):
+        self.expect(TokenType.ID)
+        var = Variable(self.tok.value)
+
+        self.expect(TokenType.DELIMITER, ('='))
+        expr = self.expression()
+        return AssignmentStatement(var, expr)
+
+
+    def statement(self):
+        if self.tokens_left() > 2 and self.tokens[1].type == TokenType.DELIMITER and self.tokens[1].value == '=':
+            return self.assignment_statement()
+        else:
+            return self.expression()
+
+
     def parse(self, tokens):
         self.tokens = tokens
-        return self.expression()
+        return self.statement()
