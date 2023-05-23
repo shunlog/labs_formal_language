@@ -5,9 +5,17 @@ from lexer import *
 from icecream import ic
 
 # Grammar:
+
 # block = statement+
-# statement = assignment_statement
-#           | expression
+# statement = expression
+#           | assignment_statement
+#           | conditional_statement
+#           | while_statement
+# assignment_statement = ID '=' expression
+# conditional_statement = 'if' condition ':' INDENT block DEDENT
+#       ('else' ':' INDENT block DEDENT)?
+# condition = expression ("==" | "!=" | ">" | "<" | ">=" | "<=") expression
+# while_statement = 'while' condition ':' INDENT block DEDENT
 # expression = term (("+"|"-") term)*
 # term = factor (("*"|"/") factor)*
 # factor = ID | Number | "(" expression ")"
