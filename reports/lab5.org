@@ -34,16 +34,24 @@ except ImportError:
     print('No Import')
 #+end_src
 
+The result of my hard work is this parser for a subset of Python (kind of):
+#+begin_src python
+p = Parser()
+#+end_src
+
+#+RESULTS:
+
+Without further ado, let me show it in action. Here's a little program which consists of a single expression:
 #+name: text1
-#+begin_src text
+#+begin_src python :eval no
 a + 10
 #+end_src
 
+And here's how I can parse it:
 #+begin_src python :results output :var inp=(get-val-of-named-src-block "text1")
 tokens = get_tokens(inp)
-
-p = Parser()
 ast = p.parse(tokens)
+
 pprint(ast)
 #+end_src
 
@@ -54,5 +62,112 @@ pprint(ast)
 :                                     Term(op='+',
 :                                          factors=[Factor(op=None,
 :                                                          value=Number(value=10))])])])
+
+Great, isn't it? Of course it would've been better if I could draw it,
+but =pprint()= is good enough, you can still see the tree structure.
+
+Let's see some more examples. Here's a list of assignments with comments:
+#+name: text2
+#+begin_src python :eval no
+# comments and blank lines are ignored
+
+# assignments can have parantheses
+a = 10 * (5 + 5 * 2)
+b = 1 * 2 / 3 * 4
+#+end_src
+
+And here's the AST:
+#+begin_src python :results output :var inp=(get-val-of-named-src-block "text2")
+tokens = get_tokens(inp)
+ast = p.parse(tokens)
+
+pprint(ast)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Block(statements=[AssignmentStatement(var=Variable(name='a'),
+                                      expr=Expression(terms=[Term(op=None,
+                                                                  factors=[Factor(op=None,
+                                                                                  value=Number(value=10)),
+                                                                           Factor(op='*',
+                                                                                  value=Expression(terms=[Term(op=None,
+                                                                                                               factors=[Factor(op=None,
+                                                                                                                               value=Number(value=5))]),
+                                                                                                          Term(op='+',
+                                                                                                               factors=[Factor(op=None,
+                                                                                                                               value=Number(value=5)),
+                                                                                                                        Factor(op='*',
+                                                                                                                               value=Number(value=2))])]))])])),
+                  AssignmentStatement(var=Variable(name='b'),
+                                      expr=Expression(terms=[Term(op=None,
+                                                                  factors=[Factor(op=None,
+                                                                                  value=Number(value=1)),
+                                                                           Factor(op='*',
+                                                                                  value=Number(value=2)),
+                                                                           Factor(op='/',
+                                                                                  value=Number(value=3)),
+                                                                           Factor(op='*',
+                                                                                  value=Number(value=4))])]))])
+#+end_example
+
+Notice how the AST consists of a =Block=, which has two =AssignmentStatement=,
+which have two fields, =var= and =expr=.
+The =Expression= structure is a bit fancy to allow for operator precedence.
+Here's the relevant piece of grammar to explain it:
+#+begin_example
+expression = term (("+"|"-") term)*
+term = factor (("*"|"/") factor)*
+factor = ID | Number | "(" expression ")"
+#+end_example
+
+The last things I haven't showcased yet are conditionals and =while= statements:
+#+name: text3
+#+begin_src python :eval no
+while b == 0:
+    if a > b:
+        a = a - b
+    else:
+        b = b - a
+#+end_src
+
+#+begin_src python :results output :var inp=(get-val-of-named-src-block "text3")
+tokens = get_tokens(inp)
+ast = p.parse(tokens)
+
+pprint(ast)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Block(statements=[WhileStatement(condition=Condition(expr1=Expression(terms=[Term(op=None,
+                                                                                  factors=[Factor(op=None,
+                                                                                                  value=Variable(name='b'))])]),
+                                                     op='==',
+                                                     expr2=Expression(terms=[Term(op=None,
+                                                                                  factors=[Factor(op=None,
+                                                                                                  value=Number(value=0))])])),
+                                 block=Block(statements=[ConditionalStatement(condition=Condition(expr1=Expression(terms=[Term(op=None,
+                                                                                                                               factors=[Factor(op=None,
+                                                                                                                                               value=Variable(name='a'))])]),
+                                                                                                  op='>',
+                                                                                                  expr2=Expression(terms=[Term(op=None,
+                                                                                                                               factors=[Factor(op=None,
+                                                                                                                                               value=Variable(name='b'))])])),
+                                                                              then_block=Block(statements=[AssignmentStatement(var=Variable(name='a'),
+                                                                                                                               expr=Expression(terms=[Term(op=None,
+                                                                                                                                                           factors=[Factor(op=None,
+                                                                                                                                                                           value=Variable(name='a'))]),
+                                                                                                                                                      Term(op='-',
+                                                                                                                                                           factors=[Factor(op=None,
+                                                                                                                                                                           value=Variable(name='b'))])]))]),
+                                                                              else_block=Block(statements=[AssignmentStatement(var=Variable(name='b'),
+                                                                                                                               expr=Expression(terms=[Term(op=None,
+                                                                                                                                                           factors=[Factor(op=None,
+                                                                                                                                                                           value=Variable(name='b'))]),
+                                                                                                                                                      Term(op='-',
+                                                                                                                                                           factors=[Factor(op=None,
+                                                                                                                                                                           value=Variable(name='a'))])]))]))]))])
+#+end_example
 
 * Implementation
