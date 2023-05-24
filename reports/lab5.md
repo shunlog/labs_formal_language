@@ -1,14 +1,14 @@
-- [Lab 5: Parsing, building an Abstract Syntax Tree](#orgb3fc8d3)
-- [Theory](#org30f7605)
-- [Objectives](#org455daa8)
-- [Results](#org2d2b284)
-- [Implementation](#orgc2b44f5)
-- [Conclusion](#org3e459bb)
+- [Lab 5: Parsing, building an Abstract Syntax Tree](#org01d4eb1)
+- [Theory](#org6733e2d)
+- [Objectives](#org304590d)
+- [Results](#orga29164d)
+- [Implementation](#org99ebc49)
+- [Conclusion](#org2b4c97a)
 
 
 
 
-<a id="orgb3fc8d3"></a>
+<a id="org01d4eb1"></a>
 
 # Lab 5: Parsing, building an Abstract Syntax Tree
 
@@ -19,7 +19,7 @@ Author
 : Balan Artiom
 
 
-<a id="org30f7605"></a>
+<a id="org6733e2d"></a>
 
 # Theory
 
@@ -38,7 +38,7 @@ It differs from a parse tree in that it&rsquo;s not every token needs to corresp
 The image from the wikipedia page is very explanatory.
 
 
-<a id="org455daa8"></a>
+<a id="org304590d"></a>
 
 # Objectives
 
@@ -47,7 +47,7 @@ The image from the wikipedia page is very explanatory.
 -   [X] Implement a parser that returns an AST
 
 
-<a id="org2d2b284"></a>
+<a id="orga29164d"></a>
 
 # Results
 
@@ -189,7 +189,7 @@ Block(statements=[WhileStatement(condition=Condition(expr1=Expression(terms=[Ter
 ```
 
 
-<a id="orgc2b44f5"></a>
+<a id="org99ebc49"></a>
 
 # Implementation
 
@@ -357,14 +357,13 @@ That&rsquo;s pretty much it,
 the rest of the code is pretty much one of the cases I&rsquo;ve shown above.
 
 
-<a id="org3e459bb"></a>
+<a id="org2b4c97a"></a>
 
 # Conclusion
 
 Implementing a simple parser by hand is not rocket science,
 but I imagine that it wouldn&rsquo;t be feasible for more complicated languages.
-
-However, it&rsquo;s pretty repetitive
+One downside of doing it manually is that it&rsquo;s pretty repetitive
 which makes it rather difficult to test.
 I had to manually write a test case for each production rule to ensure that it works correctly,
 which is time-consuming and error-prone.

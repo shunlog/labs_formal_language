@@ -336,8 +336,7 @@ the rest of the code is pretty much one of the cases I've shown above.
 * Conclusion
 Implementing a simple parser by hand is not rocket science,
 but I imagine that it wouldn't be feasible for more complicated languages.
-
-However, it's pretty repetitive
+One downside of doing it manually is that it's pretty repetitive
 which makes it rather difficult to test.
 I had to manually write a test case for each production rule to ensure that it works correctly,
 which is time-consuming and error-prone.
