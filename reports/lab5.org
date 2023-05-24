@@ -14,7 +14,7 @@ and calls some other such functions when it meets other non-terminals,
 then returns a part of the AST corresponding to its non-terminal.
 Once we have such functions for every non-terminal,
 we simply call the function for the starting symbol (e.g. =program=)
-and watch in awe the magic of recursion do its thing..
+and watch in awe the magic of recursion do its thing.
 * Objectives
 - [X] Use a TokenType enum
 - [X] Use regex in the lexer
@@ -71,7 +71,7 @@ Let's see some more examples. Here's a list of assignments with comments:
 #+begin_src python :eval no
 # comments and blank lines are ignored
 
-# assignments can have parantheses
+# expressions can have parantheses
 a = 10 * (5 + 5 * 2)
 b = 1 * 2 / 3 * 4
 #+end_src
@@ -171,3 +171,170 @@ Block(statements=[WhileStatement(condition=Condition(expr1=Expression(terms=[Ter
 #+end_example
 
 * Implementation
+First of all, the parser is written for a subset of Python.
+Here's the grammar that I used as a guide:
+#+begin_example
+block = statement+
+statement = expression
+          | assignment_statement
+          | conditional_statement
+          | while_statement
+assignment_statement = ID '=' expression
+conditional_statement = 'if' condition ':' INDENT block DEDENT
+      ('else' ':' INDENT block DEDENT)?
+condition = expression ("==" | "!=" | ">" | "<" | ">=" | "<=") expression
+while_statement = 'while' condition ':' INDENT block DEDENT
+expression = term (("+"|"-") term)*
+term = factor (("*"|"/") factor)*
+factor = ID | Number | "(" expression ")"
+#+end_example
+
+The data structure I've used for the AST representation is classes (duh).
+Here's a few examples:
+#+begin_src python :eval no
+...
+
+@dataclass
+class ConditionalStatement:
+    condition: Condition
+    then_block: Block
+    else_block: Block
+
+@dataclass
+class Block:
+    statements: list[Union[Expression, AssignmentStatement]]
+
+...
+
+@dataclass
+class Number:
+    value: str
+
+...
+#+end_src
+
+The =@dataclass= line is a class decorator which automatically generates the constructors based on the member variables, effectively rendering the classes as =record='s in Pascal (or =struct='s in C).
+
+I've used the AST just for structuring, meaning I haven't implemented any evaluation capabilities
+
+The =Parser= class has a few useful methods that I've implemented
+so I don't use its =tokens= list directly, because what if I want to change its representation later?.
+Plus, this helped me implement the parser from the conceptual description of it found on Wikipedia.
+
+#+begin_src python :eval no
+class Parser:
+    # self.tok holds the previously consumed token
+    # self.token holds the list of tokens,
+
+    def next_tok(self):
+        '''Returns the next token without consuming it.'''
+        return self.tokens[0]
+
+
+    def consume_tok(self):
+        '''Consumes the next token and returns it.'''
+        return self.tokens.pop(0)
+
+
+    def accept(self, toktype, values=()):
+        '''
+        If next token is toktype, consumes it and returns it,
+        otherwise don't consume it and return False.
+        '''
+        if self.tokens_left() and self.next_tok().type == toktype \
+            and (not values or self.next_tok().value in values):
+            self.tok = self.consume_tok()
+            return True
+        return False
+
+
+    def expect(self, toktype, values=()):
+        '''
+        If next token is not toktype, raise error, otherwise return the token.
+        '''
+        if not self.accept(toktype, values):
+            raise ValueError
+        return
+#+end_src
+
+The meat of the parser consists of the recursive procedures corresponding to each terminal.
+Here's the root method, =parse()=,
+which initializes the list of tokens and calls the =block()= procedure:
+#+begin_src python :eval no
+def parse(self, tokens):
+    self.tokens = tokens
+    return self.block()
+#+end_src
+
+Let's look at the  =statement()= procedure:
+#+begin_src python :eval no
+def statement(self):
+    if self.tokens_left() > 2 and self.tokens[1].type == TokenType.DELIMITER and self.tokens[1].value == '=':
+        return self.assignment_statement()
+    if self.accept(TokenType.KEYWORD, 'if'):
+        return self.conditional_statement()
+    if self.accept(TokenType.KEYWORD, 'while'):
+        return self.while_statement()
+    else:
+        return self.expression()
+#+end_src
+
+It demonstrates the general working of these methods.
+A =statement= has multiple production rules, but we can only pick one.
+We do that by peeking at the next tokens (usually the first next)
+and make a decision based on that.
+Then, we look at the right hand side of the picked rule,
+and for each non-terminal we call its procedure.
+Simple as that!
+
+Let's look at the =block()= procedure.
+
+#+begin_src python :eval no
+def block(self):
+    stats = []
+    if self.accept(TokenType.INDENT):
+        while not self.accept(TokenType.DEDENT):
+            stat = self.statement()
+            stats.append(stat)
+    else:
+        while not self.accept(TokenType.EOF):
+            stat = self.statement()
+            stats.append(stat)
+    return Block(stats)
+#+end_src
+
+Notice in the grammar that a =block= is a list of statements,
+so we initialize the list =stats=.
+In this particular case, we need to check whether a =block= is delimited by =INDENT='s,
+or if it ends with an =EOL=.
+Once it's decided on that, it calls the =statement()= procedure.
+
+Let's look at yet another scenario.
+#+begin_src python :eval no
+def while_statement(self):
+    # the 'while' has been consumed
+    cond = self.condition()
+    self.expect(TokenType.DELIMITER, ':')
+    blck = self.block()
+    return WhileStatement(cond, blck)
+#+end_src
+
+A =while= statement's first line ends with a terminal (the ':' character).
+We don't need to write a procedure for it
+since there's no information that could be parsed from a single character,
+however we do expect it to be there.
+That's what the =expect()= method is for - it errors out if the token is not there,
+otherwise it consumes it.
+
+That's pretty much it,
+the rest of the code is pretty much one of the cases I've shown above.
+
+* Conclusion
+Implementing a simple parser by hand is not rocket science,
+but I imagine that it wouldn't be feasible for more complicated languages.
+
+However, it's pretty repetitive
+which makes it rather difficult to test.
+I had to manually write a test case for each production rule to ensure that it works correctly,
+which is time-consuming and error-prone.
+Parser generators like =ANTLR= are a better choice when writing an actual language, I think.
