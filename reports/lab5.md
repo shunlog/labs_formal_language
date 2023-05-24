@@ -1,13 +1,13 @@
-- [Lab 5: Parsing, building an Abstract Syntax Tree](#org7816020)
-- [Theory](#orge54962b)
-- [Objectives](#org3793804)
-- [Results](#org5e6069a)
-- [Implementation](#org3f4c15f)
+- [Lab 5: Parsing, building an Abstract Syntax Tree](#org02a5fc8)
+- [Theory](#org643b7b5)
+- [Objectives](#org39a29cc)
+- [Results](#org3dc9054)
+- [Implementation](#org38946c3)
 
 
 
 
-<a id="org7816020"></a>
+<a id="org02a5fc8"></a>
 
 # Lab 5: Parsing, building an Abstract Syntax Tree
 
@@ -18,7 +18,7 @@ Author
 : Balan Artiom
 
 
-<a id="orge54962b"></a>
+<a id="org643b7b5"></a>
 
 # Theory
 
@@ -33,7 +33,7 @@ we simply call the function for the starting symbol (e.g. `program`)
 and watch in awe the magic of recursion do its thing..
 
 
-<a id="org3793804"></a>
+<a id="org39a29cc"></a>
 
 # Objectives
 
@@ -42,12 +42,33 @@ and watch in awe the magic of recursion do its thing..
 -   [X] Implement a parser that returns an AST
 
 
-<a id="org5e6069a"></a>
+<a id="org3dc9054"></a>
 
 # Results
 
+```text
+a + 10
+```
 
-<a id="org3f4c15f"></a>
+```python
+tokens = get_tokens(inp)
+
+p = Parser()
+ast = p.parse(tokens)
+pprint(ast)
+```
+
+```text
+Block(statements=[Expression(terms=[Term(op=None,
+                                         factors=[Factor(op=None,
+                                                         value=Variable(name='a'))]),
+                                    Term(op='+',
+                                         factors=[Factor(op=None,
+                                                         value=Number(value=10))])])])
+```
+
+
+<a id="org38946c3"></a>
 
 # Implementation
 

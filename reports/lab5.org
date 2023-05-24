@@ -1,5 +1,5 @@
 #+title: Lab5
-#+PROPERTY: header-args:python   :session *lab4* :exports both :eval no-export :async
+#+PROPERTY: header-args:python   :session *python_lab5* :exports both :eval no-export :async
 #+PROPERTY: header-args:latex   :noweb yes
 * Lab 5: Parsing, building an Abstract Syntax Tree
 - Course :: Formal Languages & Finite Automata
@@ -20,4 +20,39 @@ and watch in awe the magic of recursion do its thing..
 - [X] Use regex in the lexer
 - [X] Implement a parser that returns an AST
 * Results
+#+begin_src python :exports none :results none
+import sys
+from icecream import ic
+from pprint import pprint
+
+sys.path.insert(0, "../src")
+
+try:
+    from lexer import *
+    from parser import *
+except ImportError:
+    print('No Import')
+#+end_src
+
+#+name: text1
+#+begin_src text
+a + 10
+#+end_src
+
+#+begin_src python :results output :var inp=(get-val-of-named-src-block "text1")
+tokens = get_tokens(inp)
+
+p = Parser()
+ast = p.parse(tokens)
+pprint(ast)
+#+end_src
+
+#+RESULTS:
+: Block(statements=[Expression(terms=[Term(op=None,
+:                                          factors=[Factor(op=None,
+:                                                          value=Variable(name='a'))]),
+:                                     Term(op='+',
+:                                          factors=[Factor(op=None,
+:                                                          value=Number(value=10))])])])
+
 * Implementation
