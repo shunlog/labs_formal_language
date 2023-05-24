@@ -15,6 +15,10 @@ then returns a part of the AST corresponding to its non-terminal.
 Once we have such functions for every non-terminal,
 we simply call the function for the starting symbol (e.g. =program=)
 and watch in awe the magic of recursion do its thing.
+
+An [[https://en.wikipedia.org/wiki/Abstract_syntax_tree][abstract syntax tree]] (AST) is an abstract representation of the syntax of a parsed text (duh?).
+It differs from a parse tree in that it's not every token needs to corresponds to a node in the tree.
+The image from the wikipedia page is very explanatory.
 * Objectives
 - [X] Use a TokenType enum
 - [X] Use regex in the lexer
